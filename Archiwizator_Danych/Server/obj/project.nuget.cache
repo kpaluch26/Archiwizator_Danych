@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "x65vp9TXjj2JTcVNSAk6qzETBNGSDl8FAc5Vku6lEKqiky5Lj/ye1yodQn1G711H3WlN43WJ2Fr10zFxuN+/yQ==",
+  "success": true,
+  "projectFilePath": "D:\\PROJEKTY\\Archiwizator_Danych\\Archiwizator_Danych\\Archiwizator_Danych\\Server\\Server.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kamil\\.nuget\\packages\\materialdesigncolors\\2.0.0\\materialdesigncolors.2.0.0.nupkg.sha512",
+    "C:\\Users\\kamil\\.nuget\\packages\\materialdesignthemes\\4.0.0\\materialdesignthemes.4.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
