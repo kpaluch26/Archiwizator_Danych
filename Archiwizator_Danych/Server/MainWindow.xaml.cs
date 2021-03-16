@@ -27,27 +27,31 @@ namespace Server
             InitializeComponent();
         }
 
-        private void btn_CloseWindow_Click(object sender, RoutedEventArgs e)
-        {
-            //this.Close(); //zamknięcie okna
-            Application.Current.Shutdown(); //zamknięcie aplikacji
+        private void btn_CloseWindow_Click(object sender, RoutedEventArgs e) //zamknięcie okna aplikacji
+        {            
+            Application.Current.Shutdown(); 
         }
 
-        private void btn_MinimizeWindow_Click(object sender, RoutedEventArgs e)
+        private void btn_MinimizeWindow_Click(object sender, RoutedEventArgs e) //zminimalizowanie okna
         {
-            this.WindowState = WindowState.Minimized; //zminimalizowanie okna
+            this.WindowState = WindowState.Minimized; 
         }
 
-        private void btn_MenuOpen_Click(object sender, RoutedEventArgs e)
+        private void btn_MenuOpen_Click(object sender, RoutedEventArgs e) //rozwijanie menu głównego
         {
             btn_MenuOpen.Visibility = Visibility.Collapsed;
             btn_MenuClose.Visibility = Visibility.Visible;
         }
 
-        private void btn_MenuClose_Click(object sender, RoutedEventArgs e)
+        private void btn_MenuClose_Click(object sender, RoutedEventArgs e) //zwijanie menu głównego
         {
             btn_MenuOpen.Visibility = Visibility.Visible;
             btn_MenuClose.Visibility = Visibility.Collapsed;
+        }
+
+        private void grd_MenuToolbar_MouseDown(object sender, MouseButtonEventArgs e) //zmiana lokalizacji okna na ekranie
+        {
+            this.DragMove(); 
         }
     }
 }

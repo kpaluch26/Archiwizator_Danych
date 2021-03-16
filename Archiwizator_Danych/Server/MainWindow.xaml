@@ -38,7 +38,7 @@
     </Window.Triggers>
 
     <Grid Background="LightGray">
-        <Grid Height="60" VerticalAlignment="Top" Background="#FF3D5AFE" >
+        <Grid x:Name="grd_MenuToolbar" Height="60" VerticalAlignment="Top" Background="#FF3D5AFE" MouseDown="grd_MenuToolbar_MouseDown" >
             <TextBlock Text="Archiwizator danych - serwer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Text="Aplikacja" VerticalAlignment="Center" FontSize="18"/>
