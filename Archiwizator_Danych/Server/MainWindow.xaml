@@ -19,12 +19,20 @@
                 <EasingDoubleKeyFrame KeyTime="0" Value="60"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="220"/>
             </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="stp_ApplicationName">
+                <SplineThicknessKeyFrame KeyTime="0" Value="80,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:0.5" Value="240,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="MenuClose">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grd_Menu">
                 <EasingDoubleKeyFrame KeyTime="0" Value="220"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="60"/>
             </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="stp_ApplicationName">
+                <SplineThicknessKeyFrame KeyTime="0" Value="240,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:0.5" Value="80,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
 
@@ -39,9 +47,12 @@
 
     <Grid Background="LightGray">
         <Grid x:Name="grd_MenuToolbar" Height="60" VerticalAlignment="Top" Background="#FF3D5AFE" MouseDown="grd_MenuToolbar_MouseDown" >
-            <TextBlock Text="Archiwizator danych - serwer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
+            <StackPanel x:Name="stp_ApplicationName" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="80,0,0,0" >
+                <materialDesign:PackIcon Kind="Server" Height="30" Width="30"/>
+                <TextBlock Text="Archiwizator danych - serwer" FontSize="22" VerticalAlignment="Center" />
+            </StackPanel>
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Text="Aplikacja" VerticalAlignment="Center" FontSize="18"/>
+                <TextBlock Text="Opcje" VerticalAlignment="Center" FontSize="18"/>
                 <materialDesign:PopupBox HorizontalAlignment="Right" Margin="10" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
                     <StackPanel Width="150">
                         <StackPanel Orientation="Horizontal">
@@ -100,13 +111,13 @@
                         </StackPanel>
                     </ListViewItem>
                     <Separator Background="#FF3D5AFE"/>
-                    <ListViewItem Height="60">
+                    <ListViewItem Height="60" Focusable="False" IsTabStop="False" IsEnabled="False" Opacity="1">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Github" Width="25" Height="25" Margin="10" VerticalAlignment="Center"/>
                             <TextBlock Text="Github" VerticalAlignment="Center" Margin="20 10"/>
                         </StackPanel>
                     </ListViewItem>
-                    <ListViewItem Height="60">
+                    <ListViewItem Height="60" Focusable="False" IsTabStop="False" IsEnabled="False" Opacity="1">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Copyright" Width="25" Height="25" Margin="10" VerticalAlignment="Center"/>
                             <TextBlock Text="Kamil Paluch 2021" VerticalAlignment="Center" Margin="20 10"/>

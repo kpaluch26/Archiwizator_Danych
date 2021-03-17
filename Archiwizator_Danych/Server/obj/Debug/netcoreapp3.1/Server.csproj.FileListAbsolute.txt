@@ -20,3 +20,4 @@ D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\o
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.dll
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.pdb
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.genruntimeconfig.cache
+D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.csprojAssemblyReference.cache
