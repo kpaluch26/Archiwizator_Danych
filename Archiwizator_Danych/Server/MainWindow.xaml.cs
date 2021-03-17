@@ -53,5 +53,27 @@ namespace Server
         {
             this.DragMove(); 
         }
+
+        private void btn_ConfigurationPanel_Click(object sender, RoutedEventArgs e)
+        {
+            grd_Configuration.Visibility = Visibility.Visible;
+        }
+
+        private void btn_ControlPanel_Click(object sender, RoutedEventArgs e)
+        {
+            grd_Configuration.Visibility = Visibility.Hidden;
+        }
+        private void btn_ArchivePanel_Click(object sender, RoutedEventArgs e)
+        {
+            grd_Configuration.Visibility = Visibility.Hidden;
+        }
+        private void btn_HistoryPanel_Click(object sender, RoutedEventArgs e)
+        {
+            grd_Configuration.Visibility = Visibility.Hidden;
+        }
+        private void btn_ProfilPanel_Click(object sender, RoutedEventArgs e)
+        {
+            grd_Configuration.Visibility = Visibility.Hidden;
+        }
     }
 }

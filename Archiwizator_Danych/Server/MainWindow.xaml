@@ -19,20 +19,20 @@
                 <EasingDoubleKeyFrame KeyTime="0" Value="60"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="220"/>
             </DoubleAnimationUsingKeyFrames>
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="stp_ApplicationName">
-                <SplineThicknessKeyFrame KeyTime="0" Value="80,0,0,0" />
-                <SplineThicknessKeyFrame KeyTime="0:0:0.5" Value="240,0,0,0" />
-            </ThicknessAnimationUsingKeyFrames>
+            <!--<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="stp_ApplicationName">
+                <SplineThicknessKeyFrame KeyTime="0" Value="65,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:0.5" Value="225,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>-->
         </Storyboard>
         <Storyboard x:Key="MenuClose">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grd_Menu">
                 <EasingDoubleKeyFrame KeyTime="0" Value="220"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="60"/>
             </DoubleAnimationUsingKeyFrames>
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="stp_ApplicationName">
-                <SplineThicknessKeyFrame KeyTime="0" Value="240,0,0,0" />
-                <SplineThicknessKeyFrame KeyTime="0:0:0.5" Value="80,0,0,0" />
-            </ThicknessAnimationUsingKeyFrames>
+            <!--<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="stp_ApplicationName">
+                <SplineThicknessKeyFrame KeyTime="0" Value="225,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:0.5" Value="65,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>-->
         </Storyboard>
     </Window.Resources>
 
@@ -46,18 +46,24 @@
     </Window.Triggers>
 
     <Grid Background="LightGray">
+        <Grid x:Name="grd_Configuration" Visibility="Hidden">
+            <StackPanel>
+                <GroupBox Header="Konfiguracja serwera" materialDesign:ColorZoneAssist.Mode="Custom" materialDesign:ColorZoneAssist.Background="#FF1A237E" materialDesign:ColorZoneAssist.Foreground="White" materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="60,60,0,0" BorderThickness="0" Height="540" FontSize="16">
+                </GroupBox>
+            </StackPanel>
+        </Grid>
         <Grid x:Name="grd_MenuToolbar" Height="60" VerticalAlignment="Top" Background="#FF3D5AFE" MouseDown="grd_MenuToolbar_MouseDown" >
-            <StackPanel x:Name="stp_ApplicationName" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="80,0,0,0" >
+            <StackPanel x:Name="stp_ApplicationName" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" >
                 <materialDesign:PackIcon Kind="Server" Height="30" Width="30"/>
-                <TextBlock Text="Archiwizator danych - serwer" FontSize="22" VerticalAlignment="Center" />
+                <TextBlock Text="Archiwizator danych - serwer" FontSize="22" VerticalAlignment="Center" Margin="15,0,0,0"/>
             </StackPanel>
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Text="Opcje" VerticalAlignment="Center" FontSize="18"/>
-                <materialDesign:PopupBox HorizontalAlignment="Right" Margin="10" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                <materialDesign:PopupBox HorizontalAlignment="Right" Margin="10" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
                     <StackPanel Width="150">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Jasny" VerticalAlignment="Center" Margin="10 0 0 0" FontSize="12"/>
-                            <ToggleButton Style="{DynamicResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="10 0 0 0" />
+                            <ToggleButton Style="{StaticResource MaterialDesignSwitchDarkToggleButton}" ToolTip="MaterialDesignSwitchDarkToggleButton" VerticalAlignment="Center" Margin="10 0 0 0" />
                             <TextBlock Text="Ciemny" VerticalAlignment="Center" Margin="10 0 10 0" FontSize="12"/>
                         </StackPanel>
                         <Separator/>
@@ -69,9 +75,9 @@
                 </materialDesign:PopupBox>
             </StackPanel>
         </Grid>
-        <Grid x:Name="grd_Menu" Width="60" HorizontalAlignment="Left" Background="#FF1A237E">
+        <Grid x:Name="grd_Menu" Width="60" HorizontalAlignment="Left" Background="#FF1A237E" Margin="0,60,0,0">
             <StackPanel>
-                <Grid Height="150" Background="White">
+                <Grid Height="90" Background="White">
                     <Button x:Name="btn_MenuClose" Height="60" Width="60" VerticalAlignment="Top" HorizontalAlignment="Right" Background="{x:Null}" BorderBrush="{x:Null}" Click="btn_MenuClose_Click" Visibility="Collapsed">
                         <materialDesign:PackIcon Kind="ArrowLeft" Foreground="#FF1A237E" Width="25" Height="25" />
                     </Button>
@@ -81,40 +87,50 @@
                 </Grid>
                 <ListView ScrollViewer.HorizontalScrollBarVisibility="Disabled" Foreground="#FF3D5AFE">
                     <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="ViewDashboard" Width="25" Height="25" Margin="10" VerticalAlignment="Center"/>
-                            <TextBlock Text="Panel sterowania" VerticalAlignment="Center" Margin="20 10"/>
-                        </StackPanel>
+                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ControlPanel" Click="btn_ControlPanel_Click" materialDesign:RippleAssist.IsDisabled="True" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal" Margin="-16" >
+                                <materialDesign:PackIcon Kind="ViewDashboard" Width="25" Height="25" Margin="10" VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
+                                <TextBlock Text="Panel sterowania" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
+                            </StackPanel>
+                        </Button>
                     </ListViewItem>
                     <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Cog" Width="25" Height="25" Margin="10"  VerticalAlignment="Center"/>
-                            <TextBlock Text="Konfiguracja serwera" VerticalAlignment="Center" Margin="20 10"/>
+                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ConfigurationPanel" Click="btn_ConfigurationPanel_Click" Cursor="Hand" materialDesign:RippleAssist.IsDisabled="True">
+                            <StackPanel Orientation="Horizontal" Margin="-16">
+                                <materialDesign:PackIcon Kind="Cog" Width="25" Height="25" Margin="10"  VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
+                                <TextBlock Text="Konfiguracja serwera" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
                         </StackPanel>
+                        </Button>
                     </ListViewItem>
                     <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="FolderZip" Width="25" Height="25" Margin="10"  VerticalAlignment="Center"/>
-                            <TextBlock Text="Twórz archiwum" VerticalAlignment="Center" Margin="20 10"/>
-                        </StackPanel>
+                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ArchivePanel" Click="btn_ArchivePanel_Click" Cursor="Hand" materialDesign:RippleAssist.IsDisabled="True">
+                            <StackPanel Orientation="Horizontal" Margin="-16">
+                                <materialDesign:PackIcon Kind="FolderZip" Width="25" Height="25" Margin="10"  VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
+                                <TextBlock Text="Stwórz ZIP" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
+                            </StackPanel>
+                        </Button>
                     </ListViewItem>
                     <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="History" Width="25" Height="25" Margin="10"  VerticalAlignment="Center"/>
-                            <TextBlock Text="Historia aktywności" VerticalAlignment="Center" Margin="20 10"/>
-                        </StackPanel>
+                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_HistoryPanel" Click="btn_HistoryPanel_Click" Cursor="Hand" materialDesign:RippleAssist.IsDisabled="True">
+                            <StackPanel Orientation="Horizontal" Margin="-16">
+                                <materialDesign:PackIcon Kind="History" Width="25" Height="25" Margin="10"  VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
+                                <TextBlock Text="Historia aktywności" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
+                            </StackPanel>
+                        </Button>
                     </ListViewItem>
                     <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="AccountBox" Width="25" Height="25" Margin="10" VerticalAlignment="Center"/>
-                            <TextBlock Text="Profil użytkownika" VerticalAlignment="Center" Margin="20 10"/>
-                        </StackPanel>
+                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ProfilPanel" Click="btn_ProfilPanel_Click" Cursor="Hand" materialDesign:RippleAssist.IsDisabled="True">
+                            <StackPanel Orientation="Horizontal" Margin="-16">
+                                <materialDesign:PackIcon Kind="AccountBox" Width="25" Height="25" Margin="10"  VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
+                                <TextBlock Text="Profil użytkownika" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
+                            </StackPanel>
+                        </Button>
                     </ListViewItem>
                     <Separator Background="#FF3D5AFE"/>
                     <ListViewItem Height="60" Focusable="False" IsTabStop="False" IsEnabled="False" Opacity="1">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Github" Width="25" Height="25" Margin="10" VerticalAlignment="Center"/>
-                            <TextBlock Text="Github" VerticalAlignment="Center" Margin="20 10"/>
+                            <TextBlock Text="Github/kpaluch26" VerticalAlignment="Center" Margin="20 10"/>
                         </StackPanel>
                     </ListViewItem>
                     <ListViewItem Height="60" Focusable="False" IsTabStop="False" IsEnabled="False" Opacity="1">
