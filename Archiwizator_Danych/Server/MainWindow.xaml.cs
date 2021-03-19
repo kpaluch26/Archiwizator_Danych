@@ -1,23 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MaterialDesignThemes;
-using MaterialDesignColors;
 using System.IO;
 using System.Net;
 using Microsoft.Win32;
-using System.IO.Compression;
+using System.Windows.Controls.Primitives;
 
 namespace Server
 {
@@ -34,13 +22,13 @@ namespace Server
         }
 
         private void btn_CloseWindow_Click(object sender, RoutedEventArgs e) //zamknięcie okna aplikacji
-        {            
-            Application.Current.Shutdown(); 
+        {
+            Application.Current.Shutdown();
         }
 
         private void btn_MinimizeWindow_Click(object sender, RoutedEventArgs e) //zminimalizowanie okna
         {
-            this.WindowState = WindowState.Minimized; 
+            this.WindowState = WindowState.Minimized;
         }
 
         private void btn_MenuOpen_Click(object sender, RoutedEventArgs e) //rozwijanie menu głównego
@@ -57,7 +45,7 @@ namespace Server
 
         private void grd_MenuToolbar_MouseDown(object sender, MouseButtonEventArgs e) //zmiana lokalizacji okna na ekranie
         {
-            this.DragMove(); 
+            this.DragMove();
         }
 
         private void btn_ConfigurationPanel_Click(object sender, RoutedEventArgs e)
@@ -91,6 +79,7 @@ namespace Server
             string username = Environment.UserName; //odczyt nazwy konta użytkownika
             string hostName = Dns.GetHostName(); //odczyt hostname
             string ip_address = Dns.GetHostByName(hostName).AddressList[0].ToString(); // odczyt adresu IPv4
+            bool is_config_correct = false; //flaga do sterowania możliwością eksportu configa
 
             OpenFileDialog ofd = new OpenFileDialog(); //utworzenie okna do przeglądania plików konfiguracji
             ofd.Filter = "txt files (*.txt)|*.txt|xml files (*.xml)|*.xml"; //ustawienie filtrów okna na pliki txt i xml
@@ -136,11 +125,15 @@ namespace Server
                             file.Close(); //zamknięcie pliku
                             throw new FileLoadException(); //wyrzucenie wyjątku
                         }
-                        config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa    
-                        pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
+                        else
+                        {
+                            config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa    
+                            pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
+                            is_config_correct = true;
+                        }
                     }
                     catch (FileLoadException)
-                    { 
+                    {
                         pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close; //zmiana ikony na niepowodzenie operacji
                     }
                 }
@@ -197,8 +190,12 @@ namespace Server
                             file.Close(); //zamknięcie pliku
                             throw new FileLoadException(); //wyrzuca wyjątek
                         }
-                        config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa 
-                        pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
+                        else
+                        {
+                            config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa 
+                            pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
+                            is_config_correct = true;
+                        }
                     }
                     catch (FileLoadException)
                     {
@@ -210,10 +207,15 @@ namespace Server
             {
                 pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close; //zmiana ikony na niepowodzenie operacji
             }
+
+            if (is_config_correct || config != null)
+            {
+                flp_ConfigurationSave.IsEnabled = true; //można eksportować do pliku
+            }
         }
 
         private void btn_ConfigurationSave_Click(object sender, RoutedEventArgs e)
-        {
+        {           
             SaveFileDialog sfg = new SaveFileDialog(); //utworzenie okna do przeglądania plików
             sfg.Filter = "txt files (*.txt)|*.txt|xml files (*.xml)|*.xml"; //ustawienie filtrów okna na pliki txt i xml
             sfg.FilterIndex = 1; //ustawienie domyślnego filtru na plik txt
@@ -249,6 +251,56 @@ namespace Server
         private void btn_ConfigurationCreate_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void btn_ConfigurationCreateSave_Click(object sender, RoutedEventArgs e)
+        {            
+            Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog(); //utworzenie okna dialogowego do wybrania ścieżki zapisu otrzymanych plików
+            fbd.Description = "Wybierz ścieżkę dostępu."; //tytuł utworzonego okna
+            fbd.ShowNewFolderButton = true; //włączenie mozliwości tworzenia nowych folderów
+
+            if (fbd.ShowDialog() == true) //jeśli wybrano ścieżkę
+            {
+                int port, buffer;
+                string username = Environment.UserName; //odczyt nazwy konta użytkownika
+                string hostName = Dns.GetHostName(); //odczyt hostname
+                string ip_address = Dns.GetHostByName(hostName).AddressList[0].ToString(); // odczyt adresu IPv4
+
+                try
+                {
+                    port = Convert.ToInt32(txt_ConfigurationPort.Text);
+                    buffer = Convert.ToInt32(cmb_ConfigurationBuffer.Text);
+                    config = new ServerConfiguration(username, hostName, ip_address, fbd.SelectedPath, port, buffer);//utworzenie configa
+                    btn_ConfigurationCreate.Content = "Edytuj konfigurację";
+                    flp_ConfigurationSave.IsEnabled = true;
+                }
+                catch
+                {                   
+                    if(config != null) 
+                    {
+                        MessageBox.Show("Wprowadzono błędne dane. Powrót do istniejącej konfiguracji.", "Błąd.");
+                        txt_ConfigurationPort.Text = config.GetPort().ToString();
+                        cmb_ConfigurationBuffer.Text = config.GetBufferSize().ToString();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Wprowadzono błędne dane.", "Błąd.");
+                        btn_ConfigurationCreateSave.Command.Execute(null);
+                    }
+                }                  
+            }
+            else
+            {
+                if (config != null)
+                {
+                    MessageBox.Show("Nie podano miejsca zapisu dla przychodzących plików. Powrót do istniejącej konfiguracji. ", "Błąd.");
+                }
+                else
+                {
+                    MessageBox.Show("Nie podano miejsca zapisu dla przychodzących plików.", "Błąd.");
+                    btn_ConfigurationCreateSave.Command.Execute(null);
+                }
+            }
         }
     }
 }
