@@ -13,7 +13,7 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        mc:Ignorable="d" Height="600" Width="1080" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Foreground="White">
+        mc:Ignorable="d" Height="600" Width="1080" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" Foreground="White" Icon="/server.png" Title="Archiwizator danych - serwer">
     <Window.Resources>
         <Storyboard x:Key="MenuOpen">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grd_Menu">
@@ -35,6 +35,12 @@
                 <SplineThicknessKeyFrame KeyTime="0:0:0.5" Value="65,0,0,0" />
             </ThicknessAnimationUsingKeyFrames>-->
         </Storyboard>
+        <Storyboard x:Key="ResourcesMonitorInformation">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="tbl_ResourcesMonitorInformation">
+                <SplineThicknessKeyFrame KeyTime="0" Value="0,0,-540,0"/>
+                <SplineThicknessKeyFrame KeyTime="0:0:0:20" Value="0,0,1020,0"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
     </Window.Resources>
 
     <Window.Triggers>
@@ -44,6 +50,9 @@
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="btn_MenuClose">
             <BeginStoryboard Storyboard="{StaticResource MenuClose}"/>
         </EventTrigger>
+        <!--<EventTrigger RoutedEvent="ButtonBase.Click" SourceName="btn_ResourcesMonitor">
+            <BeginStoryboard Storyboard="{StaticResource ResourcesMonitorInformation}"/>
+        </EventTrigger>-->
     </Window.Triggers>
 
     <Grid Background="LightGray">
@@ -168,17 +177,41 @@
         <Grid x:Name="grd_ResourcesMonitor" Visibility="Visible" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
-                    <TextBlock Text="Konfiguracja serwera" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    <TextBlock Text="Monitor zasobów" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </Grid>
-                <Grid Height="30" Margin="0,60,0,0">
+                <!--<Grid Height="30" Margin="0,60,0,0">
                     <TextBlock Text="Zużycie CPU" FontSize="18" VerticalAlignment="Center" Margin="100,0,0,0" Width="140" HorizontalAlignment="Left" TextAlignment="Center" Foreground="Black"/>
                     <TextBlock Text="Wykorzystanie RAM" FontSize="18" VerticalAlignment="Center" Margin="430,0,0,0" Width="160" HorizontalAlignment="Left" TextAlignment="Center" Foreground="Black"/>
                     <TextBlock Text="Aktywność DYSK" FontSize="18" VerticalAlignment="Center" Margin="780,0,0,0" Width="140" HorizontalAlignment="Left" TextAlignment="Center" Foreground="Black"/>
+                </Grid>-->
+                <Grid Height="30" Margin="0">
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ResourcesMonitorInformation" HorizontalAlignment="Right"/>
                 </Grid>
             </StackPanel>
-            <syncfusion:SfCircularProgressBar x:Name="cpb_CPU" HorizontalAlignment="Left" Height="340" Margin="0,120,0,0" VerticalAlignment="Top" Width="340" SegmentCount="4" Focusable="False" IsEnabled="False" AnimationDuration="00:00:01" IsTabStop="False"/>
-            <syncfusion:SfCircularProgressBar x:Name="cpb_RAM" HorizontalAlignment="Left" Height="340" Margin="340,120,0,0" Progress="0" VerticalAlignment="Top" Width="340" SegmentCount="4" Focusable="False" IsEnabled="False"/>
-            <syncfusion:SfCircularProgressBar x:Name="cpb_DISK" HorizontalAlignment="Left" Height="340" Margin="680,120,0,0" Progress="0" VerticalAlignment="Top" Width="340" SegmentCount="4" Focusable="False" IsEnabled="False"/>
+            <syncfusion:SfCircularProgressBar x:Name="cpb_CPU" HorizontalAlignment="Left" Height="400" Margin="-30,120,0,0" VerticalAlignment="Top" Width="400" SegmentCount="4" Focusable="False" IsEnabled="False" AnimationDuration="00:00:01" IsTabStop="False">
+                <Syncfusion:SfCircularProgressBar.ProgressContent>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Progress,StringFormat={}{000}%}"  TextAlignment="Center" DataContext ="{x:Reference cpb_CPU}" />
+                        <TextBlock Text="Zużycie CPU" FontSize="30" />
+                    </StackPanel>
+                </Syncfusion:SfCircularProgressBar.ProgressContent>
+            </syncfusion:SfCircularProgressBar>
+            <syncfusion:SfCircularProgressBar x:Name="cpb_RAM" HorizontalAlignment="Left" Height="400" Margin="310,120,0,0" Progress="0" VerticalAlignment="Top" Width="400" SegmentCount="4" Focusable="False" IsEnabled="False">
+                <Syncfusion:SfCircularProgressBar.ProgressContent>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Progress,StringFormat={}{000}%}"  TextAlignment="Center" DataContext ="{x:Reference cpb_RAM}" />
+                        <TextBlock Text="Zużycie RAM" FontSize="30" />
+                    </StackPanel>
+                </Syncfusion:SfCircularProgressBar.ProgressContent>
+            </syncfusion:SfCircularProgressBar>
+            <syncfusion:SfCircularProgressBar x:Name="cpb_DISK" HorizontalAlignment="Left" Height="400" Margin="650,120,0,0" Progress="0" VerticalAlignment="Top" Width="400" SegmentCount="4" Focusable="False" IsEnabled="False">
+                <Syncfusion:SfCircularProgressBar.ProgressContent>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Progress,StringFormat={}{000}%}"  TextAlignment="Center" DataContext ="{x:Reference cpb_DISK}" />
+                        <TextBlock Text="Aktywność DYSK" FontSize="30" />
+                    </StackPanel>
+                </Syncfusion:SfCircularProgressBar.ProgressContent>
+            </syncfusion:SfCircularProgressBar>
         </Grid>
         <Grid x:Name="grd_MenuToolbar" Height="60" VerticalAlignment="Top" Background="#FF3D5AFE" MouseDown="grd_MenuToolbar_MouseDown" >
             <StackPanel x:Name="stp_ApplicationName" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" >

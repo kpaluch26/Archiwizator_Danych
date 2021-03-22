@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using System.Diagnostics;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.Windows.Media.Animation;
 
 namespace Server
 {
@@ -19,6 +20,7 @@ namespace Server
         private ServerConfiguration config;
         private static Thread resources_thread;
         private long total_ram;
+        DateTime server_start;
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -28,7 +30,8 @@ namespace Server
         {
             GetPhysicallyInstalledSystemMemory(out total_ram);
             total_ram = total_ram / 1024;
-            InitializeComponent();            
+            InitializeComponent();
+            server_start = DateTime.Now;
         }
 
         private void btn_CloseWindow_Click(object sender, RoutedEventArgs e) //zamknięcie okna aplikacji
@@ -82,6 +85,7 @@ namespace Server
         {
             CleanServer();
             grd_ResourcesMonitor.Visibility = Visibility.Visible;
+            InformationBoard();
             resources_thread = new Thread(ResorcesMonitor);
             resources_thread.Start();
         }
@@ -324,14 +328,22 @@ namespace Server
             PerformanceCounter cpu_usage = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             PerformanceCounter ram_usage = new PerformanceCounter("Memory", "Available MBytes");
             PerformanceCounter disk_usage = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
+            int loop_counter = 1;
             var firstCall = cpu_usage.NextValue();
+            Thread.Sleep(1000);
 
             while (grd_ResourcesMonitor.Visibility == Visibility.Visible)
             {
+                if (loop_counter == 20)
+                {
+                    Dispatcher.Invoke(delegate { InformationBoard(); });
+                    loop_counter = 0;
+                }
                 cpb_CPU.Dispatcher.Invoke(delegate { cpb_CPU.Progress = Math.Round(cpu_usage.NextValue(),2); });
                 cpb_RAM.Dispatcher.Invoke(delegate { cpb_RAM.Progress = Math.Round(((total_ram - ram_usage.NextValue()) * 100 / total_ram),2); });
                 cpb_DISK.Dispatcher.Invoke(delegate { cpb_DISK.Progress = Math.Round(disk_usage.NextValue(),2); });
                 Thread.Sleep(1000);
+                loop_counter++;
             }
         }
 
@@ -344,6 +356,15 @@ namespace Server
             {
                 resources_thread.Join();
             }
+        }
+
+        private void InformationBoard()
+        {
+            DateTime now = DateTime.Now;
+            TimeSpan worktime = now - server_start;
+            tbl_ResourcesMonitorInformation.Text = "Dzisiaj: " + now.Date.ToString("dd/MM/yyyy") + " Godzina: " + now.ToString("hh:mm tt") + 
+                " Czas pracy serwera: " + worktime.Hours + ":" + worktime.Minutes + ":" + worktime.Seconds;
+            this.BeginStoryboard((Storyboard)this.FindResource("ResourcesMonitorInformation"));
         }
     }
 }
