@@ -22,3 +22,6 @@ D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\o
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.genruntimeconfig.cache
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.csprojAssemblyReference.cache
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\bin\Debug\netcoreapp3.1\Ookii.Dialogs.Wpf.dll
+D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\bin\Debug\netcoreapp3.1\Syncfusion.Licensing.dll
+D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\bin\Debug\netcoreapp3.1\Syncfusion.SfProgressBar.WPF.dll
+D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\bin\Debug\netcoreapp3.1\Syncfusion.Shared.WPF.dll

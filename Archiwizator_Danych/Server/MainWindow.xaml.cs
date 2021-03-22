@@ -5,7 +5,9 @@ using System.Windows.Input;
 using System.IO;
 using System.Net;
 using Microsoft.Win32;
-using System.Windows.Controls.Primitives;
+using System.Diagnostics;
+using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace Server
 {
@@ -15,14 +17,23 @@ namespace Server
     public partial class MainWindow : Window
     {
         private ServerConfiguration config;
+        private static Thread resources_thread;
+        private long total_ram;
+
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
 
         public MainWindow()
         {
-            InitializeComponent();
+            GetPhysicallyInstalledSystemMemory(out total_ram);
+            total_ram = total_ram / 1024;
+            InitializeComponent();            
         }
 
         private void btn_CloseWindow_Click(object sender, RoutedEventArgs e) //zamknięcie okna aplikacji
         {
+            CleanServer();
             Application.Current.Shutdown();
         }
 
@@ -50,24 +61,29 @@ namespace Server
 
         private void btn_ConfigurationPanel_Click(object sender, RoutedEventArgs e)
         {
+            CleanServer();
             grd_Configuration.Visibility = Visibility.Visible;
         }
 
         private void btn_ControlPanel_Click(object sender, RoutedEventArgs e)
         {
-            grd_Configuration.Visibility = Visibility.Hidden;
+            CleanServer();
         }
         private void btn_ArchivePanel_Click(object sender, RoutedEventArgs e)
         {
-            grd_Configuration.Visibility = Visibility.Hidden;
+            CleanServer();
         }
         private void btn_HistoryPanel_Click(object sender, RoutedEventArgs e)
         {
-            grd_Configuration.Visibility = Visibility.Hidden;
+            CleanServer();
         }
-        private void btn_ProfilPanel_Click(object sender, RoutedEventArgs e)
+
+        private void btn_ResourcesMonitor_Click(object sender, RoutedEventArgs e)
         {
-            grd_Configuration.Visibility = Visibility.Hidden;
+            CleanServer();
+            grd_ResourcesMonitor.Visibility = Visibility.Visible;
+            resources_thread = new Thread(ResorcesMonitor);
+            resources_thread.Start();
         }
 
         private void btn_ConfigurationLoad_Click(object sender, RoutedEventArgs e)
@@ -300,6 +316,33 @@ namespace Server
                     MessageBox.Show("Nie podano miejsca zapisu dla przychodzących plików.", "Błąd.");
                     btn_ConfigurationCreateSave.Command.Execute(null);
                 }
+            }
+        }
+
+        private void ResorcesMonitor()
+        {
+            PerformanceCounter cpu_usage = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            PerformanceCounter ram_usage = new PerformanceCounter("Memory", "Available MBytes");
+            PerformanceCounter disk_usage = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
+            var firstCall = cpu_usage.NextValue();
+
+            while (grd_ResourcesMonitor.Visibility == Visibility.Visible)
+            {
+                cpb_CPU.Dispatcher.Invoke(delegate { cpb_CPU.Progress = Math.Round(cpu_usage.NextValue(),2); });
+                cpb_RAM.Dispatcher.Invoke(delegate { cpb_RAM.Progress = Math.Round(((total_ram - ram_usage.NextValue()) * 100 / total_ram),2); });
+                cpb_DISK.Dispatcher.Invoke(delegate { cpb_DISK.Progress = Math.Round(disk_usage.NextValue(),2); });
+                Thread.Sleep(1000);
+            }
+        }
+
+        private void CleanServer()
+        {
+            grd_ResourcesMonitor.Visibility = Visibility.Collapsed;
+            grd_Configuration.Visibility = Visibility.Collapsed;
+
+            if (resources_thread != null && resources_thread.IsAlive)
+            {
+                resources_thread.Join();
             }
         }
     }

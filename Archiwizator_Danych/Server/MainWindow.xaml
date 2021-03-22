@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Server"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:System="clr-namespace:System;assembly=System.Runtime" x:Class="Server.MainWindow"
+        xmlns:System="clr-namespace:System;assembly=System.Runtime" xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Syncfusion="clr-namespace:Syncfusion.UI.Xaml.ProgressBar;assembly=Syncfusion.SfProgressBar.WPF" x:Class="Server.MainWindow"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -47,7 +47,7 @@
     </Window.Triggers>
 
     <Grid Background="LightGray">
-        <Grid x:Name="grd_Configuration" Visibility="Visible" Margin="60,60,0,0">
+        <Grid x:Name="grd_Configuration" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Konfiguracja serwera" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
@@ -142,7 +142,7 @@
                                     <TextBox x:Name="txt_ConfigurationPort" materialDesign:HintAssist.Hint="Port komunikacji" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="20" SelectionBrush="#FF3D5AFE" Margin="0,60,0,0" CaretBrush="#FF3D5AFE" Cursor="IBeam" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE"/>
                                     <ComboBox x:Name="cmb_ConfigurationBuffer" materialDesign:HintAssist.Hint="Rozmiar buffora" Style="{DynamicResource MaterialDesignOutlinedComboBox}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,140,0,0" FontSize="20" Foreground="White" Background="#FF1A237E" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE" materialDesign:HintAssist.Background="#FF1A237E" IsReadOnly="True" >
                                         <ComboBox.ItemContainerStyle>
-                                            <Style TargetType="ComboBoxItem">
+                                            <Style TargetType="{x:Type ComboBoxItem}">
                                                 <!--<Setter Property="Background" Value="#FF1A237E"/>
                                                 <Setter Property="BorderBrush" Value="#FF1A237E"/>-->
                                                 <Setter Property="Foreground" Value="Black"/>
@@ -164,6 +164,21 @@
                 </materialDesign:Flipper>
                 <!--</GroupBox>-->
             </StackPanel>
+        </Grid>
+        <Grid x:Name="grd_ResourcesMonitor" Visibility="Visible" Margin="60,60,0,0">
+            <StackPanel>
+                <Grid Height="60" Background="#FF1A237E">
+                    <TextBlock Text="Konfiguracja serwera" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
+                </Grid>
+                <Grid Height="30" Margin="0,60,0,0">
+                    <TextBlock Text="Zużycie CPU" FontSize="18" VerticalAlignment="Center" Margin="100,0,0,0" Width="140" HorizontalAlignment="Left" TextAlignment="Center" Foreground="Black"/>
+                    <TextBlock Text="Wykorzystanie RAM" FontSize="18" VerticalAlignment="Center" Margin="430,0,0,0" Width="160" HorizontalAlignment="Left" TextAlignment="Center" Foreground="Black"/>
+                    <TextBlock Text="Aktywność DYSK" FontSize="18" VerticalAlignment="Center" Margin="780,0,0,0" Width="140" HorizontalAlignment="Left" TextAlignment="Center" Foreground="Black"/>
+                </Grid>
+            </StackPanel>
+            <syncfusion:SfCircularProgressBar x:Name="cpb_CPU" HorizontalAlignment="Left" Height="340" Margin="0,120,0,0" VerticalAlignment="Top" Width="340" SegmentCount="4" Focusable="False" IsEnabled="False" AnimationDuration="00:00:01" IsTabStop="False"/>
+            <syncfusion:SfCircularProgressBar x:Name="cpb_RAM" HorizontalAlignment="Left" Height="340" Margin="340,120,0,0" Progress="0" VerticalAlignment="Top" Width="340" SegmentCount="4" Focusable="False" IsEnabled="False"/>
+            <syncfusion:SfCircularProgressBar x:Name="cpb_DISK" HorizontalAlignment="Left" Height="340" Margin="680,120,0,0" Progress="0" VerticalAlignment="Top" Width="340" SegmentCount="4" Focusable="False" IsEnabled="False"/>
         </Grid>
         <Grid x:Name="grd_MenuToolbar" Height="60" VerticalAlignment="Top" Background="#FF3D5AFE" MouseDown="grd_MenuToolbar_MouseDown" >
             <StackPanel x:Name="stp_ApplicationName" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" >
@@ -232,10 +247,10 @@
                         </Button>
                     </ListViewItem>
                     <ListViewItem Height="60">
-                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ProfilPanel" Click="btn_ProfilPanel_Click" Cursor="Hand" materialDesign:RippleAssist.IsDisabled="True">
+                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ResourcesMonitor" Click="btn_ResourcesMonitor_Click" Cursor="Hand" materialDesign:RippleAssist.IsDisabled="True">
                             <StackPanel Orientation="Horizontal" Margin="-16">
-                                <materialDesign:PackIcon Kind="AccountBox" Width="25" Height="25" Margin="10"  VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
-                                <TextBlock Text="Profil użytkownika" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
+                                <materialDesign:PackIcon Kind="Memory" Width="25" Height="25" Margin="10"  VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
+                                <TextBlock Text="Monitor zasobów" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
                             </StackPanel>
                         </Button>
                     </ListViewItem>

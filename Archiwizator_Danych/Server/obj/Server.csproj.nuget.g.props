@@ -16,6 +16,8 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgSyncfusion_Shared_WPF Condition=" '$(PkgSyncfusion_Shared_WPF)' == '' ">C:\Users\kamil\.nuget\packages\syncfusion.shared.wpf\18.4.0.48</PkgSyncfusion_Shared_WPF>
+    <PkgSyncfusion_SfProgressBar_WPF Condition=" '$(PkgSyncfusion_SfProgressBar_WPF)' == '' ">C:\Users\kamil\.nuget\packages\syncfusion.sfprogressbar.wpf\18.4.0.48</PkgSyncfusion_SfProgressBar_WPF>
     <PkgMaterialDesignThemes Condition=" '$(PkgMaterialDesignThemes)' == '' ">C:\Users\kamil\.nuget\packages\materialdesignthemes\4.0.0</PkgMaterialDesignThemes>
   </PropertyGroup>
 </Project>

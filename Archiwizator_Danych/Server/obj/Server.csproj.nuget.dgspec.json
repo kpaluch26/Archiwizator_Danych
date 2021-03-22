@@ -47,6 +47,10 @@
             "Ookii.Dialogs.Wpf": {
               "target": "Package",
               "version": "[3.1.0, )"
+            },
+            "Syncfusion.SfProgressBar.WPF": {
+              "target": "Package",
+              "version": "[18.4.0.48, )"
             }
           },
           "imports": [

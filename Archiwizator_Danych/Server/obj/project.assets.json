@@ -37,6 +37,40 @@
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App"
         ]
+      },
+      "Syncfusion.Licensing/18.4.0.48": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/Syncfusion.Licensing.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Syncfusion.Licensing.dll": {}
+        }
+      },
+      "Syncfusion.SfProgressBar.WPF/18.4.0.48": {
+        "type": "package",
+        "dependencies": {
+          "Syncfusion.Licensing": "18.4.0.48",
+          "Syncfusion.Shared.WPF": "18.4.0.48"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Syncfusion.SfProgressBar.WPF.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Syncfusion.SfProgressBar.WPF.dll": {}
+        }
+      },
+      "Syncfusion.Shared.WPF/18.4.0.48": {
+        "type": "package",
+        "dependencies": {
+          "Syncfusion.Licensing": "18.4.0.48"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Syncfusion.Shared.WPF.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Syncfusion.Shared.WPF.dll": {}
+        }
       }
     }
   },
@@ -116,12 +150,143 @@
         "ookii.dialogs.wpf.3.1.0.nupkg.sha512",
         "ookii.dialogs.wpf.nuspec"
       ]
+    },
+    "Syncfusion.Licensing/18.4.0.48": {
+      "sha512": "oXAdH7utKg/e8/oOeymi88yeXyFf7PzY9ONir+hWgjAUWwKFRaco8SQXI/hCfyCq1fDPHyHQUSJE8S2oVBfutQ==",
+      "type": "package",
+      "path": "syncfusion.licensing/18.4.0.48",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/MonoAndroid10.0/Syncfusion.Licensing.dll",
+        "lib/MonoAndroid90/Syncfusion.Licensing.dll",
+        "lib/Xamarin.Mac/Syncfusion.Licensing.dll",
+        "lib/Xamarin.iOS10/Syncfusion.Licensing.dll",
+        "lib/net20/Syncfusion.Licensing.dll",
+        "lib/net35/Syncfusion.Licensing.dll",
+        "lib/net40/Syncfusion.Licensing.dll",
+        "lib/net45/Syncfusion.Licensing.dll",
+        "lib/net451/Syncfusion.Licensing.dll",
+        "lib/net46/Syncfusion.Licensing.dll",
+        "lib/netcoreapp3.1/Syncfusion.Licensing.dll",
+        "lib/netcoreapp5.0/Syncfusion.Licensing.dll",
+        "lib/netstandard1.0/Syncfusion.Licensing.dll",
+        "lib/netstandard1.2/Syncfusion.Licensing.dll",
+        "lib/netstandard1.4/Syncfusion.Licensing.dll",
+        "lib/netstandard2.0/Syncfusion.Licensing.dll",
+        "lib/portable-win+net45+wp80+win81+wpa81/Syncfusion.Licensing.dll",
+        "lib/uap10.0/Syncfusion.Licensing.dll",
+        "syncfusion.licensing.18.4.0.48.nupkg.sha512",
+        "syncfusion.licensing.nuspec"
+      ]
+    },
+    "Syncfusion.SfProgressBar.WPF/18.4.0.48": {
+      "sha512": "ztGhiKkbV8PlA1GHfLble2YSz1P6Xs/2lrfi7ESxHUNTZlbOSzz4FBf5WMnNMpGyYYVP+n6OErh5Fz1uEUk+Xw==",
+      "type": "package",
+      "path": "syncfusion.sfprogressbar.wpf/18.4.0.48",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/Design/Syncfusion.Design.Wpf.dll",
+        "lib/net40/Design/Syncfusion.SfProgressBar.WPF.DesignTools.dll",
+        "lib/net40/Design/Syncfusion.SfProgressBar.WPF.Expression.Design.dll",
+        "lib/net40/Design/Syncfusion.SfProgressBar.Wpf.VisualStudio.Design.dll",
+        "lib/net40/Design/Syncfusion.SfProgressBar.Wpf.dll.Design.dll",
+        "lib/net40/Syncfusion.SfProgressBar.WPF.dll",
+        "lib/net40/Syncfusion.SfProgressBar.WPF.xml",
+        "lib/net45/Design/Syncfusion.Design.Wpf.dll",
+        "lib/net45/Design/Syncfusion.SfProgressBar.WPF.DesignTools.dll",
+        "lib/net45/Design/Syncfusion.SfProgressBar.WPF.Expression.Design.dll",
+        "lib/net45/Design/Syncfusion.SfProgressBar.Wpf.VisualStudio.Design.dll",
+        "lib/net45/Design/Syncfusion.SfProgressBar.Wpf.dll.Design.dll",
+        "lib/net45/Syncfusion.SfProgressBar.WPF.dll",
+        "lib/net45/Syncfusion.SfProgressBar.WPF.xml",
+        "lib/net451/Design/Syncfusion.Design.Wpf.dll",
+        "lib/net451/Design/Syncfusion.SfProgressBar.WPF.DesignTools.dll",
+        "lib/net451/Design/Syncfusion.SfProgressBar.WPF.Expression.Design.dll",
+        "lib/net451/Design/Syncfusion.SfProgressBar.Wpf.VisualStudio.Design.dll",
+        "lib/net451/Design/Syncfusion.SfProgressBar.Wpf.dll.Design.dll",
+        "lib/net451/Syncfusion.SfProgressBar.WPF.dll",
+        "lib/net451/Syncfusion.SfProgressBar.WPF.xml",
+        "lib/net46/Design/Syncfusion.Design.Wpf.dll",
+        "lib/net46/Design/Syncfusion.SfProgressBar.WPF.DesignTools.dll",
+        "lib/net46/Design/Syncfusion.SfProgressBar.WPF.Expression.Design.dll",
+        "lib/net46/Design/Syncfusion.SfProgressBar.Wpf.VisualStudio.Design.dll",
+        "lib/net46/Design/Syncfusion.SfProgressBar.Wpf.dll.Design.dll",
+        "lib/net46/Syncfusion.SfProgressBar.WPF.dll",
+        "lib/net46/Syncfusion.SfProgressBar.WPF.xml",
+        "lib/netcoreapp3.1/Design/Syncfusion.SfProgressBar.WPF.DesignTools.dll",
+        "lib/netcoreapp3.1/Syncfusion.SfProgressBar.WPF.dll",
+        "lib/netcoreapp3.1/Syncfusion.SfProgressBar.WPF.xml",
+        "lib/netcoreapp5.0/Design/Syncfusion.SfProgressBar.WPF.DesignTools.dll",
+        "lib/netcoreapp5.0/Syncfusion.SfProgressBar.WPF.dll",
+        "lib/netcoreapp5.0/Syncfusion.SfProgressBar.WPF.xml",
+        "syncfusion.sfprogressbar.wpf.18.4.0.48.nupkg.sha512",
+        "syncfusion.sfprogressbar.wpf.nuspec",
+        "tools/VisualStudioToolsManifest.xml"
+      ]
+    },
+    "Syncfusion.Shared.WPF/18.4.0.48": {
+      "sha512": "++B0gRyg72pZ68spaFEA3x6x+feNldkP/3U+PHRNuAclHVnWatyYiTdO8VVGYge/3fvPUV/tbgEXbncy32UR0w==",
+      "type": "package",
+      "path": "syncfusion.shared.wpf/18.4.0.48",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net35/Design/Syncfusion.Design.Wpf.dll",
+        "lib/net35/Design/Syncfusion.Shared.WPF.DesignTools.dll",
+        "lib/net35/Design/Syncfusion.Shared.Wpf.Expression.Design.dll",
+        "lib/net35/Design/Syncfusion.Shared.Wpf.VisualStudio.Design.dll",
+        "lib/net35/Design/Syncfusion.Shared.Wpf.dll.Design.dll",
+        "lib/net35/Syncfusion.Shared.WPF.dll",
+        "lib/net35/Syncfusion.Shared.WPF.xml",
+        "lib/net40/Design/Syncfusion.Design.Wpf.dll",
+        "lib/net40/Design/Syncfusion.Shared.WPF.DesignTools.dll",
+        "lib/net40/Design/Syncfusion.Shared.Wpf.Expression.Design.dll",
+        "lib/net40/Design/Syncfusion.Shared.Wpf.VisualStudio.Design.dll",
+        "lib/net40/Design/Syncfusion.Shared.Wpf.dll.Design.dll",
+        "lib/net40/Syncfusion.Shared.WPF.dll",
+        "lib/net40/Syncfusion.Shared.WPF.xml",
+        "lib/net45/Design/Syncfusion.Design.Wpf.dll",
+        "lib/net45/Design/Syncfusion.Shared.WPF.DesignTools.dll",
+        "lib/net45/Design/Syncfusion.Shared.Wpf.Expression.Design.dll",
+        "lib/net45/Design/Syncfusion.Shared.Wpf.VisualStudio.Design.dll",
+        "lib/net45/Design/Syncfusion.Shared.Wpf.dll.Design.dll",
+        "lib/net45/Syncfusion.Shared.WPF.dll",
+        "lib/net45/Syncfusion.Shared.WPF.xml",
+        "lib/net451/Design/Syncfusion.Design.Wpf.dll",
+        "lib/net451/Design/Syncfusion.Shared.WPF.DesignTools.dll",
+        "lib/net451/Design/Syncfusion.Shared.Wpf.Expression.Design.dll",
+        "lib/net451/Design/Syncfusion.Shared.Wpf.VisualStudio.Design.dll",
+        "lib/net451/Design/Syncfusion.Shared.Wpf.dll.Design.dll",
+        "lib/net451/Syncfusion.Shared.WPF.dll",
+        "lib/net451/Syncfusion.Shared.WPF.xml",
+        "lib/net46/Design/Syncfusion.Design.Wpf.dll",
+        "lib/net46/Design/Syncfusion.Shared.WPF.DesignTools.dll",
+        "lib/net46/Design/Syncfusion.Shared.Wpf.Expression.Design.dll",
+        "lib/net46/Design/Syncfusion.Shared.Wpf.VisualStudio.Design.dll",
+        "lib/net46/Design/Syncfusion.Shared.Wpf.dll.Design.dll",
+        "lib/net46/Syncfusion.Shared.WPF.dll",
+        "lib/net46/Syncfusion.Shared.WPF.xml",
+        "lib/netcoreapp3.1/Design/Syncfusion.Shared.WPF.DesignTools.dll",
+        "lib/netcoreapp3.1/Syncfusion.Shared.WPF.dll",
+        "lib/netcoreapp3.1/Syncfusion.Shared.WPF.xml",
+        "lib/netcoreapp5.0/Design/Syncfusion.Shared.WPF.DesignTools.dll",
+        "lib/netcoreapp5.0/Syncfusion.Shared.WPF.dll",
+        "lib/netcoreapp5.0/Syncfusion.Shared.WPF.xml",
+        "syncfusion.shared.wpf.18.4.0.48.nupkg.sha512",
+        "syncfusion.shared.wpf.nuspec",
+        "tools/VisualStudioToolsManifest.xml"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "MaterialDesignThemes >= 4.0.0",
-      "Ookii.Dialogs.Wpf >= 3.1.0"
+      "Ookii.Dialogs.Wpf >= 3.1.0",
+      "Syncfusion.SfProgressBar.WPF >= 18.4.0.48"
     ]
   },
   "packageFolders": {
@@ -170,6 +335,10 @@
           "Ookii.Dialogs.Wpf": {
             "target": "Package",
             "version": "[3.1.0, )"
+          },
+          "Syncfusion.SfProgressBar.WPF": {
+            "target": "Package",
+            "version": "[18.4.0.48, )"
           }
         },
         "imports": [
