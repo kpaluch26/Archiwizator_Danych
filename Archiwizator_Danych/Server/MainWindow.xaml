@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Server"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:System="clr-namespace:System;assembly=System.Runtime" xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:Syncfusion="clr-namespace:Syncfusion.UI.Xaml.ProgressBar;assembly=Syncfusion.SfProgressBar.WPF" x:Class="Server.MainWindow"
+        xmlns:xrpb="http://XamlRadialProgressBar/DotNet" x:Class="Server.MainWindow"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -50,9 +49,6 @@
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="btn_MenuClose">
             <BeginStoryboard Storyboard="{StaticResource MenuClose}"/>
         </EventTrigger>
-        <!--<EventTrigger RoutedEvent="ButtonBase.Click" SourceName="btn_ResourcesMonitor">
-            <BeginStoryboard Storyboard="{StaticResource ResourcesMonitorInformation}"/>
-        </EventTrigger>-->
     </Window.Triggers>
 
     <Grid Background="LightGray">
@@ -61,7 +57,6 @@
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Konfiguracja serwera" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </Grid>
-                <!--<GroupBox Header="Konfiguracja serwera" materialDesign:ColorZoneAssist.Mode="Custom" materialDesign:ColorZoneAssist.Background="#FF1A237E" materialDesign:ColorZoneAssist.Foreground="White" materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="60,60,0,0" BorderThickness="0" Height="540" FontSize="16">-->
                 <materialDesign:Flipper Margin="45,60,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <materialDesign:Flipper.FrontContent >
                         <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
@@ -146,9 +141,8 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
-                                <!--<materialDesign:PackIcon x:Name="pic_ConfigurationCreate" Kind="Check" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>-->
                                 <Grid>
-                                    <TextBox x:Name="txt_ConfigurationPort" materialDesign:HintAssist.Hint="Port komunikacji" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="20" SelectionBrush="#FF3D5AFE" Margin="0,60,0,0" CaretBrush="#FF3D5AFE" Cursor="IBeam" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE"/>
+                                    <TextBox x:Name="txt_ConfigurationPort" materialDesign:HintAssist.Hint="Port komunikacji" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="20" SelectionBrush="#FF3D5AFE" Margin="0,60,0,0" CaretBrush="#FF3D5AFE" Cursor="IBeam" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE" SelectionTextBrush="#FF3D5AFE"/>
                                     <ComboBox x:Name="cmb_ConfigurationBuffer" materialDesign:HintAssist.Hint="Rozmiar buffora" Style="{DynamicResource MaterialDesignOutlinedComboBox}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,140,0,0" FontSize="20" Foreground="White" Background="#FF1A237E" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE" materialDesign:HintAssist.Background="#FF1A237E" IsReadOnly="True" >
                                         <ComboBox.ItemContainerStyle>
                                             <Style TargetType="{x:Type ComboBoxItem}">
@@ -162,7 +156,6 @@
                                         <ComboBoxItem Content="2048" />
                                         <ComboBoxItem Content="4096" />
                                     </ComboBox>
-                                    <!--<Button x:Name="btn_ConfigurationSavePath" Style="{StaticResource MaterialDesignRaisedAccentButton}" materialDesign:RippleAssist.IsDisabled="True" Content="Miejsce zapisu" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,220,0,0" Click="btn_ConfigurationSavePath_Click" />-->
                                 </Grid>
                             </materialDesign:ColorZone>
                             <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -171,7 +164,6 @@
                         </Grid>
                     </materialDesign:Flipper.BackContent>
                 </materialDesign:Flipper>
-                <!--</GroupBox>-->
             </StackPanel>
         </Grid>
         <Grid x:Name="grd_ResourcesMonitor" Visibility="Visible" Margin="60,60,0,0">
@@ -179,39 +171,25 @@
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Monitor zasobów" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </Grid>
-                <!--<Grid Height="30" Margin="0,60,0,0">
-                    <TextBlock Text="Zużycie CPU" FontSize="18" VerticalAlignment="Center" Margin="100,0,0,0" Width="140" HorizontalAlignment="Left" TextAlignment="Center" Foreground="Black"/>
-                    <TextBlock Text="Wykorzystanie RAM" FontSize="18" VerticalAlignment="Center" Margin="430,0,0,0" Width="160" HorizontalAlignment="Left" TextAlignment="Center" Foreground="Black"/>
-                    <TextBlock Text="Aktywność DYSK" FontSize="18" VerticalAlignment="Center" Margin="780,0,0,0" Width="140" HorizontalAlignment="Left" TextAlignment="Center" Foreground="Black"/>
-                </Grid>-->
-                <Grid Height="30" Margin="0">
-                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ResourcesMonitorInformation" HorizontalAlignment="Right"/>
+                <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ResourcesMonitorAllert}">
+                    <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ResourcesMonitorAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden" Text="UWAGA! Duże wykorzystanie podzespołów: " />
                 </Grid>
             </StackPanel>
-            <syncfusion:SfCircularProgressBar x:Name="cpb_CPU" HorizontalAlignment="Left" Height="400" Margin="-30,120,0,0" VerticalAlignment="Top" Width="400" SegmentCount="4" Focusable="False" IsEnabled="False" AnimationDuration="00:00:01" IsTabStop="False">
-                <Syncfusion:SfCircularProgressBar.ProgressContent>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Progress,StringFormat={}{000}%}"  TextAlignment="Center" DataContext ="{x:Reference cpb_CPU}" />
-                        <TextBlock Text="Zużycie CPU" FontSize="30" />
-                    </StackPanel>
-                </Syncfusion:SfCircularProgressBar.ProgressContent>
-            </syncfusion:SfCircularProgressBar>
-            <syncfusion:SfCircularProgressBar x:Name="cpb_RAM" HorizontalAlignment="Left" Height="400" Margin="310,120,0,0" Progress="0" VerticalAlignment="Top" Width="400" SegmentCount="4" Focusable="False" IsEnabled="False">
-                <Syncfusion:SfCircularProgressBar.ProgressContent>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Progress,StringFormat={}{000}%}"  TextAlignment="Center" DataContext ="{x:Reference cpb_RAM}" />
-                        <TextBlock Text="Zużycie RAM" FontSize="30" />
-                    </StackPanel>
-                </Syncfusion:SfCircularProgressBar.ProgressContent>
-            </syncfusion:SfCircularProgressBar>
-            <syncfusion:SfCircularProgressBar x:Name="cpb_DISK" HorizontalAlignment="Left" Height="400" Margin="650,120,0,0" Progress="0" VerticalAlignment="Top" Width="400" SegmentCount="4" Focusable="False" IsEnabled="False">
-                <Syncfusion:SfCircularProgressBar.ProgressContent>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Progress,StringFormat={}{000}%}"  TextAlignment="Center" DataContext ="{x:Reference cpb_DISK}" />
-                        <TextBlock Text="Aktywność DYSK" FontSize="30" />
-                    </StackPanel>
-                </Syncfusion:SfCircularProgressBar.ProgressContent>
-            </syncfusion:SfCircularProgressBar>
+            <xrpb:RadialProgressBar  Value="100" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="30,160,0,0" Width="300" Height="300" Foreground="#FFE1E5FF" BorderBrush="#FF1A237E"/>
+            <xrpb:RadialProgressBar x:Name="rpb_CPU" Value="{Binding Value1, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="30,160,0,0" Width="300" Height="300" Foreground="#FF3D5AFE" BorderBrush="#FF1A237E"/>
+            <TextBlock Text="{Binding Value, StringFormat={}{000}%}" DataContext="{x:Reference rpb_CPU}" TextAlignment="Center" Margin="80,250,740,230" Foreground="#FF3D5AFE" FontSize="60" Width="200"/>
+            <TextBlock Text="Zużycie CPU" FontSize="30" TextAlignment="Center" Margin="80,325,740,160" Width="200" Foreground="#FF3D5AFE"/>
+            
+            <xrpb:RadialProgressBar  Value="100" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="360,160,0,0" Width="300" Height="300" Foreground="#FFE1E5FF" BorderBrush="#FF1A237E"/>
+            <xrpb:RadialProgressBar x:Name="rpb_RAM" Value="{Binding Value1, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="360,160,0,0" Width="300" Height="300" Foreground="#FF3D5AFE" BorderBrush="#FF1A237E"/>
+            <TextBlock Text="{Binding Value, StringFormat={}{000}%}" DataContext="{x:Reference rpb_RAM}" TextAlignment="Center" Margin="410,250,410,230" Foreground="#FF3D5AFE" FontSize="60" Width="200"/>
+            <TextBlock Text="Zużycie RAM" FontSize="30" TextAlignment="Center" Margin="410,325,410,160" Width="200" Foreground="#FF3D5AFE"/>
+
+            <xrpb:RadialProgressBar  Value="100" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="690,160,0,0" Width="300" Height="300" Foreground="#FFE1E5FF" BorderBrush="#FF1A237E"/>
+            <xrpb:RadialProgressBar x:Name="rpb_DISK" Value="{Binding Value1, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="690,160,0,0" Width="300" Height="300" Foreground="#FF3D5AFE" BorderBrush="#FF1A237E"/>
+            <TextBlock Text="{Binding Value, StringFormat={}{000}%}" DataContext="{x:Reference rpb_DISK}" TextAlignment="Center" Margin="740,250,80,230" Foreground="#FF3D5AFE" FontSize="60" Width="200"/>
+            <TextBlock Text="Aktywność DISK" FontSize="30" TextAlignment="Center" Margin="730,325,70,160" Width="220" Foreground="#FF3D5AFE"/>
         </Grid>
         <Grid x:Name="grd_MenuToolbar" Height="60" VerticalAlignment="Top" Background="#FF3D5AFE" MouseDown="grd_MenuToolbar_MouseDown" >
             <StackPanel x:Name="stp_ApplicationName" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" >

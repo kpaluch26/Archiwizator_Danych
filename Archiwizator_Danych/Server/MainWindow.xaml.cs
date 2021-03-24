@@ -85,8 +85,7 @@ namespace Server
         {
             CleanServer();
             grd_ResourcesMonitor.Visibility = Visibility.Visible;
-            InformationBoard();
-            resources_thread = new Thread(ResorcesMonitor);
+            resources_thread = new Thread(ResourcesMonitor);
             resources_thread.Start();
         }
 
@@ -235,7 +234,7 @@ namespace Server
         }
 
         private void btn_ConfigurationSave_Click(object sender, RoutedEventArgs e)
-        {           
+        {
             SaveFileDialog sfg = new SaveFileDialog(); //utworzenie okna do przeglądania plików
             sfg.Filter = "txt files (*.txt)|*.txt|xml files (*.xml)|*.xml"; //ustawienie filtrów okna na pliki txt i xml
             sfg.FilterIndex = 1; //ustawienie domyślnego filtru na plik txt
@@ -274,7 +273,7 @@ namespace Server
         }
 
         private void btn_ConfigurationCreateSave_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog(); //utworzenie okna dialogowego do wybrania ścieżki zapisu otrzymanych plików
             fbd.Description = "Wybierz ścieżkę dostępu."; //tytuł utworzonego okna
             fbd.ShowNewFolderButton = true; //włączenie mozliwości tworzenia nowych folderów
@@ -295,8 +294,8 @@ namespace Server
                     flp_ConfigurationSave.IsEnabled = true;
                 }
                 catch
-                {                   
-                    if(config != null) 
+                {
+                    if (config != null)
                     {
                         MessageBox.Show("Wprowadzono błędne dane. Powrót do istniejącej konfiguracji.", "Błąd.");
                         txt_ConfigurationPort.Text = config.GetPort().ToString();
@@ -307,7 +306,7 @@ namespace Server
                         MessageBox.Show("Wprowadzono błędne dane.", "Błąd.");
                         btn_ConfigurationCreateSave.Command.Execute(null);
                     }
-                }                  
+                }
             }
             else
             {
@@ -323,27 +322,21 @@ namespace Server
             }
         }
 
-        private void ResorcesMonitor()
+        private void ResourcesMonitor()
         {
             PerformanceCounter cpu_usage = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             PerformanceCounter ram_usage = new PerformanceCounter("Memory", "Available MBytes");
             PerformanceCounter disk_usage = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
-            int loop_counter = 1;
             var firstCall = cpu_usage.NextValue();
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
 
             while (grd_ResourcesMonitor.Visibility == Visibility.Visible)
-            {
-                if (loop_counter == 20)
-                {
-                    Dispatcher.Invoke(delegate { InformationBoard(); });
-                    loop_counter = 0;
-                }
-                cpb_CPU.Dispatcher.Invoke(delegate { cpb_CPU.Progress = Math.Round(cpu_usage.NextValue(),2); });
-                cpb_RAM.Dispatcher.Invoke(delegate { cpb_RAM.Progress = Math.Round(((total_ram - ram_usage.NextValue()) * 100 / total_ram),2); });
-                cpb_DISK.Dispatcher.Invoke(delegate { cpb_DISK.Progress = Math.Round(disk_usage.NextValue(),2); });
+            {               
+                double cpu = Math.Round(cpu_usage.NextValue(), 2);
+                double ram = Math.Round(((total_ram - ram_usage.NextValue()) * 100 / total_ram), 2);
+                double disk = Math.Round(disk_usage.NextValue(), 2);
+                Dispatcher.Invoke(delegate { ResourcesMonitorUpdate(cpu, ram, disk); });
                 Thread.Sleep(1000);
-                loop_counter++;
             }
         }
 
@@ -358,13 +351,35 @@ namespace Server
             }
         }
 
-        private void InformationBoard()
+        private void ResourcesMonitorUpdate(double cpu, double ram, double disk)
         {
-            DateTime now = DateTime.Now;
-            TimeSpan worktime = now - server_start;
-            tbl_ResourcesMonitorInformation.Text = "Dzisiaj: " + now.Date.ToString("dd/MM/yyyy") + " Godzina: " + now.ToString("hh:mm tt") + 
-                " Czas pracy serwera: " + worktime.Hours + ":" + worktime.Minutes + ":" + worktime.Seconds;
-            this.BeginStoryboard((Storyboard)this.FindResource("ResourcesMonitorInformation"));
+            double safe_usage = 75;
+            tbl_ResourcesMonitorAllert.Text = "UWAGA! Duże wykorzystanie podzespołów: ";
+
+            if (cpu > safe_usage)
+            {
+                tbl_ResourcesMonitorAllert.Text += "CPU ";
+            }
+            if (ram > safe_usage)
+            {
+                tbl_ResourcesMonitorAllert.Text += "RAM ";
+            }
+            if (disk > safe_usage)
+            {
+                tbl_ResourcesMonitorAllert.Text += "DISK ";
+            }
+            if (cpu > safe_usage || ram > safe_usage || disk > safe_usage)
+            {                
+                tbl_ResourcesMonitorAllert.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                tbl_ResourcesMonitorAllert.Visibility = Visibility.Hidden;
+            }
+            
+            rpb_CPU.Value = cpu;
+            rpb_RAM.Value = ram;
+            rpb_DISK.Value = disk;
         }
     }
 }

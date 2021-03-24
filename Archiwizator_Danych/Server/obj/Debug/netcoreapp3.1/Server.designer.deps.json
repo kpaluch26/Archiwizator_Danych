@@ -63,6 +63,14 @@
             "fileVersion": "18.4310.0.48"
           }
         }
+      },
+      "XamlRadialProgressBar/1.0.3": {
+        "runtime": {
+          "lib/netcoreapp3.1/XamlRadialProgressBar.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -108,6 +116,13 @@
       "sha512": "sha512-++B0gRyg72pZ68spaFEA3x6x+feNldkP/3U+PHRNuAclHVnWatyYiTdO8VVGYge/3fvPUV/tbgEXbncy32UR0w==",
       "path": "syncfusion.shared.wpf/18.4.0.48",
       "hashPath": "syncfusion.shared.wpf.18.4.0.48.nupkg.sha512"
+    },
+    "XamlRadialProgressBar/1.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-loSQXgOKkSXfjWbDXTKCy6yv4ECPJRUcFh1Sbi3WseW0opSnXyJUXEPsRl/KevdFYEqKrZwZ4BSA0ANzSFhiSA==",
+      "path": "xamlradialprogressbar/1.0.3",
+      "hashPath": "xamlradialprogressbar.1.0.3.nupkg.sha512"
     }
   }
 }

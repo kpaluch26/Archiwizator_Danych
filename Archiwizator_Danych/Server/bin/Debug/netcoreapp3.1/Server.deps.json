@@ -10,7 +10,7 @@
         "dependencies": {
           "MaterialDesignThemes": "4.0.0",
           "Ookii.Dialogs.Wpf": "3.1.0",
-          "Syncfusion.SfProgressBar.WPF": "18.4.0.48"
+          "XamlRadialProgressBar": "1.0.3"
         },
         "runtime": {
           "Server.dll": {}
@@ -43,34 +43,11 @@
           }
         }
       },
-      "Syncfusion.Licensing/18.4.0.48": {
+      "XamlRadialProgressBar/1.0.3": {
         "runtime": {
-          "lib/netcoreapp3.1/Syncfusion.Licensing.dll": {
-            "assemblyVersion": "18.4.0.48",
-            "fileVersion": "18.4.0.48"
-          }
-        }
-      },
-      "Syncfusion.SfProgressBar.WPF/18.4.0.48": {
-        "dependencies": {
-          "Syncfusion.Licensing": "18.4.0.48",
-          "Syncfusion.Shared.WPF": "18.4.0.48"
-        },
-        "runtime": {
-          "lib/netcoreapp3.1/Syncfusion.SfProgressBar.WPF.dll": {
-            "assemblyVersion": "18.4310.0.48",
-            "fileVersion": "18.4310.0.48"
-          }
-        }
-      },
-      "Syncfusion.Shared.WPF/18.4.0.48": {
-        "dependencies": {
-          "Syncfusion.Licensing": "18.4.0.48"
-        },
-        "runtime": {
-          "lib/netcoreapp3.1/Syncfusion.Shared.WPF.dll": {
-            "assemblyVersion": "18.4310.0.48",
-            "fileVersion": "18.4310.0.48"
+          "lib/netcoreapp3.1/XamlRadialProgressBar.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       }
@@ -103,26 +80,12 @@
       "path": "ookii.dialogs.wpf/3.1.0",
       "hashPath": "ookii.dialogs.wpf.3.1.0.nupkg.sha512"
     },
-    "Syncfusion.Licensing/18.4.0.48": {
+    "XamlRadialProgressBar/1.0.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oXAdH7utKg/e8/oOeymi88yeXyFf7PzY9ONir+hWgjAUWwKFRaco8SQXI/hCfyCq1fDPHyHQUSJE8S2oVBfutQ==",
-      "path": "syncfusion.licensing/18.4.0.48",
-      "hashPath": "syncfusion.licensing.18.4.0.48.nupkg.sha512"
-    },
-    "Syncfusion.SfProgressBar.WPF/18.4.0.48": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-ztGhiKkbV8PlA1GHfLble2YSz1P6Xs/2lrfi7ESxHUNTZlbOSzz4FBf5WMnNMpGyYYVP+n6OErh5Fz1uEUk+Xw==",
-      "path": "syncfusion.sfprogressbar.wpf/18.4.0.48",
-      "hashPath": "syncfusion.sfprogressbar.wpf.18.4.0.48.nupkg.sha512"
-    },
-    "Syncfusion.Shared.WPF/18.4.0.48": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-++B0gRyg72pZ68spaFEA3x6x+feNldkP/3U+PHRNuAclHVnWatyYiTdO8VVGYge/3fvPUV/tbgEXbncy32UR0w==",
-      "path": "syncfusion.shared.wpf/18.4.0.48",
-      "hashPath": "syncfusion.shared.wpf.18.4.0.48.nupkg.sha512"
+      "sha512": "sha512-loSQXgOKkSXfjWbDXTKCy6yv4ECPJRUcFh1Sbi3WseW0opSnXyJUXEPsRl/KevdFYEqKrZwZ4BSA0ANzSFhiSA==",
+      "path": "xamlradialprogressbar/1.0.3",
+      "hashPath": "xamlradialprogressbar.1.0.3.nupkg.sha512"
     }
   }
 }

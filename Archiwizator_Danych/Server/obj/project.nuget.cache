@@ -1,15 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "ZM1FXKYuXK9arhCgwUD83UnBfU1CA1Q+VNY9yWVZXIH2UwvP8XTZBgIIs9PnaU7DChvcBZPC9MAYBFVdwYnpCQ==",
+  "dgSpecHash": "gd5khx1+j2ioz4qXaRzQ1q6YhojXBiQH6dy1iZAYxicHenddg4C49/5gir7d9r7n3iKuHlESxb6zh2WNH78gjw==",
   "success": true,
   "projectFilePath": "D:\\PROJEKTY\\Archiwizator_Danych\\Archiwizator_Danych\\Archiwizator_Danych\\Server\\Server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kamil\\.nuget\\packages\\materialdesigncolors\\2.0.0\\materialdesigncolors.2.0.0.nupkg.sha512",
     "C:\\Users\\kamil\\.nuget\\packages\\materialdesignthemes\\4.0.0\\materialdesignthemes.4.0.0.nupkg.sha512",
     "C:\\Users\\kamil\\.nuget\\packages\\ookii.dialogs.wpf\\3.1.0\\ookii.dialogs.wpf.3.1.0.nupkg.sha512",
-    "C:\\Users\\kamil\\.nuget\\packages\\syncfusion.licensing\\18.4.0.48\\syncfusion.licensing.18.4.0.48.nupkg.sha512",
-    "C:\\Users\\kamil\\.nuget\\packages\\syncfusion.sfprogressbar.wpf\\18.4.0.48\\syncfusion.sfprogressbar.wpf.18.4.0.48.nupkg.sha512",
-    "C:\\Users\\kamil\\.nuget\\packages\\syncfusion.shared.wpf\\18.4.0.48\\syncfusion.shared.wpf.18.4.0.48.nupkg.sha512"
+    "C:\\Users\\kamil\\.nuget\\packages\\xamlradialprogressbar\\1.0.3\\xamlradialprogressbar.1.0.3.nupkg.sha512"
   ],
   "logs": []
 }
