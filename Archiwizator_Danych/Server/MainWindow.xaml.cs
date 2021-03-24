@@ -20,7 +20,6 @@ namespace Server
         private ServerConfiguration config;
         private static Thread resources_thread;
         private long total_ram;
-        DateTime server_start;
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -31,7 +30,6 @@ namespace Server
             GetPhysicallyInstalledSystemMemory(out total_ram);
             total_ram = total_ram / 1024;
             InitializeComponent();
-            server_start = DateTime.Now;
         }
 
         private void btn_CloseWindow_Click(object sender, RoutedEventArgs e) //zamknięcie okna aplikacji
@@ -62,26 +60,28 @@ namespace Server
             this.DragMove();
         }
 
-        private void btn_ConfigurationPanel_Click(object sender, RoutedEventArgs e)
+        private void btn_ConfigurationPanel_Click(object sender, RoutedEventArgs e) //otwieranie panelu do konfiguracji
         {
             CleanServer();
             grd_Configuration.Visibility = Visibility.Visible;
+            tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
         }
 
-        private void btn_ControlPanel_Click(object sender, RoutedEventArgs e)
+        private void btn_ControlPanel_Click(object sender, RoutedEventArgs e) //otwieranie głównego panelu sterowania
         {
             CleanServer();
         }
-        private void btn_ArchivePanel_Click(object sender, RoutedEventArgs e)
+        private void btn_ArchivePanel_Click(object sender, RoutedEventArgs e) //otwieranie panelu do zarządzania zip
         {
             CleanServer();
+            grd_ArchivePanel.Visibility = Visibility.Visible;
         }
-        private void btn_HistoryPanel_Click(object sender, RoutedEventArgs e)
+        private void btn_HistoryPanel_Click(object sender, RoutedEventArgs e) //otwieranie historii pracy serwera i aktywności klientów
         {
             CleanServer();
         }
 
-        private void btn_ResourcesMonitor_Click(object sender, RoutedEventArgs e)
+        private void btn_ResourcesMonitor_Click(object sender, RoutedEventArgs e) //śledzenie wydajności zasobów komputera
         {
             CleanServer();
             grd_ResourcesMonitor.Visibility = Visibility.Visible;
@@ -89,7 +89,7 @@ namespace Server
             resources_thread.Start();
         }
 
-        private void btn_ConfigurationLoad_Click(object sender, RoutedEventArgs e)
+        private void btn_ConfigurationLoad_Click(object sender, RoutedEventArgs e) //funkcja do załadowania pliku konfiguracyjnego
         {
             StreamReader file; //zmienna do odczytu pliku
             string[] result = new string[2]; //tablica zmiennych do odczytu konfiguracji
@@ -146,13 +146,16 @@ namespace Server
                         }
                         else
                         {
-                            config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa    
+                            config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa   
                             pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
                             is_config_correct = true;
                         }
                     }
                     catch (FileLoadException)
                     {
+                        tbl_ConfigurationAllert.Text = "UWAGA! Wczytanie konfiguracji nie powiodło się. Plik konfiguracyjny jest uszkodzony.";
+                        tbl_ConfigurationAllert.FontSize = 18;
+                        tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                         pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close; //zmiana ikony na niepowodzenie operacji
                     }
                 }
@@ -211,19 +214,25 @@ namespace Server
                         }
                         else
                         {
-                            config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa 
+                            config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa                             
                             pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
                             is_config_correct = true;
                         }
                     }
                     catch (FileLoadException)
                     {
+                        tbl_ConfigurationAllert.Text = "UWAGA! Wczytanie konfiguracji nie powiodło się. Plik konfiguracyjny jest uszkodzony.";
+                        tbl_ConfigurationAllert.FontSize = 18;
+                        tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                         pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close; //zmiana ikony na niepowodzenie operacji
                     }
                 }
             }
             else
             {
+                tbl_ConfigurationAllert.Text = "UWAGA! Nie wybrano pliku z konfiguracją serwera.";
+                tbl_ConfigurationAllert.FontSize = 18;
+                tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                 pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close; //zmiana ikony na niepowodzenie operacji
             }
 
@@ -233,7 +242,7 @@ namespace Server
             }
         }
 
-        private void btn_ConfigurationSave_Click(object sender, RoutedEventArgs e)
+        private void btn_ConfigurationSave_Click(object sender, RoutedEventArgs e) //funkcja do zapisu konfiguracji do pliku
         {
             SaveFileDialog sfg = new SaveFileDialog(); //utworzenie okna do przeglądania plików
             sfg.Filter = "txt files (*.txt)|*.txt|xml files (*.xml)|*.xml"; //ustawienie filtrów okna na pliki txt i xml
@@ -259,20 +268,18 @@ namespace Server
                         Environment.NewLine + "</serwer>"); //stworzenie lub nadpisanie pliku 
                 }
                 pic_ConfigurationSave.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
+                tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
             }
             else
             {
-                Console.WriteLine("Nie zapisano pliku. Powrót do menu głównego."); //komunikat
+                tbl_ConfigurationAllert.Text = "UWAGA! Nie zapisano pliku, użytkownik nie wskazał miejsca zapisu.";
+                tbl_ConfigurationAllert.FontSize = 18;
+                tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                 pic_ConfigurationSave.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close; //zmiana ikony na niepowodzenie operacji
             }
         }
 
-        private void btn_ConfigurationCreate_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btn_ConfigurationCreateSave_Click(object sender, RoutedEventArgs e)
+        private void btn_ConfigurationCreateSave_Click(object sender, RoutedEventArgs e) //funkcja do ręcznego tworzenia konfiguracji
         {
             Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog(); //utworzenie okna dialogowego do wybrania ścieżki zapisu otrzymanych plików
             fbd.Description = "Wybierz ścieżkę dostępu."; //tytuł utworzonego okna
@@ -292,18 +299,23 @@ namespace Server
                     config = new ServerConfiguration(username, hostName, ip_address, fbd.SelectedPath, port, buffer);//utworzenie configa
                     btn_ConfigurationCreate.Content = "Edytuj konfigurację";
                     flp_ConfigurationSave.IsEnabled = true;
+                    tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
                 }
                 catch
                 {
                     if (config != null)
                     {
-                        MessageBox.Show("Wprowadzono błędne dane. Powrót do istniejącej konfiguracji.", "Błąd.");
+                        tbl_ConfigurationAllert.Text = "UWAGA! Nie wprowadzono wszystkich danych niezbędnych do utworzenia konfiguracji lub wprowadzone dane są niepoprawne, powrót do istniejącej konfiguracji.";
+                        tbl_ConfigurationAllert.FontSize = 12;
+                        tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                         txt_ConfigurationPort.Text = config.GetPort().ToString();
                         cmb_ConfigurationBuffer.Text = config.GetBufferSize().ToString();
                     }
                     else
                     {
-                        MessageBox.Show("Wprowadzono błędne dane.", "Błąd.");
+                        tbl_ConfigurationAllert.Text = "UWAGA! Nie wprowadzono wszystkich danych niezbędnych do utworzenia konfiguracji lub wprowadzone dane są niepoprawne.";
+                        tbl_ConfigurationAllert.FontSize = 16;
+                        tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                         btn_ConfigurationCreateSave.Command.Execute(null);
                     }
                 }
@@ -312,17 +324,21 @@ namespace Server
             {
                 if (config != null)
                 {
-                    MessageBox.Show("Nie podano miejsca zapisu dla przychodzących plików. Powrót do istniejącej konfiguracji. ", "Błąd.");
+                    tbl_ConfigurationAllert.Text = "UWAGA! Nie podano miejsca zapisu dla przychodzących plików. Powrót do istniejącej konfiguracji.";
+                    tbl_ConfigurationAllert.FontSize = 18;
+                    tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    MessageBox.Show("Nie podano miejsca zapisu dla przychodzących plików.", "Błąd.");
+                    tbl_ConfigurationAllert.Text = "UWAGA! Nie podano miejsca zapisu dla przychodzących plików.";
+                    tbl_ConfigurationAllert.FontSize = 18;
+                    tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                     btn_ConfigurationCreateSave.Command.Execute(null);
                 }
             }
         }
 
-        private void ResourcesMonitor()
+        private void ResourcesMonitor() //metoda do odczytu uźycia podzespołów
         {
             PerformanceCounter cpu_usage = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             PerformanceCounter ram_usage = new PerformanceCounter("Memory", "Available MBytes");
@@ -340,10 +356,11 @@ namespace Server
             }
         }
 
-        private void CleanServer()
+        private void CleanServer() //funkcja do czyszczenia pozostałości po wcześniej otwartym oknie
         {
             grd_ResourcesMonitor.Visibility = Visibility.Collapsed;
             grd_Configuration.Visibility = Visibility.Collapsed;
+            grd_ArchivePanel.Visibility = Visibility.Visible;
 
             if (resources_thread != null && resources_thread.IsAlive)
             {
@@ -351,7 +368,7 @@ namespace Server
             }
         }
 
-        private void ResourcesMonitorUpdate(double cpu, double ram, double disk)
+        private void ResourcesMonitorUpdate(double cpu, double ram, double disk) //funkcja do aktualizacji użycia podzespołów
         {
             double safe_usage = 75;
             tbl_ResourcesMonitorAllert.Text = "UWAGA! Duże wykorzystanie podzespołów: ";
@@ -380,6 +397,11 @@ namespace Server
             rpb_CPU.Value = cpu;
             rpb_RAM.Value = ram;
             rpb_DISK.Value = disk;
+        }
+
+        private void btn_ConfigurationReturn_Click(object sender, RoutedEventArgs e) //event do kasowania komunikatów
+        {
+            tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
         }
     }
 }

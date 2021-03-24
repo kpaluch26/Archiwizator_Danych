@@ -57,7 +57,11 @@
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Konfiguracja serwera" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </Grid>
-                <materialDesign:Flipper Margin="45,60,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ConfigurationAllert}">
+                    <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ConfigurationAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden"/>
+                </Grid>
+                <materialDesign:Flipper Margin="45,45,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <materialDesign:Flipper.FrontContent >
                         <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <Grid.RowDefinitions>
@@ -77,12 +81,12 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="280" />
                                 <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
+                            </Grid.RowDefinitions> 
                             <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
                                 <materialDesign:PackIcon x:Name="pic_ConfigurationLoad" Kind="Check" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
                             </materialDesign:ColorZone>
                             <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
+                                <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Click="btn_ConfigurationReturn_Click" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
                             </StackPanel>
                         </Grid>
                     </materialDesign:Flipper.BackContent>
@@ -113,7 +117,7 @@
                                 <materialDesign:PackIcon x:Name="pic_ConfigurationSave" Kind="Check" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
                             </materialDesign:ColorZone>
                             <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
+                                <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Click="btn_ConfigurationReturn_Click" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
                             </StackPanel>
                         </Grid>
                     </materialDesign:Flipper.BackContent>
@@ -130,7 +134,7 @@
                                 <materialDesign:PackIcon Kind="FilePlus" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
                             </materialDesign:ColorZone>
                             <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button x:Name="btn_ConfigurationCreate" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Stwórz konfigurację" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ConfigurationCreate_Click"/>
+                                <Button x:Name="btn_ConfigurationCreate" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Stwórz konfigurację" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
                             </StackPanel>
                         </Grid>
                     </materialDesign:Flipper.FrontContent>
@@ -166,7 +170,20 @@
                 </materialDesign:Flipper>
             </StackPanel>
         </Grid>
-        <Grid x:Name="grd_ResourcesMonitor" Visibility="Visible" Margin="60,60,0,0">
+
+        <Grid x:Name="grd_ArchivePanel" Visibility="Visible" Margin="60,60,0,0">
+            <StackPanel>
+                <Grid Height="60" Background="#FF1A237E">
+                    <TextBlock Text="Zarządzanie ZIP" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
+                </Grid>
+                <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ArchivePanelAllert}">
+                    <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ArchivePanelAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden" />
+                </Grid>
+            </StackPanel>
+        </Grid>
+        
+        <Grid x:Name="grd_ResourcesMonitor" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Monitor zasobów" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
