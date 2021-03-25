@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:xrpb="http://XamlRadialProgressBar/DotNet" x:Class="Server.MainWindow"
+        xmlns:xrpb="http://XamlRadialProgressBar/DotNet" xmlns:local="clr-namespace:Server" x:Class="Server.MainWindow"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -81,7 +81,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="280" />
                                 <RowDefinition Height="*" />
-                            </Grid.RowDefinitions> 
+                            </Grid.RowDefinitions>
                             <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
                                 <materialDesign:PackIcon x:Name="pic_ConfigurationLoad" Kind="Check" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
                             </materialDesign:ColorZone>
@@ -181,8 +181,35 @@
                     <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ArchivePanelAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden" />
                 </Grid>
             </StackPanel>
+
+            <DataGrid Margin="0,90,0,0" x:Name="lsv_ArchivePanelFiles" DragEnter="lsv_ArchivePanelFiles_DragEnter" Drop="lsv_ArchivePanelFiles_Drop" AllowDrop="True" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="450" Width="760" VerticalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" ClipboardCopyMode="None" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFF0EAEA" RowDetailsVisibilityMode="Collapsed" Background="{x:Null}" BorderBrush="#FFF0EAEA" BorderThickness="1" >
+                <DataGrid.Resources>
+                    <local:FormatSizeConverter x:Key="FormatSizeConverter"/>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="50" CanUserResize="False" CanUserReorder="False" CanUserSort="False">
+                        <DataGridTemplateColumn.Header>
+                            <CheckBox x:Name="cbx_ArchivePanelSelectAllFiles" Click="cbx_ArchivePanelSelectAllFiles_Click" Background="#FF1A237E" Foreground="#FF3D5AFE" BorderBrush="#FF1A237E"/>
+                        </DataGridTemplateColumn.Header>
+                    </DataGridTemplateColumn>
+                    <DataGridCheckBoxColumn Header="Wybór" Binding="{Binding is_checked, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" IsReadOnly="False" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" CanUserSort="True" >
+                        <DataGridCheckBoxColumn.CellStyle>
+                            <Style >
+                                <EventSetter Event="CheckBox.Click" Handler="cbx_ArchviePanelFileSelectedChangeValue"/>
+                            </Style>
+                        </DataGridCheckBoxColumn.CellStyle>
+                    </DataGridCheckBoxColumn>
+                    <DataGridTextColumn Header="Nazwa pliku" Binding="{Binding filename}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}"/>
+                    <DataGridTextColumn Header="Rozszerzenie" Binding="{Binding filetype}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}"/>
+                    <DataGridTextColumn Header="Rozmiar" Binding="{Binding filesize, Converter={StaticResource FormatSizeConverter}}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}"/>
+                    <DataGridTextColumn Header="Lokalizacja" Binding="{Binding filepath}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}"/>
+                </DataGrid.Columns>
+                <DataGrid.DataContext>
+                    <local:FileInformation/>
+                </DataGrid.DataContext>
+            </DataGrid>
         </Grid>
-        
+
         <Grid x:Name="grd_ResourcesMonitor" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
@@ -195,17 +222,17 @@
             </StackPanel>
             <xrpb:RadialProgressBar  Value="100" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="30,160,0,0" Width="300" Height="300" Foreground="#FFE1E5FF" BorderBrush="#FF1A237E"/>
             <xrpb:RadialProgressBar x:Name="rpb_CPU" Value="{Binding Value1, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="30,160,0,0" Width="300" Height="300" Foreground="#FF3D5AFE" BorderBrush="#FF1A237E"/>
-            <TextBlock Text="{Binding Value, StringFormat={}{000}%}" DataContext="{x:Reference rpb_CPU}" TextAlignment="Center" Margin="80,250,740,230" Foreground="#FF3D5AFE" FontSize="60" Width="200"/>
-            <TextBlock Text="Zużycie CPU" FontSize="30" TextAlignment="Center" Margin="80,325,740,160" Width="200" Foreground="#FF3D5AFE"/>
-            
+            <TextBlock Text="{Binding Value, StringFormat=\{000\}%}" DataContext="{x:Reference rpb_CPU}" TextAlignment="Center" Margin="80,250,740,230" Foreground="#FF3D5AFE" FontSize="60" Width="200"/>
+            <TextBlock Text="Użycie CPU" FontSize="30" TextAlignment="Center" Margin="80,325,740,160" Width="200" Foreground="#FF3D5AFE"/>
+
             <xrpb:RadialProgressBar  Value="100" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="360,160,0,0" Width="300" Height="300" Foreground="#FFE1E5FF" BorderBrush="#FF1A237E"/>
             <xrpb:RadialProgressBar x:Name="rpb_RAM" Value="{Binding Value1, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="360,160,0,0" Width="300" Height="300" Foreground="#FF3D5AFE" BorderBrush="#FF1A237E"/>
-            <TextBlock Text="{Binding Value, StringFormat={}{000}%}" DataContext="{x:Reference rpb_RAM}" TextAlignment="Center" Margin="410,250,410,230" Foreground="#FF3D5AFE" FontSize="60" Width="200"/>
-            <TextBlock Text="Zużycie RAM" FontSize="30" TextAlignment="Center" Margin="410,325,410,160" Width="200" Foreground="#FF3D5AFE"/>
+            <TextBlock Text="{Binding Value, StringFormat=\{000\}%}" DataContext="{x:Reference rpb_RAM}" TextAlignment="Center" Margin="410,250,410,230" Foreground="#FF3D5AFE" FontSize="60" Width="200"/>
+            <TextBlock Text="Użycie RAM" FontSize="30" TextAlignment="Center" Margin="410,325,410,160" Width="200" Foreground="#FF3D5AFE"/>
 
             <xrpb:RadialProgressBar  Value="100" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="690,160,0,0" Width="300" Height="300" Foreground="#FFE1E5FF" BorderBrush="#FF1A237E"/>
             <xrpb:RadialProgressBar x:Name="rpb_DISK" Value="{Binding Value1, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="690,160,0,0" Width="300" Height="300" Foreground="#FF3D5AFE" BorderBrush="#FF1A237E"/>
-            <TextBlock Text="{Binding Value, StringFormat={}{000}%}" DataContext="{x:Reference rpb_DISK}" TextAlignment="Center" Margin="740,250,80,230" Foreground="#FF3D5AFE" FontSize="60" Width="200"/>
+            <TextBlock Text="{Binding Value, StringFormat=\{000\}%}" DataContext="{x:Reference rpb_DISK}" TextAlignment="Center" Margin="740,250,80,230" Foreground="#FF3D5AFE" FontSize="60" Width="200"/>
             <TextBlock Text="Aktywność DISK" FontSize="30" TextAlignment="Center" Margin="730,325,70,160" Width="220" Foreground="#FF3D5AFE"/>
         </Grid>
         <Grid x:Name="grd_MenuToolbar" Height="60" VerticalAlignment="Top" Background="#FF3D5AFE" MouseDown="grd_MenuToolbar_MouseDown" >

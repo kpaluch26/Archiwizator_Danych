@@ -9,6 +9,10 @@ using System.Diagnostics;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Animation;
+using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Collections.ObjectModel;
 
 namespace Server
 {
@@ -20,6 +24,8 @@ namespace Server
         private ServerConfiguration config;
         private static Thread resources_thread;
         private long total_ram;
+        ObservableCollection<FileInformation> files_list = new ObservableCollection<FileInformation>();
+
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -30,6 +36,8 @@ namespace Server
             GetPhysicallyInstalledSystemMemory(out total_ram);
             total_ram = total_ram / 1024;
             InitializeComponent();
+            files_list.Clear();            
+            lsv_ArchivePanelFiles.ItemsSource = files_list;            
         }
 
         private void btn_CloseWindow_Click(object sender, RoutedEventArgs e) //zamknięcie okna aplikacji
@@ -347,7 +355,7 @@ namespace Server
             Thread.Sleep(100);
 
             while (grd_ResourcesMonitor.Visibility == Visibility.Visible)
-            {               
+            {
                 double cpu = Math.Round(cpu_usage.NextValue(), 2);
                 double ram = Math.Round(((total_ram - ram_usage.NextValue()) * 100 / total_ram), 2);
                 double disk = Math.Round(disk_usage.NextValue(), 2);
@@ -386,14 +394,14 @@ namespace Server
                 tbl_ResourcesMonitorAllert.Text += "DISK ";
             }
             if (cpu > safe_usage || ram > safe_usage || disk > safe_usage)
-            {                
+            {
                 tbl_ResourcesMonitorAllert.Visibility = Visibility.Visible;
             }
             else
             {
                 tbl_ResourcesMonitorAllert.Visibility = Visibility.Hidden;
             }
-            
+
             rpb_CPU.Value = cpu;
             rpb_RAM.Value = ram;
             rpb_DISK.Value = disk;
@@ -403,5 +411,107 @@ namespace Server
         {
             tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
         }
-    }
+
+        private void lsv_ArchivePanelFiles_DragEnter(object sender, DragEventArgs e) //event do sprawdzania czy przyciągany jest plik
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.Copy;
+            }    
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+        }
+
+        private void lsv_ArchivePanelFiles_Drop(object sender, DragEventArgs e) //event do dodawania lików do listy
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files != null && files.Length >= 1)
+            {
+                List<string> _files_list = new List<string>(files);
+
+                foreach (string _file in _files_list)
+                {
+                    FileInfo fi = new FileInfo(_file);
+                    if (fi.Exists)
+                    {
+                        string _filename = Path.GetFileNameWithoutExtension(fi.Name);
+                        string _filepath = fi.DirectoryName;
+                        string _filetype = fi.Extension;
+                        long _filesize = fi.Length;
+                        FileInformation file = new FileInformation()
+                        {
+                            filename = _filename,
+                            filepath = _filepath,
+                            filetype = _filetype,
+                            filesize = _filesize,
+                            is_checked = false
+                        };
+                        files_list.Add(file);
+                    }
+                }
+                _files_list.Clear();
+            }
+        }
+
+        private string FileSizeCalculate(Int64 _filesize) // funkcja do obliczania rozmiaru pliku
+        {             
+            string[] suffixes = { " B", " KB", " MB", " GB" };
+
+            int counter = 0;
+            decimal number = (decimal)_filesize;
+            while (Math.Round(number / 1024) >= 1)
+            {
+                number = number / 1024;
+                counter++;
+            }
+            return string.Format("{0:n1}{1}", number, suffixes[counter]);
+        }
+
+        private void cbx_ArchivePanelSelectAllFiles_Click(object sender, RoutedEventArgs e)
+        {            
+            if (cbx_ArchivePanelSelectAllFiles.IsChecked == true)
+            {
+                for (int i = 0; i < files_list.Count; i++)
+                {
+                    files_list[i].is_checked = true;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < files_list.Count; i++)
+                {
+                    files_list[i].is_checked = false;
+                }
+            }
+
+            lsv_ArchivePanelFiles.Items.Refresh();
+        }
+
+        private void cbx_ArchviePanelFileSelectedChangeValue(object sender, RoutedEventArgs e)
+        {
+            if (cbx_ArchivePanelSelectAllFiles.IsChecked == true)
+            {
+                cbx_ArchivePanelSelectAllFiles.IsChecked = false;
+            }
+            else
+            {
+                int selected_counter = 0;
+                for (int i = 0; i < files_list.Count; i++)
+                {
+                    if (files_list[i].is_checked == true)
+                    {
+                        selected_counter++;
+                    } 
+                }
+
+                if (selected_counter == files_list.Count)
+                {
+                    cbx_ArchivePanelSelectAllFiles.IsChecked = true;
+                }
+            }
+        }
+
+    }    
 }
