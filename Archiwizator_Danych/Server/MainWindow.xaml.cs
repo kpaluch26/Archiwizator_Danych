@@ -456,21 +456,7 @@ namespace Server
             }
         }
 
-        private string FileSizeCalculate(Int64 _filesize) // funkcja do obliczania rozmiaru pliku
-        {             
-            string[] suffixes = { " B", " KB", " MB", " GB" };
-
-            int counter = 0;
-            decimal number = (decimal)_filesize;
-            while (Math.Round(number / 1024) >= 1)
-            {
-                number = number / 1024;
-                counter++;
-            }
-            return string.Format("{0:n1}{1}", number, suffixes[counter]);
-        }
-
-        private void cbx_ArchivePanelSelectAllFiles_Click(object sender, RoutedEventArgs e)
+        private void cbx_ArchivePanelSelectAllFiles_Click(object sender, RoutedEventArgs e) //event checkboxa do zaznaczania/odznaczania wszystkich plików na liście
         {            
             if (cbx_ArchivePanelSelectAllFiles.IsChecked == true)
             {
@@ -490,7 +476,7 @@ namespace Server
             dgr_ArchivePanelFiles.Items.Refresh();
         }
 
-        private void cbx_ArchviePanelFileSelectedChangeValue(object sender, RoutedEventArgs e)
+        private void cbx_ArchviePanelFileSelectedChangeValue(object sender, RoutedEventArgs e) //event do od/zaznaczania pojedynczego pliku z listy 
         {
             if (cbx_ArchivePanelSelectAllFiles.IsChecked == true)
             {
@@ -519,13 +505,27 @@ namespace Server
 
         }
 
-        private void btn_ArchivePanelDataGridClear_Click(object sender, RoutedEventArgs e)
+        private void btn_ArchivePanelDataGridClear_Click(object sender, RoutedEventArgs e) //event do czyszczenia plikow
         {
-            files_list.Clear();
-            btn_ArchivePanelDataGridClear.IsEnabled = false;
+            if (cbx_ArchivePanelSelectAllFiles.IsChecked == true)
+            {
+                files_list.Clear();
+                btn_ArchivePanelDataGridClear.IsEnabled = false;
+                cbx_ArchivePanelSelectAllFiles.IsChecked = false;
+            }
+            else
+            {
+                for (int i = 0; i < files_list.Count; i++)
+                {
+                    if (files_list[i].is_checked == true)
+                    {
+                        files_list.Remove(files_list[i]);                        
+                    }
+                }              
+            }
         }
 
-        private void btn_ArchivePanelDataGridFileAdd_Click(object sender, RoutedEventArgs e)
+        private void btn_ArchivePanelDataGridFileAdd_Click(object sender, RoutedEventArgs e) //event do dodawania plików do listy
         {
             OpenFileDialog ofd = new OpenFileDialog(); //utworzenie okna do przeglądania plików
             ofd.Filter = "all files (*.*)|*.*"; //ustawienie filtrów okna na dowolne pliki
@@ -557,6 +557,44 @@ namespace Server
                 {
                     btn_ArchivePanelDataGridClear.IsEnabled = true;
                 }
+            }
+        }
+
+        private void pic_ArchivePanelPasswordBox_MouseDown(object sender, MouseButtonEventArgs e) //event do pokazywania hasła
+        {
+            tbx_ArchivePanelPasswordUnmasked.Text = pbx_ArchivePanelPasswordBox.Password;
+            pbx_ArchivePanelPasswordBox.Visibility = Visibility.Collapsed;
+            tbx_ArchivePanelPasswordUnmasked.Visibility = Visibility.Visible;
+        }
+
+        private void pic_ArchivePanelPasswordBox_MouseUp(object sender, MouseButtonEventArgs e) //event do ukrywania hasła
+        {
+            tbx_ArchivePanelPasswordUnmasked.Visibility = Visibility.Collapsed;
+            pbx_ArchivePanelPasswordBox.Visibility = Visibility.Visible;           
+            tbx_ArchivePanelPasswordUnmasked.Text = "";
+        }
+
+        private void pic_ArchivePanelPasswordBox_MouseLeave(object sender, MouseEventArgs e) //event do ukrywania hasła
+        {
+            tbx_ArchivePanelPasswordUnmasked.Visibility = Visibility.Collapsed;
+            pbx_ArchivePanelPasswordBox.Visibility = Visibility.Visible;
+            tbx_ArchivePanelPasswordUnmasked.Text = "";
+        }
+
+        private void btn_ArchivePanelCreateOptions_Click(object sender, RoutedEventArgs e) //event do animacji karty z opcjami dla archiwum zip
+        {
+            Storyboard s;
+            if (btn_ArchivePanelCreateZIP.IsEnabled==false)
+            {
+                s = (Storyboard)this.FindResource("ArchivePanelOptionsShow");
+                s.Begin();
+                btn_ArchivePanelCreateZIP.IsEnabled = true;
+            }
+            else
+            {
+                s = (Storyboard)this.FindResource("ArchivePanelOptionsHide");
+                s.Begin();
+                btn_ArchivePanelCreateZIP.IsEnabled = false;
             }
         }
     }    

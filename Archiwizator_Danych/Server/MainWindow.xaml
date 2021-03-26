@@ -24,7 +24,7 @@
                 <SplineThicknessKeyFrame KeyTime="0:0:0.5" Value="225,0,0,0" />
             </ThicknessAnimationUsingKeyFrames>-->
         </Storyboard>
-        <Storyboard x:Key="MenuClose">
+        <Storyboard x:Key="MenuClose" >
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grd_Menu">
                 <EasingDoubleKeyFrame KeyTime="0" Value="220"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="60"/>
@@ -34,10 +34,24 @@
                 <SplineThicknessKeyFrame KeyTime="0:0:0.5" Value="65,0,0,0" />
             </ThicknessAnimationUsingKeyFrames>-->
         </Storyboard>
-        <Storyboard x:Key="ResourcesMonitorInformation">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="tbl_ResourcesMonitorInformation">
-                <SplineThicknessKeyFrame KeyTime="0" Value="0,0,-540,0"/>
-                <SplineThicknessKeyFrame KeyTime="0:0:0:20" Value="0,0,1020,0"/>
+        <Storyboard x:Key="ArchivePanelOptionsShow">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Storyboard.TargetName="grd_ArchivePanelCreateOptions">
+                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="460,126,10,120"/>
+                <SplineThicknessKeyFrame KeyTime="00:00:01" Value="970,126,10,120"/>
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Storyboard.TargetName="flp_ArchivePanelOptionsCard">
+                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,134,310,0"/>
+                <SplineThicknessKeyFrame KeyTime="00:00:01" Value="0,134,51,0"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="ArchivePanelOptionsHide">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Storyboard.TargetName="grd_ArchivePanelCreateOptions">
+                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="970,126,10,120"/>
+                <SplineThicknessKeyFrame KeyTime="00:00:01" Value="460,126,10,120"/>
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Storyboard.TargetName="flp_ArchivePanelOptionsCard">
+                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,134,51,0"/>
+                <SplineThicknessKeyFrame KeyTime="00:00:01" Value="0,134,310,0"/>
             </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
@@ -182,7 +196,60 @@
                 </Grid>
             </StackPanel>
 
-            <DataGrid Margin="10,90,0,0" x:Name="dgr_ArchivePanelFiles" DragEnter="dgr_ArchivePanelFiles_DragEnter" Drop="dgr_ArchivePanelFiles_Drop" AllowDrop="True" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="395" Width="705" VerticalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" ClipboardCopyMode="None" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFF0EAEA" RowDetailsVisibilityMode="Collapsed" Background="{x:Null}" BorderBrush="#FFF0EAEA" BorderThickness="1" CanUserResizeColumns="False">
+            <Grid>
+                <Grid x:Name="grd_ArchivePanelCreateOptions" Width="40" Margin="460,126,10,120">
+                    <Button x:Name="btn_ArchivePanelCreateOptions" Style="{StaticResource MaterialDesignRaisedAccentButton}" Height="288" materialDesign:ButtonAssist.CornerRadius="0 25 25 0" ToolTip="Wbierz pliki, które zostaną dodane do listy." Cursor="Hand" Background="#FF3D5AFE" Foreground="White" BorderBrush="#FF3D5AFE" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ArchivePanelCreateOptions_Click" Command="{Binding}">
+                        <TextBlock Text="Opcje tworzenia" Margin="-10,0,-10,0" FontSize="20">
+                            <TextBlock.LayoutTransform>
+                                <RotateTransform Angle="90"/>
+                            </TextBlock.LayoutTransform>
+                        </TextBlock>
+                    </Button>
+                </Grid>
+
+                <materialDesign:Flipper x:Name="flp_ArchivePanelOptionsCard" Visibility="Visible" Margin="0,134,310,0" Width="250" Height="346" VerticalAlignment="Top" HorizontalAlignment="Right" materialDesign:ShadowAssist.ShadowDepth="Depth3" IsEnabled="True">
+                    <materialDesign:Flipper.FrontContent >
+                        <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="280" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
+                                <Grid>
+                                    <TextBox materialDesign:HintAssist.Hint="Nazwa archiwum" Width="210" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="20" SelectionBrush="#FF3D5AFE" Margin="20,20,0,0" CaretBrush="#FF3D5AFE" Cursor="IBeam" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE" SelectionTextBrush="#FF3D5AFE"/>
+                                    <materialDesign:PackIcon Kind="RenameBox" Margin="5,40,0,0" Width="25" Height="25" Foreground="White"/>
+                                    <PasswordBox x:Name="pbx_ArchivePanelPasswordBox" materialDesign:HintAssist.Hint="Hasło (opconalne)" Width="210" Margin="20,80,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="20" materialDesign:HintAssist.Foreground="#FF3D5AFE" SelectionTextBrush="#FF3D5AFE" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" SelectionBrush="#FF3D5AFE" CaretBrush="#FF3D5AFE" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" Cursor="IBeam" materialDesign:TextFieldAssist.HasClearButton="True" MaxLength="16"/>
+                                    <TextBox x:Name="tbx_ArchivePanelPasswordUnmasked" materialDesign:HintAssist.Hint="Hasło (opconalne)" Visibility="Collapsed" Width="210" Margin="20,80,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="20" SelectionTextBrush="#FF3D5AFE" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" SelectionBrush="#FF3D5AFE" CaretBrush="#FF3D5AFE" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" materialDesign:TextFieldAssist.HasClearButton="True"/>
+                                    <materialDesign:PackIcon x:Name="pic_ArchivePanelPasswordBox" Kind="Key" Margin="5,100,0,0" Width="25" Height="25" Foreground="White" MouseDown="pic_ArchivePanelPasswordBox_MouseDown" MouseUp="pic_ArchivePanelPasswordBox_MouseUp" MouseLeave="pic_ArchivePanelPasswordBox_MouseLeave"/>
+                                    <CheckBox x:Name="cbx_ArchivePanelSetToSend" Background="#FF3D5AFE" Foreground="#FF1A237E" BorderBrush="#FF3D5AFE" Margin="10,160,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignAccentCheckBox}" Width="30" Height="30" IsChecked="True"/>
+                                    <TextBox Width="210" Margin="20,160,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="20" Style="{StaticResource MaterialDesignTextBox}" Text="Ustaw do wysłania." CaretBrush="{x:Null}" IsEnabled="False"/>
+                                    <CheckBox x:Name="cbx_ArchivePanelSavePathFromFile" Background="#FF3D5AFE" Foreground="#FF1A237E" BorderBrush="#FF3D5AFE" Margin="10,220,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignAccentCheckBox}" Width="30" Height="30" IsChecked="True"/>
+                                    <TextBox Width="210" Margin="20,220,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="18" Style="{StaticResource MaterialDesignTextBox}" Text="Domyślne miejsce zapisu." CaretBrush="{x:Null}" IsEnabled="False"/>
+                                </Grid>
+                            </materialDesign:ColorZone>
+                            <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Button x:Name="btn_ArchivePanelCreateZIP" IsEnabled="False" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Stwórz archiwum" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ArchivePanelCreateZIP_Click" Opacity="1"/>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:Flipper.FrontContent>
+                    <materialDesign:Flipper.BackContent>
+                        <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="380" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
+                                <materialDesign:PackIcon x:Name="pic_ArchivePanelCreateZIP" Kind="Check" Height="320" Width="320" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
+                            </materialDesign:ColorZone>
+                            <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Click="btn_ConfigurationReturn_Click" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:Flipper.BackContent>
+                </materialDesign:Flipper>
+            </Grid>
+
+            <DataGrid Margin="10,90,0,0" x:Name="dgr_ArchivePanelFiles" DragEnter="dgr_ArchivePanelFiles_DragEnter" Drop="dgr_ArchivePanelFiles_Drop" AllowDrop="True" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="395" Width="705" VerticalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" ClipboardCopyMode="None" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFF0EAEA" RowDetailsVisibilityMode="Collapsed" Background="LightGray" BorderBrush="#FFF0EAEA" BorderThickness="1" CanUserResizeColumns="False">
                 <DataGrid.Resources>
                     <local:FormatSizeConverter x:Key="FormatSizeConverter"/>
                 </DataGrid.Resources>
@@ -258,7 +325,7 @@
             </DataGrid>
 
             <Grid Width="150" Margin="565,481,305,10">
-                <Button x:Name="btn_ArchivePanelDataGridClear" Style="{StaticResource MaterialDesignRaisedAccentButton}" Click="btn_ArchivePanelDataGridClear_Click" Height="40" materialDesign:ButtonAssist.CornerRadius="0 0 25 25" ToolTip="Wyczyść listę plików." Cursor="Hand" Background="#FF3D5AFE" Foreground="White" BorderBrush="#FF3D5AFE" materialDesign:RippleAssist.IsDisabled="True" IsEnabled="false">
+                <Button x:Name="btn_ArchivePanelDataGridClear" Style="{StaticResource MaterialDesignRaisedAccentButton}" Click="btn_ArchivePanelDataGridClear_Click" Height="40" materialDesign:ButtonAssist.CornerRadius="0 0 25 25" ToolTip="Wyczyść zaznaczone pliki." Cursor="Hand" Background="#FF3D5AFE" Foreground="White" BorderBrush="#FF3D5AFE" materialDesign:RippleAssist.IsDisabled="True" IsEnabled="false">
                     <TextBlock Text="Wyczyść listę" />
                 </Button>
             </Grid>
@@ -268,37 +335,6 @@
                     <TextBlock Text="Wybierz pliki" />
                 </Button>
             </Grid>
-
-            <materialDesign:Flipper x:Name="flp_ArchivePanelOptionsCard" Margin="0,100,10,0" Width="280" Height="430" VerticalAlignment="Top" HorizontalAlignment="Right" materialDesign:ShadowAssist.ShadowDepth="Depth3" IsEnabled="True">
-                <materialDesign:Flipper.FrontContent >
-                    <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="380" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
-                            
-                        </materialDesign:ColorZone>
-                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Button x:Name="btn_ArchivePanelCreateZIP" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Stwórz archiwum" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ArchivePanelCreateZIP_Click" Opacity="1"/>
-                        </StackPanel>
-                    </Grid>
-                </materialDesign:Flipper.FrontContent>
-                <materialDesign:Flipper.BackContent>
-                    <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="380" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
-                            <materialDesign:PackIcon x:Name="pic_ArchivePanelCreateZIP" Kind="Check" Height="320" Width="320" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
-                        </materialDesign:ColorZone>
-                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Click="btn_ConfigurationReturn_Click" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
-                        </StackPanel>
-                    </Grid>
-                </materialDesign:Flipper.BackContent>
-            </materialDesign:Flipper>
         </Grid>
 
         <Grid x:Name="grd_ResourcesMonitor" Visibility="Collapsed" Margin="60,60,0,0">
