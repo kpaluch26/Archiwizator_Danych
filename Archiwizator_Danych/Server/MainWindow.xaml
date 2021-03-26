@@ -174,7 +174,7 @@
         <Grid x:Name="grd_ArchivePanel" Visibility="Visible" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
-                    <TextBlock Text="Zarządzanie ZIP" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    <TextBlock Text="Tworzenie Archiwum" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </Grid>
                 <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ArchivePanelAllert}">
                     <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
@@ -182,7 +182,7 @@
                 </Grid>
             </StackPanel>
 
-            <DataGrid Margin="0,90,0,0" x:Name="lsv_ArchivePanelFiles" DragEnter="lsv_ArchivePanelFiles_DragEnter" Drop="lsv_ArchivePanelFiles_Drop" AllowDrop="True" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="450" Width="760" VerticalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" ClipboardCopyMode="None" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFF0EAEA" RowDetailsVisibilityMode="Collapsed" Background="{x:Null}" BorderBrush="#FFF0EAEA" BorderThickness="1" >
+            <DataGrid Margin="10,90,0,0" x:Name="dgr_ArchivePanelFiles" DragEnter="dgr_ArchivePanelFiles_DragEnter" Drop="dgr_ArchivePanelFiles_Drop" AllowDrop="True" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="395" Width="705" VerticalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" ClipboardCopyMode="None" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFF0EAEA" RowDetailsVisibilityMode="Collapsed" Background="{x:Null}" BorderBrush="#FFF0EAEA" BorderThickness="1" CanUserResizeColumns="False">
                 <DataGrid.Resources>
                     <local:FormatSizeConverter x:Key="FormatSizeConverter"/>
                 </DataGrid.Resources>
@@ -191,23 +191,114 @@
                         <DataGridTemplateColumn.Header>
                             <CheckBox x:Name="cbx_ArchivePanelSelectAllFiles" Click="cbx_ArchivePanelSelectAllFiles_Click" Background="#FF1A237E" Foreground="#FF3D5AFE" BorderBrush="#FF1A237E"/>
                         </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTemplateColumn.CellStyle>
                     </DataGridTemplateColumn>
-                    <DataGridCheckBoxColumn Header="Wybór" Binding="{Binding is_checked, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" IsReadOnly="False" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" CanUserSort="True" >
+                    <DataGridCheckBoxColumn Header="Wybór" Binding="{Binding is_checked, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" CanUserSort="True" >
                         <DataGridCheckBoxColumn.CellStyle>
-                            <Style >
+                            <Style TargetType="{x:Type DataGridCell}">
                                 <EventSetter Event="CheckBox.Click" Handler="cbx_ArchviePanelFileSelectedChangeValue"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
                             </Style>
                         </DataGridCheckBoxColumn.CellStyle>
+                        <DataGridCheckBoxColumn.ElementStyle>
+                            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MaterialDesignAccentCheckBox}">
+                                <Setter Property="Background" Value="#FF1A237E"/>
+                                <Setter Property="Foreground" Value="#FF3D5AFE"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridCheckBoxColumn.ElementStyle>
                     </DataGridCheckBoxColumn>
-                    <DataGridTextColumn Header="Nazwa pliku" Binding="{Binding filename}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}"/>
-                    <DataGridTextColumn Header="Rozszerzenie" Binding="{Binding filetype}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}"/>
-                    <DataGridTextColumn Header="Rozmiar" Binding="{Binding filesize, Converter={StaticResource FormatSizeConverter}}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}"/>
-                    <DataGridTextColumn Header="Lokalizacja" Binding="{Binding filepath}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}"/>
+                    <DataGridTextColumn Header="Nazwa pliku" Binding="{Binding filename}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}" MinWidth="150">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Rozszerzenie" Binding="{Binding filetype}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Rozmiar" Binding="{Binding filesize, Converter={StaticResource FormatSizeConverter}}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Lokalizacja" Binding="{Binding filepath}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}" MinWidth="241">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
                 <DataGrid.DataContext>
                     <local:FileInformation/>
                 </DataGrid.DataContext>
             </DataGrid>
+
+            <Grid Width="150" Margin="565,481,305,10">
+                <Button x:Name="btn_ArchivePanelDataGridClear" Style="{StaticResource MaterialDesignRaisedAccentButton}" Click="btn_ArchivePanelDataGridClear_Click" Height="40" materialDesign:ButtonAssist.CornerRadius="0 0 25 25" ToolTip="Wyczyść listę plików." Cursor="Hand" Background="#FF3D5AFE" Foreground="White" BorderBrush="#FF3D5AFE" materialDesign:RippleAssist.IsDisabled="True" IsEnabled="false">
+                    <TextBlock Text="Wyczyść listę" />
+                </Button>
+            </Grid>
+
+            <Grid Width="150" Margin="10,481,860,10">
+                <Button x:Name="btn_ArchivePanelDataGridFileAdd" Style="{StaticResource MaterialDesignRaisedAccentButton}" Click="btn_ArchivePanelDataGridFileAdd_Click" Height="40" materialDesign:ButtonAssist.CornerRadius="0 0 25 25" ToolTip="Wbierz pliki, które zostaną dodane do listy." Cursor="Hand" Background="#FF3D5AFE" Foreground="White" BorderBrush="#FF3D5AFE" materialDesign:RippleAssist.IsDisabled="True">
+                    <TextBlock Text="Wybierz pliki" />
+                </Button>
+            </Grid>
+
+            <materialDesign:Flipper x:Name="flp_ArchivePanelOptionsCard" Margin="0,100,10,0" Width="280" Height="430" VerticalAlignment="Top" HorizontalAlignment="Right" materialDesign:ShadowAssist.ShadowDepth="Depth3" IsEnabled="True">
+                <materialDesign:Flipper.FrontContent >
+                    <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="380" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
+                            
+                        </materialDesign:ColorZone>
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button x:Name="btn_ArchivePanelCreateZIP" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Stwórz archiwum" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ArchivePanelCreateZIP_Click" Opacity="1"/>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Flipper.FrontContent>
+                <materialDesign:Flipper.BackContent>
+                    <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="380" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
+                            <materialDesign:PackIcon x:Name="pic_ArchivePanelCreateZIP" Kind="Check" Height="320" Width="320" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
+                        </materialDesign:ColorZone>
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Click="btn_ConfigurationReturn_Click" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Flipper.BackContent>
+            </materialDesign:Flipper>
         </Grid>
 
         <Grid x:Name="grd_ResourcesMonitor" Visibility="Collapsed" Margin="60,60,0,0">

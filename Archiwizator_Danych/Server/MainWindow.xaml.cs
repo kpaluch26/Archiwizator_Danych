@@ -37,7 +37,7 @@ namespace Server
             total_ram = total_ram / 1024;
             InitializeComponent();
             files_list.Clear();            
-            lsv_ArchivePanelFiles.ItemsSource = files_list;            
+            dgr_ArchivePanelFiles.ItemsSource = files_list;            
         }
 
         private void btn_CloseWindow_Click(object sender, RoutedEventArgs e) //zamknięcie okna aplikacji
@@ -368,7 +368,7 @@ namespace Server
         {
             grd_ResourcesMonitor.Visibility = Visibility.Collapsed;
             grd_Configuration.Visibility = Visibility.Collapsed;
-            grd_ArchivePanel.Visibility = Visibility.Visible;
+            grd_ArchivePanel.Visibility = Visibility.Collapsed;
 
             if (resources_thread != null && resources_thread.IsAlive)
             {
@@ -412,7 +412,7 @@ namespace Server
             tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
         }
 
-        private void lsv_ArchivePanelFiles_DragEnter(object sender, DragEventArgs e) //event do sprawdzania czy przyciągany jest plik
+        private void dgr_ArchivePanelFiles_DragEnter(object sender, DragEventArgs e) //event do sprawdzania czy przyciągany jest plik
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -424,7 +424,7 @@ namespace Server
             }
         }
 
-        private void lsv_ArchivePanelFiles_Drop(object sender, DragEventArgs e) //event do dodawania lików do listy
+        private void dgr_ArchivePanelFiles_Drop(object sender, DragEventArgs e) //event do dodawania lików do listy
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files != null && files.Length >= 1)
@@ -452,6 +452,7 @@ namespace Server
                     }
                 }
                 _files_list.Clear();
+                btn_ArchivePanelDataGridClear.IsEnabled = true;
             }
         }
 
@@ -486,7 +487,7 @@ namespace Server
                 }
             }
 
-            lsv_ArchivePanelFiles.Items.Refresh();
+            dgr_ArchivePanelFiles.Items.Refresh();
         }
 
         private void cbx_ArchviePanelFileSelectedChangeValue(object sender, RoutedEventArgs e)
@@ -513,5 +514,50 @@ namespace Server
             }
         }
 
+        private void btn_ArchivePanelCreateZIP_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_ArchivePanelDataGridClear_Click(object sender, RoutedEventArgs e)
+        {
+            files_list.Clear();
+            btn_ArchivePanelDataGridClear.IsEnabled = false;
+        }
+
+        private void btn_ArchivePanelDataGridFileAdd_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog(); //utworzenie okna do przeglądania plików
+            ofd.Filter = "all files (*.*)|*.*"; //ustawienie filtrów okna na dowolne pliki
+            ofd.FilterIndex = 1; //ustawienie domyślnego filtru
+            ofd.RestoreDirectory = true; //przywracanie wcześniej zamkniętego katalogu
+            ofd.Multiselect = true; //ustawienie możliwości wyboru wielu plików z poziomu okna
+
+            if (ofd.ShowDialog() == true)
+            {
+                FileInfo[] _files = ofd.FileNames.Select(_file => new FileInfo(_file)).ToArray();
+
+                foreach ( var _file in _files)
+                {
+                    string _filename = Path.GetFileNameWithoutExtension(_file.Name);
+                    string _filepath = _file.DirectoryName;
+                    string _filetype = _file.Extension;
+                    long _filesize = _file.Length;
+                    FileInformation file = new FileInformation()
+                    {
+                        filename = _filename,
+                        filepath = _filepath,
+                        filetype = _filetype,
+                        filesize = _filesize,
+                        is_checked = false
+                    };
+                    files_list.Add(file);
+                }
+                if (btn_ArchivePanelDataGridClear.IsEnabled == false)
+                {
+                    btn_ArchivePanelDataGridClear.IsEnabled = true;
+                }
+            }
+        }
     }    
 }
