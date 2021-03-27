@@ -1,12 +1,22 @@
 {
   "version": 2,
-  "dgSpecHash": "gd5khx1+j2ioz4qXaRzQ1q6YhojXBiQH6dy1iZAYxicHenddg4C49/5gir7d9r7n3iKuHlESxb6zh2WNH78gjw==",
+  "dgSpecHash": "TV0uNOroMVXiAWPMP9j+cOXKT+yWXm2CACASSMZ5hCEGvt6qTNRpz+rmwsR4HMMZ0NdVScRSaHRk8ilDNGZePg==",
   "success": true,
   "projectFilePath": "D:\\PROJEKTY\\Archiwizator_Danych\\Archiwizator_Danych\\Archiwizator_Danych\\Server\\Server.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\kamil\\.nuget\\packages\\dotnetzip\\1.15.0\\dotnetzip.1.15.0.nupkg.sha512",
     "C:\\Users\\kamil\\.nuget\\packages\\materialdesigncolors\\2.0.0\\materialdesigncolors.2.0.0.nupkg.sha512",
     "C:\\Users\\kamil\\.nuget\\packages\\materialdesignthemes\\4.0.0\\materialdesignthemes.4.0.0.nupkg.sha512",
+    "C:\\Users\\kamil\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\kamil\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\kamil\\.nuget\\packages\\ookii.dialogs.wpf\\3.1.0\\ookii.dialogs.wpf.3.1.0.nupkg.sha512",
+    "C:\\Users\\kamil\\.nuget\\packages\\system.drawing.common\\5.0.0\\system.drawing.common.5.0.0.nupkg.sha512",
+    "C:\\Users\\kamil\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
+    "C:\\Users\\kamil\\.nuget\\packages\\system.security.accesscontrol\\5.0.0\\system.security.accesscontrol.5.0.0.nupkg.sha512",
+    "C:\\Users\\kamil\\.nuget\\packages\\system.security.permissions\\5.0.0\\system.security.permissions.5.0.0.nupkg.sha512",
+    "C:\\Users\\kamil\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512",
+    "C:\\Users\\kamil\\.nuget\\packages\\system.text.encoding.codepages\\5.0.0\\system.text.encoding.codepages.5.0.0.nupkg.sha512",
+    "C:\\Users\\kamil\\.nuget\\packages\\system.windows.extensions\\5.0.0\\system.windows.extensions.5.0.0.nupkg.sha512",
     "C:\\Users\\kamil\\.nuget\\packages\\xamlradialprogressbar\\1.0.3\\xamlradialprogressbar.1.0.3.nupkg.sha512"
   ],
   "logs": []

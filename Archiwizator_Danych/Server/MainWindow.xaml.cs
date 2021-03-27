@@ -10,9 +10,8 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Animation;
 using System.Collections.Generic;
-using System.Windows.Controls;
-using System.Windows.Media;
 using System.Collections.ObjectModel;
+using Ionic.Zip;
 
 namespace Server
 {
@@ -72,7 +71,7 @@ namespace Server
         {
             CleanServer();
             grd_Configuration.Visibility = Visibility.Visible;
-            tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
+            tbl_ConfigurationAllert.Visibility = Visibility.Collapsed;
         }
 
         private void btn_ControlPanel_Click(object sender, RoutedEventArgs e) //otwieranie głównego panelu sterowania
@@ -83,6 +82,7 @@ namespace Server
         {
             CleanServer();
             grd_ArchivePanel.Visibility = Visibility.Visible;
+            tbl_ArchivePanelAllert.Visibility = Visibility.Collapsed;
         }
         private void btn_HistoryPanel_Click(object sender, RoutedEventArgs e) //otwieranie historii pracy serwera i aktywności klientów
         {
@@ -480,7 +480,14 @@ namespace Server
         {
             if (cbx_ArchivePanelSelectAllFiles.IsChecked == true)
             {
-                cbx_ArchivePanelSelectAllFiles.IsChecked = false;
+                for (int i = 0; i < files_list.Count; i++)
+                {
+                    if (files_list[i].is_checked == false)
+                    {
+                        cbx_ArchivePanelSelectAllFiles.IsChecked = false;
+                        break;
+                    }
+                }                
             }
             else
             {
@@ -500,9 +507,114 @@ namespace Server
             }
         }
 
-        private void btn_ArchivePanelCreateZIP_Click(object sender, RoutedEventArgs e)
+        private void btn_ArchivePanelCreateZIP_Click(object sender, RoutedEventArgs e) //event do tworzenia archiwum zip
         {
+            string filename = tbx_ArchivePanelFilename.Text;
+            string password = pbx_ArchivePanelPasswordBox.Password;
+            string path = null;
+            List<FileInformation> _files_list = new List<FileInformation>();
 
+            try
+            {
+                if(filename != null && filename.Trim() != "")
+                {
+                    if (cbx_ArchivePanelSavePathFromFile.IsChecked == true)
+                    {
+                        if (config != null)
+                        {
+                            path = config.GetArchiveAddress() + "\\" + filename + ".zip";
+                        }
+                        else
+                        {
+                            tbl_ArchivePanelAllert.Text = "UWAGA! Domyślne miejsce zapisu nieustawione. Załaduj plik konfiguracyjny lub ręcznie wybierz miejsce zapisu";
+                            tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
+                            pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
+                            throw new Exception();
+                        }
+                    }
+                    else
+                    {
+                        Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog(); //utworzenie okna dialogowego do wybrania ścieżki zapisu otrzymanych plików
+                        fbd.Description = "Wybierz ścieżkę dostępu."; //tytuł utworzonego okna
+                        fbd.ShowNewFolderButton = true; //włączenie mozliwości tworzenia nowych folderów
+
+                        if (fbd.ShowDialog() == true)
+                        {
+                            path = fbd.SelectedPath + "\\" + filename + ".zip";
+                        }
+                        else
+                        {
+                            tbl_ArchivePanelAllert.Text = "UWAGA! Nie wybrano miejsca zapisu nowego archiwum.";
+                            tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
+                            pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
+                            throw new Exception();
+                        }
+                    }
+
+                    if (files_list.Count >= 1)
+                    {
+                        for (int i = 0; i < files_list.Count; i++)
+                        {
+                            if (files_list[i].is_checked == true)
+                            {
+                                _files_list.Add(files_list[i]);
+                            }
+                        }
+                        if (_files_list.Count >= 1)
+                        {
+                            using (ZipFile _zip = new ZipFile()) //utworzenie archiwum
+                            {
+                                foreach (var _file in _files_list)
+                                {
+                                    if (password != null && password.Trim() != "")
+                                    {
+                                        _zip.Password = password; //dodanie hasła
+                                    }
+                                    _zip.AddFile((_file.filepath + "\\" + _file.filename + _file.filetype), ""); //dodanie pliku do archiwum
+                                }
+                                _zip.Save(path); //zapis archiwum
+                                tbl_ArchivePanelAllert.Text = "";
+                                tbl_ArchivePanelAllert.Visibility = Visibility.Collapsed;
+                                pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check;
+                            }
+                        }
+                        else
+                        {
+                            tbl_ArchivePanelAllert.Text = "UWAGA! Na liście brak zaznaczonych plików do skompresowania.";
+                            tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
+                            pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
+                        }
+                    }
+                    else
+                    {
+                        tbl_ArchivePanelAllert.Text = "UWAGA! Na liście brak plików do skompresowania.";
+                        tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
+                        pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
+                    }
+                }
+                else
+                {
+                    tbl_ArchivePanelAllert.Text = "UWAGA! Nie utworzono archiwum. Podaj nazwę archiwum, które chcesz utworzyć.";
+                    tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
+                    pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                tbl_ArchivePanelAllert.Text = "UWAGA! Błąd tworzenia. Przynajmniej jeden wybrany plik zmienił ścieżke dostępu.";
+                tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
+                pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
+            }
+            catch (ArgumentException)
+            {
+                tbl_ArchivePanelAllert.Text = "UWAGA! Błąd tworzenia. Nazwa archiwum zawiera niedozwolone znaki.";
+                tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
+                pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private void btn_ArchivePanelDataGridClear_Click(object sender, RoutedEventArgs e) //event do czyszczenia plikow
