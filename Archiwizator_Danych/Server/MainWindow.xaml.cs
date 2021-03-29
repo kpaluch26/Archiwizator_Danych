@@ -26,6 +26,7 @@ namespace Server
         ObservableCollection<FileInformation> files_list = new ObservableCollection<FileInformation>();
         private int users_counter = 0;
         private FileInformation file_to_send = new FileInformation();
+        CancellationTokenSource cts;
 
 
         [DllImport("kernel32.dll")]
@@ -98,7 +99,8 @@ namespace Server
         {
             CleanServer();
             grd_ResourcesMonitor.Visibility = Visibility.Visible;
-            resources_thread = new Thread(ResourcesMonitor);
+            cts = new CancellationTokenSource();
+            resources_thread = new Thread(() => ResourcesMonitor(cts.Token));
             resources_thread.Start();
         }
 
@@ -363,23 +365,24 @@ namespace Server
             }
         }
 
-        private void ResourcesMonitor() //metoda do odczytu uźycia podzespołów
+        private void ResourcesMonitor(object _canceltoken) //metoda do odczytu uźycia podzespołów
         {
+            CancellationToken canceltoken = (CancellationToken)_canceltoken;
+            
             PerformanceCounter cpu_usage = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             PerformanceCounter ram_usage = new PerformanceCounter("Memory", "Available MBytes");
             PerformanceCounter disk_usage = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
             var firstCall = cpu_usage.NextValue();
             Thread.Sleep(100);
 
-            while (grd_ResourcesMonitor.Visibility == Visibility.Visible)
+            while (!canceltoken.IsCancellationRequested)
             {
                 double cpu = Math.Round(cpu_usage.NextValue(), 2);
                 double ram = Math.Round(((total_ram - ram_usage.NextValue()) * 100 / total_ram), 2);
                 double disk = Math.Round(disk_usage.NextValue(), 2);
                 Dispatcher.Invoke(delegate { ResourcesMonitorUpdate(cpu, ram, disk); });
                 Thread.Sleep(1000);
-            }
-           
+            }          
         }
 
         private void CleanServer() //funkcja do czyszczenia pozostałości po wcześniej otwartym oknie
@@ -391,8 +394,10 @@ namespace Server
 
             if (resources_thread != null && resources_thread.IsAlive)
             {
-                resources_thread.Join();
-                ResourcesMonitorUpdate(0, 0, 0);
+                cts.Cancel();
+                cts.Token.WaitHandle.WaitOne();
+                cts.Dispose();
+                //ResourcesMonitorUpdate(0, 0, 0);                
             }
         }
 
