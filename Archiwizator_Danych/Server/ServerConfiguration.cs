@@ -33,6 +33,21 @@ namespace Server
             return this.buffer_size;
         }
 
+        public string GetUserName()
+        {
+            return this.username;
+        }
+
+        public string GetHostName()
+        {
+            return this.hostname;
+        }
+
+        public string GetIPAddress()
+        {
+            return this.ip_address;
+        }
+
         public string GetArchiveAddress()
         {
             return this.archive_address;
@@ -44,9 +59,10 @@ namespace Server
             return this.archive_address;
         }
 
-        public override string ToString()
+        public void SetIPAddress(string ip)
         {
-            return $" Użytkownik: {username} || AdresIPv4: {ip_address} || Hostname: {hostname} ||  Port: {port} || Rozmiar bufera: {buffer_size} || Ścieżka: {archive_address} ";
+            this.ip_address = ip;
         }
+
     }
 }

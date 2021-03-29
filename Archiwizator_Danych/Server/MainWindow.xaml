@@ -66,6 +66,92 @@
     </Window.Triggers>
 
     <Grid Background="LightGray">
+        <Grid x:Name="grd_ControlPanel" Visibility="Visible" Margin="60,60,0,0">
+            <Grid Height="60" Background="#FF1A237E" VerticalAlignment="Top">
+                <TextBlock Text="Panel sterowania" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
+            </Grid>
+            <Grid Height="30" Margin="0,60,0,0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ControlPanelAllert}" VerticalAlignment="Top">
+                <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
+                <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ControlPanelAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden"/>
+            </Grid>
+            <materialDesign:Card Background="#FF1A237E" Width="280" Height="280" Margin="10,100,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
+                <Grid>
+                    <xrpb:RadialProgressBar  Value="100" VerticalAlignment="Top" HorizontalAlignment="Left" Width="280" Height="280" Foreground="#FFE1E5FF" BorderBrush="#FF1A237E"/>
+                    <xrpb:RadialProgressBar x:Name="rpb_ControlPanelUsersCounter" Value="{Binding Value1, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" HorizontalAlignment="Left" Width="280" Height="280" Foreground="#FF3D5AFE" BorderBrush="#FF1A237E"/>
+                    <TextBlock x:Name="tbl_ControlPanelUsercCounters" TextAlignment="Center" Margin="20,100,20,120" Foreground="White" FontSize="60" Width="220"/>
+                    <TextBlock Text="Podłączeni klienci" FontSize="26" TextAlignment="Center" Margin="20,180,20,60" Width="220" Foreground="White"/>
+                </Grid>
+            </materialDesign:Card>
+
+            <materialDesign:Card Background="#FF1A237E" Width="710" Height="140" Margin="10,390,0,10" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
+                <Grid>
+                    <materialDesign:PackIcon Kind="FileEdit" Height="30" Width="30" VerticalAlignment="Top" Margin="5,10,0,0"/>
+                    <materialDesign:PackIcon Kind="FolderOpen" Height="30" Width="30" VerticalAlignment="Top" Margin="5,50,0,0"/>
+                    <materialDesign:PackIcon Kind="FileCode" Height="30" Width="30" VerticalAlignment="Top" Margin="5,90,0,0"/>
+                    <TextBlock Text="Nazwa pliku:" FontSize="26" Margin="35,10,0,0" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"  Margin="190,18,10,0" Height="39" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <TextBlock x:Name="tbl_ControlPanelFileName" FontSize="18" Text=""/>
+                    </ScrollViewer>
+                    <TextBlock Text="Lokalizacja:" FontSize="26" Margin="35,50,0,0" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"  Margin="180,58,10,0" Height="39" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <TextBlock x:Name="tbl_ControlPanelFileLocation" FontSize="18"/>
+                    </ScrollViewer>
+                    <TextBlock Text="Rozmiar pliku:" FontSize="26" Margin="35,90,0,0" Height="30" Width="170" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelFileSize" FontSize="18" Margin="210,98,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Button x:Name="btn_ControlPanelChangeZIP" Content="{materialDesign:PackIcon DotsHorizontal}" ToolTip="Icon" Margin="0,100,10,10" Height="30" Width="60" VerticalAlignment="Top" HorizontalAlignment="Right" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ControlPanelChangeZIP_Click" Cursor="Hand"/>
+                </Grid>
+            </materialDesign:Card>
+
+            <materialDesign:Card Background="#FF1A237E" Width="710" Height="280" Margin="300,100,10,160" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
+                <Grid>
+                    <materialDesign:PackIcon Kind="AccountBox" Height="30" Width="30" VerticalAlignment="Top" Margin="5,11,0,0"/>
+                    <materialDesign:PackIcon Kind="Ip" Height="30" Width="30" VerticalAlignment="Top" Margin="5,48,0,0"/>
+                    <Button x:Name="btn_ControlPanelChangeIP" Height="30" Width="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,48,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Click="btn_ControlPanelChangeIP_Click" Cursor="Hand"/>
+                    <materialDesign:PackIcon Kind="AccountSearch" Height="30" Width="30" VerticalAlignment="Top" Margin="5,86,0,0"/>
+                    <materialDesign:PackIcon Kind="FolderCog" Height="30" Width="30" VerticalAlignment="Top" Margin="5,124,0,0"/>
+                    <Button x:Name="btn_ControlPanelChangeConfigPath" Height="30" Width="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,124,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Click="btn_ControlPanelChangeConfigPath_Click" Cursor="Hand"/>
+                    <materialDesign:PackIcon Kind="Buffer" Height="30" Width="30" VerticalAlignment="Top" Margin="5,162,0,0"/>
+                    <materialDesign:PackIcon Kind="Connection" Height="30" Width="30" VerticalAlignment="Top" Margin="5,200,0,0"/>
+                    <materialDesign:PackIcon Kind="PlusNetwork" Height="30" Width="30" VerticalAlignment="Top" Margin="5,238,0,0"/>
+                    <TextBlock Text="Użytkownik:" FontSize="26" Margin="35,11,0,0" Height="30" Width="290" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelUserName" FontSize="18" Margin="180,19,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock Text="AdresIPv4:" FontSize="26" Margin="35,48,0,0" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelIP" FontSize="18" Margin="170,56,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="txt_ControlPanelChangeIP" materialDesign:HintAssist.Hint="Nowe IP" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="White" Width="250" FontSize="16" SelectionBrush="#FF3D5AFE" Margin="170,39,10,0" CaretBrush="#FF3D5AFE" Cursor="IBeam" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE" SelectionTextBrush="#FF3D5AFE" Visibility="Collapsed"/>
+                    <TextBlock Text="Hostname:" FontSize="26" Margin="35,86,0,0" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelHostName" FontSize="18" Margin="170,94,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Miejsce zapisu:" FontSize="26" Margin="35,124,0,0" Height="30" Width="180" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"  Margin="220,132,10,0" Height="39" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <TextBlock x:Name="tbl_ControlPanelSavePath" FontSize="18"/>
+                    </ScrollViewer>
+                    <TextBlock Text="Rozmiar bufera:" FontSize="26" Margin="35,162,0,0" Height="30" Width="190" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelBufferSize" FontSize="18" Margin="220,170,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Port komunikacji:" FontSize="26" Margin="35,200,0,0" Height="30" Width="200" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelPort" FontSize="18" Margin="240,208,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Aktywny tryb pracy:" FontSize="26" Margin="35,238,0,11" Height="30" Width="230" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelServer" FontSize="18" Margin="265,246,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Text="Wyłączony"/>
+                </Grid>
+            </materialDesign:Card>
+
+            <materialDesign:Card Background="#FF1A237E" Width="280" Height="140" Margin="730,390,10,10" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
+                <Grid>
+                    <materialDesign:Badged Badge="{materialDesign:PackIcon LanDisconnect}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="13,13,0,0" Background="{x:Null}" BorderBrush="#FF3D5AFE">
+                        <Button Content="Zatrzymaj" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10"/>
+                    </materialDesign:Badged>
+                    <materialDesign:Badged Badge="{materialDesign:PackIcon FileDownloadOutline}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="13,77,0,13" Background="{x:Null}" BorderBrush="#FF3D5AFE">
+                        <Button Content="Odbieraj" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10"/>
+                    </materialDesign:Badged>
+                    <materialDesign:Badged Badge="{materialDesign:PackIcon LanConnect}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="150,13,13,0" Background="{x:Null}" BorderBrush="#FF3D5AFE">
+                        <Button Content="Nasłuchuj" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10"/>
+                    </materialDesign:Badged>
+                    <materialDesign:Badged Badge="{materialDesign:PackIcon FileSendOutline}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="150,77,13,13" Background="{x:Null}" BorderBrush="#FF3D5AFE">
+                        <Button Content="Wyślij plik" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10"/>
+                    </materialDesign:Badged>
+                </Grid>
+            </materialDesign:Card>
+
+        </Grid>
+
         <Grid x:Name="grd_Configuration" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
@@ -73,9 +159,10 @@
                 </Grid>
                 <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ConfigurationAllert}">
                     <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
-                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ConfigurationAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden"/>
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ConfigurationAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Collapsed"/>
                 </Grid>
-                <materialDesign:Flipper Margin="45,45,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+            </StackPanel>
+            <materialDesign:Flipper Margin="45,90,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <materialDesign:Flipper.FrontContent >
                         <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <Grid.RowDefinitions>
@@ -106,7 +193,7 @@
                     </materialDesign:Flipper.BackContent>
                 </materialDesign:Flipper>
 
-                <materialDesign:Flipper x:Name="flp_ConfigurationSave" Margin="0,-360,45,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Right" materialDesign:ShadowAssist.ShadowDepth="Depth3" IsEnabled="False">
+                <materialDesign:Flipper x:Name="flp_ConfigurationSave" Margin="0,90,45,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Right" materialDesign:ShadowAssist.ShadowDepth="Depth3" IsEnabled="False">
                     <materialDesign:Flipper.FrontContent >
                         <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <Grid.RowDefinitions>
@@ -137,7 +224,7 @@
                     </materialDesign:Flipper.BackContent>
                 </materialDesign:Flipper>
 
-                <materialDesign:Flipper x:Name="flp_ConfigurationCreate" Margin="370,-360,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                <materialDesign:Flipper x:Name="flp_ConfigurationCreate" Margin="370,90,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <materialDesign:Flipper.FrontContent >
                         <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <Grid.RowDefinitions>
@@ -182,10 +269,9 @@
                         </Grid>
                     </materialDesign:Flipper.BackContent>
                 </materialDesign:Flipper>
-            </StackPanel>
         </Grid>
 
-        <Grid x:Name="grd_ArchivePanel" Visibility="Visible" Margin="60,60,0,0">
+        <Grid x:Name="grd_ArchivePanel" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Tworzenie Archiwum" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
@@ -362,6 +448,7 @@
             <TextBlock Text="{Binding Value, StringFormat=\{000\}%}" DataContext="{x:Reference rpb_DISK}" TextAlignment="Center" Margin="740,250,80,230" Foreground="#FF3D5AFE" FontSize="60" Width="200"/>
             <TextBlock Text="Aktywność DISK" FontSize="30" TextAlignment="Center" Margin="730,325,70,160" Width="220" Foreground="#FF3D5AFE"/>
         </Grid>
+
         <Grid x:Name="grd_MenuToolbar" Height="60" VerticalAlignment="Top" Background="#FF3D5AFE" MouseDown="grd_MenuToolbar_MouseDown" >
             <StackPanel x:Name="stp_ApplicationName" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" >
                 <materialDesign:PackIcon Kind="Server" Height="30" Width="30"/>
@@ -371,12 +458,12 @@
                 <TextBlock Text="Opcje" VerticalAlignment="Center" FontSize="18"/>
                 <materialDesign:PopupBox HorizontalAlignment="Right" Margin="10" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Foreground="White">
                     <StackPanel Width="150">
-                        <StackPanel Orientation="Horizontal">
+                        <!--<StackPanel Orientation="Horizontal">
                             <TextBlock Text="Jasny" VerticalAlignment="Center" Margin="10 0 0 0" FontSize="12"/>
                             <ToggleButton Style="{StaticResource MaterialDesignSwitchDarkToggleButton}" ToolTip="MaterialDesignSwitchDarkToggleButton" VerticalAlignment="Center" Margin="10 0 0 0" />
                             <TextBlock Text="Ciemny" VerticalAlignment="Center" Margin="10 0 10 0" FontSize="12"/>
                         </StackPanel>
-                        <Separator/>
+                        <Separator/>-->
                         <Button Content="Help" FontSize="12" />
                         <Separator/>
                         <Button x:Name="btn_MinimizeWindow" Content="Minimalizuj" Click="btn_MinimizeWindow_Click" FontSize="12"/>

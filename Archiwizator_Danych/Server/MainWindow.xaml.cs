@@ -24,6 +24,8 @@ namespace Server
         private static Thread resources_thread;
         private long total_ram;
         ObservableCollection<FileInformation> files_list = new ObservableCollection<FileInformation>();
+        private int users_counter = 0;
+        private FileInformation file_to_send = new FileInformation();
 
 
         [DllImport("kernel32.dll")]
@@ -36,7 +38,8 @@ namespace Server
             total_ram = total_ram / 1024;
             InitializeComponent();
             files_list.Clear();            
-            dgr_ArchivePanelFiles.ItemsSource = files_list;            
+            dgr_ArchivePanelFiles.ItemsSource = files_list;
+            tbl_ControlPanelUsercCounters.Text = users_counter.ToString() + " / 20";
         }
 
         private void btn_CloseWindow_Click(object sender, RoutedEventArgs e) //zamknięcie okna aplikacji
@@ -77,6 +80,8 @@ namespace Server
         private void btn_ControlPanel_Click(object sender, RoutedEventArgs e) //otwieranie głównego panelu sterowania
         {
             CleanServer();
+            grd_ControlPanel.Visibility = Visibility.Visible;
+            tbl_ControlPanelAllert.Visibility = Visibility.Collapsed;
         }
         private void btn_ArchivePanel_Click(object sender, RoutedEventArgs e) //otwieranie panelu do zarządzania zip
         {
@@ -105,7 +110,7 @@ namespace Server
             int port = 0, buffer_size = 0, counterp = 0, counterb = 0, countera = 0; //zmienne pomocnicze sprawdzające poprawność importowanych danych
             string username = Environment.UserName; //odczyt nazwy konta użytkownika
             string hostName = Dns.GetHostName(); //odczyt hostname
-            string ip_address = Dns.GetHostByName(hostName).AddressList[0].ToString(); // odczyt adresu IPv4
+            string ip_address = Dns.GetHostByName(hostName).AddressList[1].ToString(); // odczyt adresu IPv4
             bool is_config_correct = false; //flaga do sterowania możliwością eksportu configa
 
             OpenFileDialog ofd = new OpenFileDialog(); //utworzenie okna do przeglądania plików konfiguracji
@@ -157,6 +162,7 @@ namespace Server
                             config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa   
                             pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
                             is_config_correct = true;
+                            ServerConfigurationUpdate();
                         }
                     }
                     catch (FileLoadException)
@@ -224,6 +230,7 @@ namespace Server
                         {
                             config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa                             
                             pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
+                            ServerConfigurationUpdate();
                             is_config_correct = true;
                         }
                     }
@@ -248,6 +255,16 @@ namespace Server
             {
                 flp_ConfigurationSave.IsEnabled = true; //można eksportować do pliku
             }
+        }
+
+        private void ServerConfigurationUpdate()
+        {
+            tbl_ControlPanelUserName.Text = config.GetUserName();
+            tbl_ControlPanelIP.Text = config.GetIPAddress();
+            tbl_ControlPanelHostName.Text = config.GetHostName();
+            tbl_ControlPanelSavePath.Text = config.GetArchiveAddress();
+            tbl_ControlPanelBufferSize.Text = config.GetBufferSize().ToString();
+            tbl_ControlPanelPort.Text = config.GetPort().ToString();
         }
 
         private void btn_ConfigurationSave_Click(object sender, RoutedEventArgs e) //funkcja do zapisu konfiguracji do pliku
@@ -298,8 +315,7 @@ namespace Server
                 int port, buffer;
                 string username = Environment.UserName; //odczyt nazwy konta użytkownika
                 string hostName = Dns.GetHostName(); //odczyt hostname
-                string ip_address = Dns.GetHostByName(hostName).AddressList[0].ToString(); // odczyt adresu IPv4
-
+                string ip_address = Dns.GetHostByName(hostName).AddressList[1].ToString(); // odczyt adresu IPv4
                 try
                 {
                     port = Convert.ToInt32(txt_ConfigurationPort.Text);
@@ -308,6 +324,7 @@ namespace Server
                     btn_ConfigurationCreate.Content = "Edytuj konfigurację";
                     flp_ConfigurationSave.IsEnabled = true;
                     tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
+                    ServerConfigurationUpdate();
                 }
                 catch
                 {
@@ -362,6 +379,7 @@ namespace Server
                 Dispatcher.Invoke(delegate { ResourcesMonitorUpdate(cpu, ram, disk); });
                 Thread.Sleep(1000);
             }
+           
         }
 
         private void CleanServer() //funkcja do czyszczenia pozostałości po wcześniej otwartym oknie
@@ -369,10 +387,12 @@ namespace Server
             grd_ResourcesMonitor.Visibility = Visibility.Collapsed;
             grd_Configuration.Visibility = Visibility.Collapsed;
             grd_ArchivePanel.Visibility = Visibility.Collapsed;
+            grd_ControlPanel.Visibility = Visibility.Collapsed;
 
             if (resources_thread != null && resources_thread.IsAlive)
             {
                 resources_thread.Join();
+                ResourcesMonitorUpdate(0, 0, 0);
             }
         }
 
@@ -573,6 +593,10 @@ namespace Server
                                     _zip.AddFile((_file.filepath + "\\" + _file.filename + _file.filetype), ""); //dodanie pliku do archiwum
                                 }
                                 _zip.Save(path); //zapis archiwum
+                                if (cbx_ArchivePanelSetToSend.IsChecked == true)
+                                {
+                                    FileToSendSet(path);                                   
+                                }
                                 tbl_ArchivePanelAllert.Text = "";
                                 tbl_ArchivePanelAllert.Visibility = Visibility.Collapsed;
                                 pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check;
@@ -617,6 +641,33 @@ namespace Server
             }
         }
 
+        private void FileToSendSet(string path)
+        {
+            FileInfo _file_to_send = new FileInfo(path);
+
+            file_to_send.filename = Path.GetFileNameWithoutExtension(_file_to_send.Name);
+            file_to_send.filepath = path;
+            file_to_send.filetype = _file_to_send.Extension;
+            file_to_send.filesize = _file_to_send.Length;
+            file_to_send.is_checked = true;
+
+            tbl_ControlPanelFileName.Text = _file_to_send.Name;
+            tbl_ControlPanelFileLocation.Text = path;
+            tbl_ControlPanelFileSize.Text = FormatSize(_file_to_send.Length);
+        }
+
+        public static string FormatSize(Int64 bytes)
+        {
+            string[] suffixes = { "Bytes", "KB", "MB", "GB", "TB", "PB" };
+            int counter = 0;
+            decimal number = (decimal)bytes;
+            while (Math.Round(number / 1024) >= 1)
+            {
+                number = number / 1024;
+                counter++;
+            }
+            return string.Format("{0:n1}{1}", number, suffixes[counter]);
+        }
         private void btn_ArchivePanelDataGridClear_Click(object sender, RoutedEventArgs e) //event do czyszczenia plikow
         {
             if (cbx_ArchivePanelSelectAllFiles.IsChecked == true)
@@ -708,6 +759,94 @@ namespace Server
                 s.Begin();
                 btn_ArchivePanelCreateZIP.IsEnabled = false;
             }
+        }
+
+        private void btn_ControlPanelChangeZIP_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog(); //utworzenie okna do przeglądania plików
+            ofd.Filter = "zip file(*.zip)|*.zip"; //ustawienie filtrów okna na dowolne pliki
+            ofd.FilterIndex = 1; //ustawienie domyślnego filtru
+            ofd.RestoreDirectory = true; //przywracanie wcześniej zamkniętego katalogu
+            ofd.Multiselect = false; //ustawienie możliwości wyboru wielu plików z poziomu okna 
+
+            if (ofd.ShowDialog() == true)
+            {
+                FileToSendSet(ofd.FileName);
+            }
+            else
+            {
+                tbl_ControlPanelAllert.Text = "UWAGA! Nie wybrano nowego archiwum. Powrót do poprzedniego pliku.";
+                tbl_ControlPanelAllert.Visibility = Visibility.Visible;
+            }
+
+        }
+
+        private void btn_ControlPanelChangeConfigPath_Click(object sender, RoutedEventArgs e)
+        {
+            if (config != null)
+            {
+                Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog(); //utworzenie okna dialogowego do wybrania ścieżki zapisu otrzymanych plików
+                fbd.Description = "Wybierz ścieżkę dostępu."; //tytuł utworzonego okna
+                fbd.ShowNewFolderButton = true; //włączenie mozliwości tworzenia nowych folderów
+
+                if (fbd.ShowDialog() == true) //jeśli wybrano ścieżkę
+                {
+                    config.SetArchiveAddress(fbd.SelectedPath);
+                    tbl_ControlPanelSavePath.Text = fbd.SelectedPath;
+                    tbl_ControlPanelAllert.Text = "";
+                    tbl_ControlPanelAllert.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    tbl_ControlPanelAllert.Text = "UWAGA! Nie wybrano nowego miejsca zapisu. Powrót do poprzedniego zapisu.";
+                    tbl_ControlPanelAllert.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private void btn_ControlPanelChangeIP_Click(object sender, RoutedEventArgs e)
+        {
+            if (config != null) {
+                if (txt_ControlPanelChangeIP.Visibility == Visibility.Collapsed)
+                {
+                    txt_ControlPanelChangeIP.Visibility = Visibility.Visible;
+                    tbl_ControlPanelIP.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    if (ValidateIPAddress(txt_ControlPanelChangeIP.Text) == true)
+                    {
+                        config.SetIPAddress(txt_ControlPanelChangeIP.Text);
+                        tbl_ControlPanelIP.Text = txt_ControlPanelChangeIP.Text;
+                        tbl_ControlPanelAllert.Text = "";
+                        tbl_ControlPanelAllert.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        tbl_ControlPanelAllert.Text = "UWAGA! Podany adres IP jest nieprawidłowy. Powrót do poprzedniej konfiguracji.";
+                        tbl_ControlPanelAllert.Visibility = Visibility.Visible;
+                    }
+                    txt_ControlPanelChangeIP.Visibility = Visibility.Collapsed;
+                    tbl_ControlPanelIP.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        public bool ValidateIPAddress(string new_ip)
+        {
+            if (String.IsNullOrWhiteSpace(new_ip))
+            {
+                return false;
+            }
+
+            string[] splitValues = new_ip.Split('.');
+            if (splitValues.Length != 4)
+            {
+                return false;
+            }
+
+            byte tempForParsing;
+            return splitValues.All(r => byte.TryParse(r, out tempForParsing));
         }
     }    
 }

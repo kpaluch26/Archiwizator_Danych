@@ -20,7 +20,6 @@ D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\o
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.dll
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.pdb
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.genruntimeconfig.cache
-D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.csprojAssemblyReference.cache
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\bin\Debug\netcoreapp3.1\Ookii.Dialogs.Wpf.dll
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\bin\Debug\netcoreapp3.1\XamlRadialProgressBar.dll
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\GeneratedInternalTypeHelper.g.cs
@@ -41,3 +40,4 @@ D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\b
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Text.Encoding.CodePages.dll
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Server\obj\Debug\netcoreapp3.1\Server.csprojAssemblyReference.cache
