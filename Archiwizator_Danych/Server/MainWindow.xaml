@@ -66,7 +66,7 @@
     </Window.Triggers>
 
     <Grid Background="LightGray">
-        <Grid x:Name="grd_ControlPanel" Visibility="Visible" Margin="60,60,0,0">
+        <Grid x:Name="grd_ControlPanel" Visibility="Collapsed" Margin="60,60,0,0">
             <Grid Height="60" Background="#FF1A237E" VerticalAlignment="Top">
                 <TextBlock Text="Panel sterowania" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
             </Grid>
@@ -136,16 +136,16 @@
             <materialDesign:Card Background="#FF1A237E" Width="280" Height="140" Margin="730,390,10,10" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
                 <Grid>
                     <materialDesign:Badged Badge="{materialDesign:PackIcon LanDisconnect}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="13,13,0,0" Background="{x:Null}" BorderBrush="#FF3D5AFE">
-                        <Button Content="Zatrzymaj" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10"/>
+                        <Button x:Name="btn_ControlPanelServerStop" Content="Zatrzymaj" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ControlPanelServerStop_Click"/>
                     </materialDesign:Badged>
                     <materialDesign:Badged Badge="{materialDesign:PackIcon FileDownloadOutline}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="13,77,0,13" Background="{x:Null}" BorderBrush="#FF3D5AFE">
-                        <Button Content="Odbieraj" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10"/>
+                        <Button x:Name="btn_ControlPanelServerReceive" Content="Odbieraj" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ControlPanelServerReceive_Click" Cursor="Hand"/>
                     </materialDesign:Badged>
                     <materialDesign:Badged Badge="{materialDesign:PackIcon LanConnect}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="150,13,13,0" Background="{x:Null}" BorderBrush="#FF3D5AFE">
-                        <Button Content="Nasłuchuj" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10"/>
+                        <Button x:Name="btn_ControlPanelServerListen" Content="Nasłuchuj" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ControlPanelServerListen_Click" Cursor="Hand"/>
                     </materialDesign:Badged>
                     <materialDesign:Badged Badge="{materialDesign:PackIcon FileSendOutline}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="150,77,13,13" Background="{x:Null}" BorderBrush="#FF3D5AFE">
-                        <Button Content="Wyślij plik" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10"/>
+                        <Button x:Name="btn_ControlPanelServerSend" Content="Wyślij plik" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="120" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ControlPanelServerSend_Click" Cursor="Hand"/>
                     </materialDesign:Badged>
                 </Grid>
             </materialDesign:Card>
@@ -423,7 +423,75 @@
             </Grid>
         </Grid>
 
-        <Grid x:Name="grd_ResourcesMonitor" Visibility="Collapsed" Margin="60,60,0,0">
+        <Grid x:Name="grd_UsersPanel" Visibility="Visible" Margin="60,60,0,0">
+            <StackPanel>
+                <Grid Height="60" Background="#FF1A237E">
+                    <TextBlock Text="Historia aktywności" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
+                </Grid>
+                <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_UsersPanelAllert}">
+                    <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_UsersPanelAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden" Text="" />
+                </Grid>
+            </StackPanel>
+
+            <DataGrid Margin="10,90,0,10" x:Name="dgr_UsersPanelHistory" AllowDrop="False" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="440" Width="580" VerticalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" ClipboardCopyMode="None" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFF0EAEA" RowDetailsVisibilityMode="Collapsed" Background="LightGray" BorderBrush="#FFF0EAEA" BorderThickness="1" CanUserResizeColumns="True">
+                <DataGrid.DataContext>
+                    <local:WorkHistory/>
+                </DataGrid.DataContext>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Czas aktywności" Binding="{Binding History}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}" MinWidth="135" CanUserSort="False">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Komunikat" Binding="{Binding Activity}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}" MinWidth="443" CanUserSort="False">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <DataGrid Margin="600,90,0,10" x:Name="dgr_UsersPanelConnectedUsers" AllowDrop="False" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="440" Width="410" VerticalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" ClipboardCopyMode="None" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFF0EAEA" RowDetailsVisibilityMode="Collapsed" Background="LightGray" BorderBrush="#FFF0EAEA" BorderThickness="1" CanUserResizeColumns="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Adres IP" Binding="{Binding IpAddress}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}" MinWidth="100" Width="108">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Użytkownik" Binding="{Binding ClientName}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}" MinWidth="100" Width="200">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Rozłącz" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" MinWidth="100" Width="100" CanUserReorder="False" CanUserSort="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button x:Name="btn_UsersPanelDeleteUser" Content="Usuń" Command="{Binding Path=DisconnectClient}" Background="#FF3D5AFE" Foreground="White" BorderBrush="{x:Null}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>                        
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+            <Grid x:Name="grd_ResourcesMonitor" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Monitor zasobów" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
@@ -503,7 +571,7 @@
                         <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ArchivePanel" Click="btn_ArchivePanel_Click" Cursor="Hand" materialDesign:RippleAssist.IsDisabled="True">
                             <StackPanel Orientation="Horizontal" Margin="-16">
                                 <materialDesign:PackIcon Kind="FolderZip" Width="25" Height="25" Margin="10"  VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
-                                <TextBlock Text="Stwórz ZIP" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
+                                <TextBlock Text="Tworzenie archiwa" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
                             </StackPanel>
                         </Button>
                     </ListViewItem>

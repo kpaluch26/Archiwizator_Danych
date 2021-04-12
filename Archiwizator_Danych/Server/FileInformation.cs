@@ -7,5 +7,11 @@
         public string filetype { get; set; }
         public long filesize  { get; set; }
         public bool is_checked { get; set; }
+
+        public string GetFullFileName()
+        {
+            return filename + filetype;
+        }
+
     }
 }
