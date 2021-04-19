@@ -95,12 +95,14 @@ namespace Server
             grd_ControlPanel.Visibility = Visibility.Visible;
             tbl_ControlPanelAllert.Visibility = Visibility.Collapsed;
         }
+
         private void btn_ArchivePanel_Click(object sender, RoutedEventArgs e) //otwieranie panelu do zarządzania zip
         {
             CleanServer();
             grd_ArchivePanel.Visibility = Visibility.Visible;
             tbl_ArchivePanelAllert.Visibility = Visibility.Collapsed;
         }
+
         private void btn_HistoryPanel_Click(object sender, RoutedEventArgs e) //otwieranie historii pracy serwera i aktywności klientów
         {
             CleanServer();
@@ -119,156 +121,20 @@ namespace Server
 
         private void btn_ConfigurationLoad_Click(object sender, RoutedEventArgs e) //funkcja do załadowania pliku konfiguracyjnego
         {
-            StreamReader file; //zmienna do odczytu pliku
-            string[] result = new string[2]; //tablica zmiennych do odczytu konfiguracji
-            string filePath, line, archive_address = ""; //zmienne pomocnicze do konfiguracji serwera
-            int port = 0, buffer_size = 0, counterp = 0, counterb = 0, countera = 0; //zmienne pomocnicze sprawdzające poprawność importowanych danych
-            string username = Environment.UserName; //odczyt nazwy konta użytkownika
-            string hostName = Dns.GetHostName(); //odczyt hostname
-            string ip_address = Dns.GetHostByName(hostName).AddressList[1].ToString(); // odczyt adresu IPv4
-            bool is_config_correct = false; //flaga do sterowania możliwością eksportu configa
+            config = ServerConfigurationLoad.LoadFromFile();
 
-            OpenFileDialog ofd = new OpenFileDialog(); //utworzenie okna do przeglądania plików konfiguracji
-            ofd.Filter = "txt files (*.txt)|*.txt|xml files (*.xml)|*.xml"; //ustawienie filtrów okna na pliki txt i xml
-            ofd.FilterIndex = 1; //ustawienie domyślnego filtru na plik txt
-            ofd.RestoreDirectory = true; //przywracanie wcześniej zamkniętego katalogu
-
-            if (ofd.ShowDialog() == true) //wyświetlenie okna ze sprawdzeniem, czy plik został wybrany
+            if (config != null)
             {
-                filePath = ofd.FileName; //przypisanie ścieżki wybranego pliku do zmiennej
-
-                if (ofd.FilterIndex == 1)//odczyt dla pliku txt
-                {
-                    try
-                    {
-                        file = new StreamReader(filePath); //utworzenie odczytu pliku
-                        while ((line = file.ReadLine()) != null) //dopóki są linie w pliku
-                        {
-                            line = String.Concat(line.Where(x => !Char.IsWhiteSpace(x))); //usunięcie wszelkich znaków białych z linii
-                            result = line.Split('='); //podzielenie odczytanej linii wykorzystując separator
-                            switch (result[0].ToLower()) //zmiana liter na małe w poleceniu
-                            {
-                                case "port_tcp": //polecenie
-                                    port = Convert.ToInt32(result[1].Substring(1, result[1].Length - 2)); //przypisanie numeru portu odczytanego z pliku txt
-                                    counterp = 1; //poprawny format
-                                    break;
-                                case "buffer_size": //polecenie
-                                    buffer_size = Convert.ToInt32(result[1].Substring(1, result[1].Length - 2)); //przypisanie rozmiaru buffera odczytanego z pliku txt
-                                    counterb = 1; //poprawny format
-                                    break;
-                                case "archive_address": //polecenie
-                                    archive_address = Convert.ToString(result[1].Substring(1, result[1].Length - 2)); //przypisanie ścieżki zapisu otrzymanych plików
-                                    countera = 1; //poprawny format
-                                    break;
-                            }
-                            if (counterp + counterb + countera == 3) //jeśli wczytano wszystkie niezbędne dane
-                            {
-                                break; //przerwij dalsze wczytywanie
-                            }
-                        }
-                        file.Close(); //zamknięcie pliku
-                        if (counterp + counterb + countera != 3) //jeśli nie wczytano wszystkich niezbędnych danych
-                        {
-                            file.Close(); //zamknięcie pliku
-                            throw new FileLoadException(); //wyrzucenie wyjątku
-                        }
-                        else
-                        {
-                            config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa   
-                            pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
-                            is_config_correct = true;
-                            ServerConfigurationUpdate();
-                        }
-                    }
-                    catch (FileLoadException)
-                    {
-                        tbl_ConfigurationAllert.Text = "UWAGA! Wczytanie konfiguracji nie powiodło się. Plik konfiguracyjny jest uszkodzony.";
-                        tbl_ConfigurationAllert.FontSize = 18;
-                        tbl_ConfigurationAllert.Visibility = Visibility.Visible;
-                        pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close; //zmiana ikony na niepowodzenie operacji
-                    }
-                }
-                else if (ofd.FilterIndex == 2)//odczyt dla pliku xml
-                {
-                    try
-                    {
-                        bool serwer = false; //zmienna pomocnicza do odczytu konfiguracji dla serwera
-                        bool configure = false; //zmienna pomocnicza sprawdzająca poprawność importowanych danych
-                        file = new StreamReader(filePath); //utworzenie odczytu pliku
-                        while ((line = file.ReadLine()) != null) //dopóki są linie w pliku
-                        {
-                            line = String.Concat(line.Where(x => !Char.IsWhiteSpace(x))); //usunięcie wszelkich znaków białych z linii
-                            if (line.ToLower() == "<serwer>") //początek konfiguracji serwera
-                            {
-                                serwer = true; //ustawienie odczytu danych dla serwera
-                            }
-                            else if (line.ToLower() == "</serwer>") //koniec konfiguracji serwera
-                            {
-                                serwer = false; //przerwanie odczytu danych
-                                break;
-                            }
-                            else if (line.ToLower() == "<configure>" && serwer) //początek konfiguracji
-                            {
-                                configure = true; //ustawienie odczytu konfiguracji
-                            }
-                            else if (line.ToLower() == "</configure>" && serwer) //koniec konfiguracji
-                            {
-                                configure = false; //przerwanie konfiguracji
-                            }
-                            else if (serwer && configure) //jeśli konfiguracja obowiązuje dla serwera
-                            {
-                                result = line.Split('='); //podzielenie odczytanej linii wykorzystując separator
-                                switch (result[0].ToLower()) //ustawienie małych liter poleceń
-                                {
-                                    case "port_tcp": //polecenie
-                                        port = Convert.ToInt32(result[1].Substring(1, result[1].Length - 2)); //przypisanie numeru portu odczytanego z pliku xml
-                                        counterp = 1; //poprawny format
-                                        break;
-                                    case "buffer_size": //polecenie
-                                        buffer_size = Convert.ToInt32(result[1].Substring(1, result[1].Length - 2)); //przypisanie numeru portu odczytanego z pliku xml
-                                        counterb = 1; //poprawny format
-                                        break;
-                                    case "archive_address": //polecenie 
-                                        archive_address = Convert.ToString(result[1].Substring(1, result[1].Length - 2)); //przypisanie ścieżki zapisu otrzymanych plików
-                                        countera = 1; //poprawny format
-                                        break;
-                                }
-                            }
-                        }
-                        file.Close(); //zamknięcie pliku
-                        if (counterp + counterb + countera != 3) //jeśli niepoprawny format konfiguracji
-                        {
-                            file.Close(); //zamknięcie pliku
-                            throw new FileLoadException(); //wyrzuca wyjątek
-                        }
-                        else
-                        {
-                            config = new ServerConfiguration(username, hostName, ip_address, archive_address, port, buffer_size);//utworzenie configa                             
-                            pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
-                            ServerConfigurationUpdate();
-                            is_config_correct = true;
-                        }
-                    }
-                    catch (FileLoadException)
-                    {
-                        tbl_ConfigurationAllert.Text = "UWAGA! Wczytanie konfiguracji nie powiodło się. Plik konfiguracyjny jest uszkodzony.";
-                        tbl_ConfigurationAllert.FontSize = 18;
-                        tbl_ConfigurationAllert.Visibility = Visibility.Visible;
-                        pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close; //zmiana ikony na niepowodzenie operacji
-                    }
-                }
+                pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
+                ServerConfigurationUpdate();
+                flp_ConfigurationSave.IsEnabled = true; //można eksportować do pliku
             }
             else
             {
-                tbl_ConfigurationAllert.Text = "UWAGA! Nie wybrano pliku z konfiguracją serwera.";
+                tbl_ConfigurationAllert.Text = ServerConfigurationLoad.GetError();
                 tbl_ConfigurationAllert.FontSize = 18;
                 tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                 pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close; //zmiana ikony na niepowodzenie operacji
-            }
-
-            if (is_config_correct || config != null)
-            {
-                flp_ConfigurationSave.IsEnabled = true; //można eksportować do pliku
             }
         }
 
@@ -284,29 +150,10 @@ namespace Server
 
         private void btn_ConfigurationSave_Click(object sender, RoutedEventArgs e) //funkcja do zapisu konfiguracji do pliku
         {
-            SaveFileDialog sfg = new SaveFileDialog(); //utworzenie okna do przeglądania plików
-            sfg.Filter = "txt files (*.txt)|*.txt|xml files (*.xml)|*.xml"; //ustawienie filtrów okna na pliki txt i xml
-            sfg.FilterIndex = 1; //ustawienie domyślnego filtru na plik txt
-            sfg.RestoreDirectory = true; //przywracanie wcześniej zamkniętego katalogu
+            bool result = ServerConfigurationSave.SaveToFile(config.GetPort(), config.GetBufferSize(), config.GetArchiveAddress());
 
-            if (sfg.ShowDialog() == true)//wyświetlenie okna ze sprawdzeniem, czy plik został zapisany
+            if (result)
             {
-                if (sfg.FilterIndex == 1) //zapis dla pliku txt
-                {
-                    File.WriteAllText(sfg.FileName, "port_tcp=" + '"' + config.GetPort() + '"' +
-                    Environment.NewLine + "buffer_size=" + '"' + config.GetBufferSize() + '"' +
-                    Environment.NewLine + "archive_address=" + '"' + config.GetArchiveAddress() + '"'); //stworzenie lub nadpisanie pliku        
-                }
-                else if (sfg.FilterIndex == 2) //zapis dla pliku xml
-                {
-                    File.WriteAllText(sfg.FileName, "<serwer>" +
-                        Environment.NewLine + "    <configure>" +
-                        Environment.NewLine + "        port_tcp=" + '"' + config.GetPort() + '"' +
-                        Environment.NewLine + "        buffer_size=" + '"' + config.GetBufferSize() + '"' +
-                        Environment.NewLine + "        archive_address=" + '"' + config.GetArchiveAddress() + '"' +
-                        Environment.NewLine + "    </configure>" +
-                        Environment.NewLine + "</serwer>"); //stworzenie lub nadpisanie pliku 
-                }
                 pic_ConfigurationSave.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
                 tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
             }
@@ -321,57 +168,38 @@ namespace Server
 
         private void btn_ConfigurationCreateSave_Click(object sender, RoutedEventArgs e) //funkcja do ręcznego tworzenia konfiguracji
         {
-            Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog(); //utworzenie okna dialogowego do wybrania ścieżki zapisu otrzymanych plików
-            fbd.Description = "Wybierz ścieżkę dostępu."; //tytuł utworzonego okna
-            fbd.ShowNewFolderButton = true; //włączenie mozliwości tworzenia nowych folderów
-
-            if (fbd.ShowDialog() == true) //jeśli wybrano ścieżkę
+            bool iscreated = false;
+            ServerConfiguration new_config = null;
+            
+            if (config != null)
             {
-                int port, buffer;
-                string username = Environment.UserName; //odczyt nazwy konta użytkownika
-                string hostName = Dns.GetHostName(); //odczyt hostname
-                string ip_address = Dns.GetHostByName(hostName).AddressList[1].ToString(); // odczyt adresu IPv4
-                try
-                {
-                    port = Convert.ToInt32(txt_ConfigurationPort.Text);
-                    buffer = Convert.ToInt32(cmb_ConfigurationBuffer.Text);
-                    config = new ServerConfiguration(username, hostName, ip_address, fbd.SelectedPath, port, buffer);//utworzenie configa
-                    btn_ConfigurationCreate.Content = "Edytuj konfigurację";
-                    flp_ConfigurationSave.IsEnabled = true;
-                    tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
-                    ServerConfigurationUpdate();
-                }
-                catch
-                {
-                    if (config != null)
-                    {
-                        tbl_ConfigurationAllert.Text = "UWAGA! Nie wprowadzono wszystkich danych niezbędnych do utworzenia konfiguracji lub wprowadzone dane są niepoprawne, powrót do istniejącej konfiguracji.";
-                        tbl_ConfigurationAllert.FontSize = 12;
-                        tbl_ConfigurationAllert.Visibility = Visibility.Visible;
-                        txt_ConfigurationPort.Text = config.GetPort().ToString();
-                        cmb_ConfigurationBuffer.Text = config.GetBufferSize().ToString();
-                    }
-                    else
-                    {
-                        tbl_ConfigurationAllert.Text = "UWAGA! Nie wprowadzono wszystkich danych niezbędnych do utworzenia konfiguracji lub wprowadzone dane są niepoprawne.";
-                        tbl_ConfigurationAllert.FontSize = 16;
-                        tbl_ConfigurationAllert.Visibility = Visibility.Visible;
-                        btn_ConfigurationCreateSave.Command.Execute(null);
-                    }
-                }
+                iscreated = true;
+            }
+
+            new_config = ServerConfigurationCreate.CreateConfiguration(txt_ConfigurationPort.Text, tbl_ControlPanelBufferSize.Text, iscreated);
+
+            if (new_config != null)
+            {
+                config = new_config;
+                btn_ConfigurationCreate.Content = "Edytuj konfigurację";
+                flp_ConfigurationSave.IsEnabled = true;
+                tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
+                ServerConfigurationUpdate();
             }
             else
             {
-                if (config != null)
+                if (iscreated)
                 {
-                    tbl_ConfigurationAllert.Text = "UWAGA! Nie podano miejsca zapisu dla przychodzących plików. Powrót do istniejącej konfiguracji.";
-                    tbl_ConfigurationAllert.FontSize = 18;
+                    tbl_ConfigurationAllert.Text = ServerConfigurationCreate.GetError();
+                    tbl_ConfigurationAllert.FontSize = 12;
                     tbl_ConfigurationAllert.Visibility = Visibility.Visible;
+                    txt_ConfigurationPort.Text = config.GetPort().ToString();
+                    cmb_ConfigurationBuffer.Text = config.GetBufferSize().ToString();
                 }
                 else
                 {
-                    tbl_ConfigurationAllert.Text = "UWAGA! Nie podano miejsca zapisu dla przychodzących plików.";
-                    tbl_ConfigurationAllert.FontSize = 18;
+                    tbl_ConfigurationAllert.Text = ServerConfigurationCreate.GetError();
+                    tbl_ConfigurationAllert.FontSize = 16;
                     tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                     btn_ConfigurationCreateSave.Command.Execute(null);
                 }
@@ -1245,9 +1073,5 @@ namespace Server
             tbl_ControlPanelServer.Text = "Oczekiwanie na przesłanie plików.";
         }
 
-        private void btn_UsersPanelDeleteUser_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }    
 }
