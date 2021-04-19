@@ -890,7 +890,10 @@ namespace Server
                 m_oBackgroundWorker.WorkerSupportsCancellation = true; //włączenie możliwości przerwania pracy wątka roboczego
                 m_oBackgroundWorker.DoWork += new DoWorkEventHandler(m_oBackgroundWorker_DoWork); //utworzenie uchwyta dla obiektu
             }
-            m_oBackgroundWorker.RunWorkerAsync(config.GetPort()); //start wątka roboczego w tle
+            if (config != null)
+            {
+                m_oBackgroundWorker.RunWorkerAsync(config.GetPort()); //start wątka roboczego w tle
+            }
         }
 
         private void m_oBackgroundWorker_DoWork(object sender, DoWorkEventArgs e) //funkcja odpowiadająca za pracę wątka roboczego w tle
