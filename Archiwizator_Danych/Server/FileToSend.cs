@@ -47,9 +47,9 @@ namespace Server
             return string.Format("{0:n1}{1}", number, suffixes[counter]);
         }
 
-        public static FileInformation GetFileToSend()
-        {
-            return file_to_send;
-        }
+        //public static FileInformation GetFileToSend()
+        //{
+        //    return file_to_send;
+        //}
     }
 }

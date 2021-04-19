@@ -26,22 +26,16 @@ namespace Server
         private ServerConfiguration config;
         private static Thread resources_thread;
         private long total_ram;
-        ObservableCollection<FileInformation> files_list = new ObservableCollection<FileInformation>();
-        private int active_clients = 0;        
+        ObservableCollection<FileInformation> files_list = new ObservableCollection<FileInformation>();               
         CancellationTokenSource cts;
-        private static FileInformation file_to_send;
-        private BackgroundWorker m_oBackgroundWorker = null;
-        private enum ServerOptions { server_stop, server_listen, server_receive, server_send };
-        private ServerOptions server_option = ServerOptions.server_stop;
-        private ObservableCollection<ConnectionThread> client_list = new ObservableCollection<ConnectionThread>();
-        private ObservableCollection<WorkHistory> history_list = new ObservableCollection<WorkHistory>();
-        private object client_list_locker = new Object();
+        private FileInformation file_to_send;                                
 
         //konstruktor 
         public MainWindow()
         {
             InitializeComponent();
             SetUp();
+            TransferThread.SetLists(this);
         }
 
         //funkcje
@@ -54,12 +48,8 @@ namespace Server
             GetPhysicallyInstalledSystemMemory(out total_ram);
             total_ram = total_ram / 1024;
             files_list.Clear();
-            history_list.Clear();
-            client_list.Clear();
             dgr_ArchivePanelFiles.ItemsSource = files_list;
-            dgr_UsersPanelHistory.ItemsSource = history_list;
-            dgr_UsersPanelConnectedUsers.ItemsSource = client_list;
-            tbl_ControlPanelUsercCounters.Text = active_clients.ToString() + " / 20";
+            tbl_ControlPanelUsercCounters.Text = "0 / 20";
         }
 
         private void CleanServer() //funkcja do czyszczenia pozostałości po wcześniej otwartym oknie
@@ -86,7 +76,7 @@ namespace Server
             tbl_ControlPanelSavePath.Text = config.GetArchiveAddress();
             tbl_ControlPanelBufferSize.Text = config.GetBufferSize().ToString();
             tbl_ControlPanelPort.Text = config.GetPort().ToString();
-        }
+        }        
 
         //wydarzenia
         private void btn_CloseWindow_Click(object sender, RoutedEventArgs e) //zamknięcie okna aplikacji
@@ -162,7 +152,9 @@ namespace Server
             {
                 pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check; //zmiana ikony na powodzenie operacji
                 ServerConfigurationUpdate();
+                btn_ConfigurationCreate.Content = "Edytuj konfigurację";
                 flp_ConfigurationSave.IsEnabled = true; //można eksportować do pliku
+                TransferThread.SetUp(config, this);
             }
             else
             {
@@ -210,6 +202,7 @@ namespace Server
                 flp_ConfigurationSave.IsEnabled = true;
                 tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
                 ServerConfigurationUpdate();
+                TransferThread.SetUp(config, this);
             }
             else
             {
@@ -358,7 +351,9 @@ namespace Server
                 if (cbx_ArchivePanelSetToSend.IsChecked == true)
                 {
                     file_to_send = FileToSend.FileToSendSet(ZipFileCreate.GetPath());
-                    
+
+                    TransferThread.SetUp(file_to_send);
+
                     tbl_ControlPanelFileName.Text = file_to_send.filename;
                     tbl_ControlPanelFileLocation.Text = file_to_send.filepath;
                     tbl_ControlPanelFileSize.Text = FileToSend.FormatSize(file_to_send.filesize);
@@ -480,6 +475,8 @@ namespace Server
             {
                 file_to_send = FileToSend.FileToSendSet(ofd.FileName);
 
+                TransferThread.SetUp(file_to_send);
+
                 tbl_ControlPanelFileName.Text = file_to_send.filename;
                 tbl_ControlPanelFileLocation.Text = file_to_send.filepath;
                 tbl_ControlPanelFileSize.Text = FileToSend.FormatSize(file_to_send.filesize);
@@ -525,7 +522,7 @@ namespace Server
                 }
                 else
                 {
-                    if (ValidateIPAddress(txt_ControlPanelChangeIP.Text) == true)
+                    if (ValidationIP.ValidateIPAddress(txt_ControlPanelChangeIP.Text) == true)
                     {
                         config.SetIPAddress(txt_ControlPanelChangeIP.Text);
                         tbl_ControlPanelIP.Text = txt_ControlPanelChangeIP.Text;
@@ -541,385 +538,34 @@ namespace Server
                     tbl_ControlPanelIP.Visibility = Visibility.Visible;
                 }
             }
-        }
-
-        public bool ValidateIPAddress(string new_ip)
-        {
-            if (String.IsNullOrWhiteSpace(new_ip))
-            {
-                return false;
-            }
-
-            string[] splitValues = new_ip.Split('.');
-            if (splitValues.Length != 4)
-            {
-                return false;
-            }
-
-            byte tempForParsing;
-            return splitValues.All(r => byte.TryParse(r, out tempForParsing));
-        }
-        
-        private void ConnectionListen()
-        {
-            if (null == m_oBackgroundWorker) //sprawdzanie czy obiekt istnieje
-            {
-                m_oBackgroundWorker = new BackgroundWorker(); //utworzenie obiektu
-                m_oBackgroundWorker.WorkerSupportsCancellation = true; //włączenie możliwości przerwania pracy wątka roboczego
-                m_oBackgroundWorker.DoWork += new DoWorkEventHandler(m_oBackgroundWorker_DoWork); //utworzenie uchwyta dla obiektu
-            }
-            if (config != null)
-            {
-                m_oBackgroundWorker.RunWorkerAsync(config.GetPort()); //start wątka roboczego w tle
-            }
-        }
-
-        private void m_oBackgroundWorker_DoWork(object sender, DoWorkEventArgs e) //funkcja odpowiadająca za pracę wątka roboczego w tle
-        {
-            TcpListener listener = new TcpListener(IPAddress.Any, config.GetPort()); //ustawienie nasłuchiwania na porcie z konfiguracji i dla dowolnego adresu IP
-            TcpClient client = null; //utworzenie pustego klienta
-            listener.Start(); //rozpoczęcie nasłuchiwania     
-            bool do_work = true; //zmienna określające prace wątka w tle
-
-            while (do_work)
-            {
-                if (server_option == ServerOptions.server_listen) //działa jesli tryb pracy serwera jest ustawiony na oczekiwanie
-                {
-                    if (listener.Pending()) //jeśli jakieś zapytanie przychodzi
-                    {
-                        client = listener.AcceptTcpClient(); //zaakceptowanie przychodzącego połączenia                           
-                        ThreadPool.QueueUserWorkItem(TransferThread, client ); //Dodanie do kolejki klienta
-                    }
-                }
-                if (m_oBackgroundWorker.CancellationPending) //jeśli przerwano prace wątka
-                {
-                    listener.Stop(); //stop nasłuchiwania
-                    e.Cancel = true; //przerwanie obiektu
-                    do_work = false; //koniec pracy
-                    return;
-                }
-            }
-        }
-
-        private void TransferThread(object obj)
-        {
-            TcpClient client = (TcpClient)obj; //przejęcie kontroli nad klientem
-            CancellationTokenSource canceltoken = new CancellationTokenSource();
-            System.Text.Decoder decoder = System.Text.Encoding.UTF8.GetDecoder(); //zmienna pomocnicza do odkodowania nazwy pliku
-            int buffer_size = config.GetBufferSize(); //wczytanie rozmiaru buffera z konfiguracji
-            byte[] data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-            int receive_bytes; //zmienna do odbierania plików
-            NetworkStream stream = null; //utworzenie kanału do odbioru
-            string client_hostname = null; //zmienna do identyfikacji połączenia
-            string client_ip = null;
-            string client_filename = null; //zmienna do identyfikacji nazwy pliku
-            bool help = true; //zmienna omocnicza określająca czy nowy klient się podłączył  
-            WorkHistory worker = new WorkHistory();           
-
-            while (!canceltoken.IsCancellationRequested)
-            {
-                try
-                {
-                    while (client.Connected)
-                    {
-                        if (server_option != ServerOptions.server_listen && help)
-                        {
-                            client.Close();
-                        }
-                        else if (server_option == ServerOptions.server_listen && help)
-                        {
-                            Monitor.Enter(client_list_locker);
-                            Dispatcher.Invoke( delegate { updateCounterOfActiveUsers(true); } );
-                            stream = client.GetStream(); //określenie rodzaju połączenia na odbiór danych
-                            int dec_data = stream.Read(data, 0, data.Length);//oczekiwanie na nazwę klienta       
-                            char[] chars = new char[dec_data]; //zmienna pomocnicza do odkodowania nazwy klienta
-                            decoder.GetChars(data, 0, dec_data, chars, 0); //dekodowanie otrzymanej nazwy klienta
-                            client_hostname = new System.String(chars); //przypisanie odkodowanej nazwy do nowej zmiennej
-                            client_ip = client.Client.RemoteEndPoint.ToString();
-                            worker.ClientConnectionStart(client_hostname);
-                            Dispatcher.Invoke(delegate { history_list.Add(worker); });
-                            help = false; //wyłączenie właściwości nowego klienta                        
-                            ConnectionThread _ct = new ConnectionThread(client_hostname, client_ip, canceltoken);
-                            Dispatcher.Invoke(delegate { client_list.Add(_ct); });
-                            Monitor.Exit(client_list_locker);
-                        }
-                        else if (server_option == ServerOptions.server_receive && !help)
-                        {
-                            if (Directory.Exists(config.GetArchiveAddress()) == false) //sprawdzanie czy ścieżka dostępu z pliku konfiguracyjnego istnieje
-                            {
-                                Directory.CreateDirectory(config.GetArchiveAddress()); //utworzenie ścieżki dostępu z pliku konfiguracyjnego
-                            }
-                            try
-                            {
-                                byte[] buff = new byte[1]; //pomocniczy bufer
-                                data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                bool end_stream = false; //flaga informująca czy koniec pliku
-                                stream = client.GetStream(); //określenie rodzaju połączenia na odbiór danych
-                                stream.ReadTimeout = 1000;
-                                receive_bytes = stream.Read(data, 0, data.Length);
-                                if ("startsending" == System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes))
-                                {
-                                    stream.ReadTimeout = Timeout.Infinite;
-                                    data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                    data = System.Text.Encoding.ASCII.GetBytes("ready");
-                                    stream.Write(data, 0, data.Length);
-                                    stream.Write(data, 0, data.Length);
-                                    stream.Flush(); //zwolnienie strumienia
-                                    data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                    receive_bytes = stream.Read(data, 0, data.Length);
-                                    client_filename = System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes);
-                                    if (client_filename != null && client_filename != "")
-                                    {
-                                        data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                        data = System.Text.Encoding.ASCII.GetBytes("ready");
-                                        stream.Write(data, 0, data.Length);
-                                        stream.Flush(); //zwolnienie strumienia
-                                        stream.Write(data, 0, data.Length);
-                                        worker.ClientReceiveStart(client_hostname, client_filename);
-                                        Dispatcher.Invoke(delegate { history_list.Add(worker); });
-                                        FileStream filestream = new FileStream(config.GetArchiveAddress() + @"\" + client_filename, FileMode.OpenOrCreate, FileAccess.Write); //utworzenie pliku do zapisu archiwum                              
-                                        data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                                                      //while ((receive_bytes = stream.Read(data, 0, data.Length)) > 0 && !end_stream) //dopóki przychodzą dane                           
-                                        while (!end_stream)
-                                        {
-                                            if (client.Client.Receive(buff, SocketFlags.Peek) == 0) //jeśli nagle przestał odpowiadać
-                                            {
-                                                worker.ClientReceiveError(client_hostname, client_filename);
-                                                Dispatcher.Invoke(delegate { history_list.Add(worker); });
-                                                throw new SocketException();
-                                            }
-                                            receive_bytes = stream.Read(data, 0, data.Length);
-                                            string end_transfer = System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes);
-                                            if (end_transfer == "endsending")
-                                            {
-                                                end_stream = true;
-                                            }
-                                            else
-                                            {
-                                                filestream.Write(data, 0, receive_bytes); //kopiowanie danych do pliku
-                                            }
-                                        }
-                                        filestream.Close(); //zamknięcie strumienia pliku    
-                                        worker.ClientReceiveEnd(client_hostname, client_filename);
-                                        Dispatcher.Invoke(delegate { history_list.Add(worker); });
-                                        client_filename = null; //wyczyszczenie nazwy pliku                                                              
-                                    }
-                                }
-                                else
-                                {
-                                    if (client.Client.Receive(buff, SocketFlags.Peek) == 0) //jeśli nagle przestał odpowiadać
-                                    {
-                                        client.Client.Disconnect(true); //rozłącz klienta                                                         
-                                    }
-                                }
-                            }
-                            catch
-                            { }
-                        }
-                        else if (server_option == ServerOptions.server_send && !help)
-                        {
-                            if (file_to_send != null) //jeśli wybrany plik istnieje
-                            {
-                                try
-                                {
-                                    stream = client.GetStream(); //aktywacja strumienia
-                                    data = System.Text.Encoding.ASCII.GetBytes("startsending"); //zakodowanie chęci wysłania pliku
-                                    stream.Write(data, 0, data.Length); //wysłanie chęci
-                                    stream.Flush(); //zwolnienie strumienia
-                                    data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                    receive_bytes = stream.Read(data, 0, data.Length);
-                                    if ("confirmtask" == System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes))
-                                    {
-                                        data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                        data = System.Text.Encoding.ASCII.GetBytes(file_to_send.GetFullFileName()); //zakodowanie nazwy pliku
-                                        stream.Write(data, 0, data.Length); //wysłanie nazwy pliku
-                                        stream.Flush(); //zwolnienie strumienia
-                                        data = new byte[buffer_size];
-                                        receive_bytes = stream.Read(data, 0, data.Length);
-                                        if ("ready" == System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes))
-                                        {
-                                            data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                            data = System.Text.Encoding.ASCII.GetBytes(file_to_send.filesize.ToString()); //zakodowanie rozmiaru pliku
-                                            stream.Write(data, 0, data.Length); //wysłanie rozmiaru pliku
-                                            stream.Flush(); //zwolnienie strumienia
-                                            data = new byte[buffer_size];
-                                            receive_bytes = stream.Read(data, 0, data.Length);
-                                            if ("ready" == System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes))
-                                            {
-                                                data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                                worker.ClientSendStart(client_hostname, file_to_send.GetFullFileName());
-                                                Dispatcher.Invoke(delegate { history_list.Add(worker); });
-                                                using (var s = File.OpenRead(file_to_send.filepath)) //dopoki plik jest otwarty
-                                                {
-                                                    int actually_read; //zmienna pomocnicza do odczytu rozmiaru
-                                                    while ((actually_read = s.Read(data, 0, buffer_size)) > 0) //dopóki w pliku sa dane
-                                                    {
-                                                        stream.Write(data, 0, actually_read); //wyslanie danych z pliku
-                                                    }
-                                                }
-                                                stream.Flush(); //zwolnienie strumienia   
-                                                Thread.Sleep(250); //usypianie w celu oddzielenia następnej wiadomości
-                                                data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                                data = System.Text.Encoding.ASCII.GetBytes("endsending"); //zakodowanie nazwy pliku
-                                                stream.Write(data, 0, data.Length); //wysłanie nazwy pliku
-                                                stream.Flush(); //zwolnienie strumienia
-                                                worker.ClientSendEnd(client_hostname, file_to_send.GetFullFileName());
-                                                Dispatcher.Invoke(delegate { history_list.Add(worker); });
-                                            }
-                                        }
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    stream.Flush();
-                                    worker.ClientSendError(client_hostname, client_filename);
-                                    Dispatcher.Invoke(delegate { history_list.Add(worker); });
-                                    MessageBox.Show(e.ToString());
-                                    throw new SocketException();
-                                }
-                                finally
-                                {
-                                    server_option = ServerOptions.server_stop;
-                                    Dispatcher.Invoke(delegate { tbl_ControlPanelServer.Text = "Wstrzymanie pracy."; }); //aktualizacja aktywnych użytkowników
-                                }
-                            }
-                        }
-                        else if (client.Client.Poll(0, SelectMode.SelectRead)) //jeśli klient odpowiada
-                        {
-                            byte[] buff = new byte[1]; //pomocniczy bufer
-                            if (client.Client.Receive(buff, SocketFlags.Peek) == 0) //jeśli nagle przestał odpowiadać
-                            {
-                                client.Client.Disconnect(true); //rozłącz klienta                                                         
-                            }
-                        }
-                        else if (canceltoken.IsCancellationRequested)
-                        {
-                            client.Client.Disconnect(true); //rozłącz klienta
-                            help = true;
-                        }
-                    }
-                    client.Close(); //zamknięcie klienta                    
-                    Dispatcher.Invoke(delegate { updateCounterOfActiveUsers(false); }); //aktualizacja aktywnych użytkowników
-                    if (!help)
-                    {
-                        canceltoken.Cancel();
-                        canceltoken.Dispose();
-                    }
-                    Dispatcher.Invoke(delegate { deleteUserFromList(client_ip); });
-                    worker.ClientConnectionEnd(client_hostname);
-                    Dispatcher.Invoke(delegate { history_list.Add(worker); });
-                }
-                catch (SocketException)
-                {
-                    client.Client.ReceiveTimeout = 3000;
-                    if (!client.Client.Poll(0, SelectMode.SelectRead))
-                    {
-                        client.Client.ReceiveTimeout = 0;
-                    }
-                    else
-                    {
-                        client.Close(); //zamknięcie klienta
-                        Dispatcher.Invoke(delegate { updateCounterOfActiveUsers(false); }); //aktualizacja aktywnych użytkowników
-                        if (!help)
-                        {
-                            canceltoken.Cancel();
-                            canceltoken.Dispose();
-                        }
-                        Dispatcher.Invoke(delegate { deleteUserFromList(client_ip); });
-                        worker.ClientConnectionEnd(client_hostname);
-                        Dispatcher.Invoke(delegate { history_list.Add(worker); });
-                    }
-                }
-                catch (IOException)
-                {
-                    client.Close(); //zamknięcie klienta
-                    Dispatcher.Invoke(delegate { updateCounterOfActiveUsers(false); }); //aktualizacja aktywnych użytkowników
-                    if (!help)
-                    {
-                        canceltoken.Cancel();
-                        canceltoken.Dispose();
-                    }
-                    Dispatcher.Invoke(delegate { deleteUserFromList(client_ip); });
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.ToString()); //komunikat o błędzie
-                }
-            }
-        }
-
-        private void deleteUserFromList(string _ip)
-        {
-            foreach (var _client in client_list)
-            {
-                if (_client.IpAddress == _ip)
-                {
-                    client_list.Remove(_client);
-                    break;
-                }
-            }
-        }
-
-        private void updateCounterOfActiveUsers(bool x) //funkcja do aktualizowania aktywnych połączeń
-        {
-            if (x) //jeśli true
-            {
-                active_clients++; //zwiększenie listy aktywnych klientów
-                tbl_ControlPanelUsercCounters.Text = active_clients.ToString() + " / 20";
-                rpb_ControlPanelUsersCounter.Value = (active_clients * 5);
-            }
-            else
-            {
-                active_clients--; //zmniejszenie liczby aktywnych klientów
-                tbl_ControlPanelUsercCounters.Text = active_clients.ToString() + " / 20";
-                if (active_clients != 0)
-                {
-                    rpb_ControlPanelUsersCounter.Value = (active_clients * 5);
-                }
-                else
-                {
-                    rpb_ControlPanelUsersCounter.Value = 0;
-                }
-            }
-        }
-
-        private void BackgroundWorkerClose() //funkcja do przerywania wątka w tle
-        {
-            if (m_oBackgroundWorker != null) //jeśli obiekt istnieje
-            {
-                if (m_oBackgroundWorker.IsBusy) //sprawdzanie czy taki wątek istnieje
-                {
-                    m_oBackgroundWorker.CancelAsync();//przerwanie wątka roboczego
-                }
-            }
-        }
+        }       
 
         private void btn_ControlPanelServerListen_Click(object sender, RoutedEventArgs e)
-        {
-            server_option = ServerOptions.server_listen;
-            BackgroundWorkerClose();
+        {            
+            ServerOptions.server_option = ServerOptions.Options.server_listen;
+            BackgroundThread.BackgroundWorkerClose();
+            BackgroundThread.ConnectionListen(config);
             tbl_ControlPanelServer.Text = "Oczekiwanie na podłączenie klientów.";
-            ConnectionListen();
         }
 
         private void btn_ControlPanelServerSend_Click(object sender, RoutedEventArgs e)
         {
-            server_option = ServerOptions.server_send;
-            BackgroundWorkerClose();
+            ServerOptions.server_option = ServerOptions.Options.server_send;
+            BackgroundThread.BackgroundWorkerClose();
             tbl_ControlPanelServer.Text = "Wysyłanie plików podłączonym klientom.";
         }
 
         private void btn_ControlPanelServerStop_Click(object sender, RoutedEventArgs e)
         {
-            server_option = ServerOptions.server_stop;
-            BackgroundWorkerClose();
+            ServerOptions.server_option = ServerOptions.Options.server_stop;
+            BackgroundThread.BackgroundWorkerClose();
             tbl_ControlPanelServer.Text = "Wstrzymanie pracy.";
         }
 
         private void btn_ControlPanelServerReceive_Click(object sender, RoutedEventArgs e)
         {
-            server_option = ServerOptions.server_receive;
-            BackgroundWorkerClose();
+            ServerOptions.server_option = ServerOptions.Options.server_receive;
+            BackgroundThread.BackgroundWorkerClose();
             tbl_ControlPanelServer.Text = "Oczekiwanie na przesłanie plików.";
         }
 
