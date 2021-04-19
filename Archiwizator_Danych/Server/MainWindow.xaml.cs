@@ -22,13 +22,14 @@ namespace Server
     /// </summary>
     public partial class MainWindow : Window
     {
+        //zmienne globalne
         private ServerConfiguration config;
         private static Thread resources_thread;
         private long total_ram;
         ObservableCollection<FileInformation> files_list = new ObservableCollection<FileInformation>();
-        private int active_clients = 0;
-        private FileInformation file_to_send;
+        private int active_clients = 0;        
         CancellationTokenSource cts;
+        private static FileInformation file_to_send;
         private BackgroundWorker m_oBackgroundWorker = null;
         private enum ServerOptions { server_stop, server_listen, server_receive, server_send };
         private ServerOptions server_option = ServerOptions.server_stop;
@@ -36,15 +37,22 @@ namespace Server
         private ObservableCollection<WorkHistory> history_list = new ObservableCollection<WorkHistory>();
         private object client_list_locker = new Object();
 
+        //konstruktor 
+        public MainWindow()
+        {
+            InitializeComponent();
+            SetUp();
+        }
+
+        //funkcje
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
 
-        public MainWindow()
+        private void SetUp()
         {
             GetPhysicallyInstalledSystemMemory(out total_ram);
             total_ram = total_ram / 1024;
-            InitializeComponent();
             files_list.Clear();
             history_list.Clear();
             client_list.Clear();
@@ -54,6 +62,33 @@ namespace Server
             tbl_ControlPanelUsercCounters.Text = active_clients.ToString() + " / 20";
         }
 
+        private void CleanServer() //funkcja do czyszczenia pozostałości po wcześniej otwartym oknie
+        {
+            grd_ResourcesMonitor.Visibility = Visibility.Collapsed;
+            grd_Configuration.Visibility = Visibility.Collapsed;
+            grd_ArchivePanel.Visibility = Visibility.Collapsed;
+            grd_ControlPanel.Visibility = Visibility.Collapsed;
+            grd_UsersPanel.Visibility = Visibility.Collapsed;
+
+            if (resources_thread != null && resources_thread.IsAlive && cts.Token.CanBeCanceled)
+            {
+                cts.Cancel();
+                cts.Token.WaitHandle.WaitOne();
+                cts.Dispose();
+            }
+        }
+
+        private void ServerConfigurationUpdate()
+        {
+            tbl_ControlPanelUserName.Text = config.GetUserName();
+            tbl_ControlPanelIP.Text = config.GetIPAddress();
+            tbl_ControlPanelHostName.Text = config.GetHostName();
+            tbl_ControlPanelSavePath.Text = config.GetArchiveAddress();
+            tbl_ControlPanelBufferSize.Text = config.GetBufferSize().ToString();
+            tbl_ControlPanelPort.Text = config.GetPort().ToString();
+        }
+
+        //wydarzenia
         private void btn_CloseWindow_Click(object sender, RoutedEventArgs e) //zamknięcie okna aplikacji
         {
             CleanServer();
@@ -114,8 +149,8 @@ namespace Server
         {
             CleanServer();
             grd_ResourcesMonitor.Visibility = Visibility.Visible;
-            cts = new CancellationTokenSource();
-            resources_thread = new Thread(() => ResourcesMonitor(cts.Token));
+            cts = new CancellationTokenSource();            
+            resources_thread = new Thread(() => ResourcesMonitor.ResourcesMonitorWork(cts.Token, total_ram, this));
             resources_thread.Start();
         }
 
@@ -136,16 +171,6 @@ namespace Server
                 tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                 pic_ConfigurationLoad.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close; //zmiana ikony na niepowodzenie operacji
             }
-        }
-
-        private void ServerConfigurationUpdate()
-        {
-            tbl_ControlPanelUserName.Text = config.GetUserName();
-            tbl_ControlPanelIP.Text = config.GetIPAddress();
-            tbl_ControlPanelHostName.Text = config.GetHostName();
-            tbl_ControlPanelSavePath.Text = config.GetArchiveAddress();
-            tbl_ControlPanelBufferSize.Text = config.GetBufferSize().ToString();
-            tbl_ControlPanelPort.Text = config.GetPort().ToString();
         }
 
         private void btn_ConfigurationSave_Click(object sender, RoutedEventArgs e) //funkcja do zapisu konfiguracji do pliku
@@ -204,74 +229,6 @@ namespace Server
                     btn_ConfigurationCreateSave.Command.Execute(null);
                 }
             }
-        }
-
-        private void ResourcesMonitor(object _canceltoken) //metoda do odczytu uźycia podzespołów
-        {
-            CancellationToken canceltoken = (CancellationToken)_canceltoken;
-            
-            PerformanceCounter cpu_usage = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-            PerformanceCounter ram_usage = new PerformanceCounter("Memory", "Available MBytes");
-            PerformanceCounter disk_usage = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
-            var firstCall = cpu_usage.NextValue();
-            Thread.Sleep(100);
-
-            while (!canceltoken.IsCancellationRequested)
-            {
-                double cpu = Math.Round(cpu_usage.NextValue(), 2);
-                double ram = Math.Round(((total_ram - ram_usage.NextValue()) * 100 / total_ram), 2);
-                double disk = Math.Round(disk_usage.NextValue(), 2);
-                Dispatcher.Invoke(delegate { ResourcesMonitorUpdate(cpu, ram, disk); });
-                Thread.Sleep(1000);
-            }          
-        }
-
-        private void CleanServer() //funkcja do czyszczenia pozostałości po wcześniej otwartym oknie
-        {
-            grd_ResourcesMonitor.Visibility = Visibility.Collapsed;
-            grd_Configuration.Visibility = Visibility.Collapsed;
-            grd_ArchivePanel.Visibility = Visibility.Collapsed;
-            grd_ControlPanel.Visibility = Visibility.Collapsed;
-            grd_UsersPanel.Visibility = Visibility.Collapsed;
-
-            if (resources_thread != null && resources_thread.IsAlive && cts.Token.CanBeCanceled)
-            {
-                cts.Cancel();
-                cts.Token.WaitHandle.WaitOne();
-                cts.Dispose();
-                ResourcesMonitorUpdate(0, 0, 0);                
-            }
-        }
-
-        private void ResourcesMonitorUpdate(double cpu, double ram, double disk) //funkcja do aktualizacji użycia podzespołów
-        {
-            double safe_usage = 75;
-            tbl_ResourcesMonitorAllert.Text = "UWAGA! Duże wykorzystanie podzespołów: ";
-
-            if (cpu > safe_usage)
-            {
-                tbl_ResourcesMonitorAllert.Text += "CPU ";
-            }
-            if (ram > safe_usage)
-            {
-                tbl_ResourcesMonitorAllert.Text += "RAM ";
-            }
-            if (disk > safe_usage)
-            {
-                tbl_ResourcesMonitorAllert.Text += "DISK ";
-            }
-            if (cpu > safe_usage || ram > safe_usage || disk > safe_usage)
-            {
-                tbl_ResourcesMonitorAllert.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                tbl_ResourcesMonitorAllert.Visibility = Visibility.Hidden;
-            }
-
-            rpb_CPU.Value = cpu;
-            rpb_RAM.Value = ram;
-            rpb_DISK.Value = disk;
         }
 
         private void btn_ConfigurationReturn_Click(object sender, RoutedEventArgs e) //event do kasowania komunikatów
@@ -376,157 +333,46 @@ namespace Server
 
         private void btn_ArchivePanelCreateZIP_Click(object sender, RoutedEventArgs e) //event do tworzenia archiwum zip
         {
-            string filename = tbx_ArchivePanelFilename.Text;
-            string password = pbx_ArchivePanelPasswordBox.Password;
-            string path = null;
-            List<FileInformation> _files_list = new List<FileInformation>();
+            bool result = false;
+            string path = "";
 
-            try
+            if (cbx_ArchivePanelSavePathFromFile.IsChecked == true)
             {
-                if(filename != null && filename.Trim() != "")
+                if (config != null)
                 {
-                    if (cbx_ArchivePanelSavePathFromFile.IsChecked == true)
-                    {
-                        if (config != null)
-                        {
-                            path = config.GetArchiveAddress() + "\\" + filename + ".zip";
-                        }
-                        else
-                        {
-                            tbl_ArchivePanelAllert.Text = "UWAGA! Domyślne miejsce zapisu nieustawione. Załaduj plik konfiguracyjny lub ręcznie wybierz miejsce zapisu";
-                            tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
-                            pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
-                            throw new Exception();
-                        }
-                    }
-                    else
-                    {
-                        Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog(); //utworzenie okna dialogowego do wybrania ścieżki zapisu otrzymanych plików
-                        fbd.Description = "Wybierz ścieżkę dostępu."; //tytuł utworzonego okna
-                        fbd.ShowNewFolderButton = true; //włączenie mozliwości tworzenia nowych folderów
-
-                        if (fbd.ShowDialog() == true)
-                        {
-                            path = fbd.SelectedPath + "\\" + filename + ".zip";
-                        }
-                        else
-                        {
-                            tbl_ArchivePanelAllert.Text = "UWAGA! Nie wybrano miejsca zapisu nowego archiwum.";
-                            tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
-                            pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
-                            throw new Exception();
-                        }
-                    }
-
-                    if (files_list.Count >= 1)
-                    {
-                        for (int i = 0; i < files_list.Count; i++)
-                        {
-                            if (files_list[i].is_checked == true)
-                            {
-                                _files_list.Add(files_list[i]);
-                            }
-                        }
-                        if (_files_list.Count >= 1)
-                        {
-                            using (ZipFile _zip = new ZipFile()) //utworzenie archiwum
-                            {
-                                foreach (var _file in _files_list)
-                                {
-                                    if (password != null && password.Trim() != "")
-                                    {
-                                        _zip.Password = password; //dodanie hasła
-                                    }
-                                    _zip.AddFile((_file.filepath + "\\" + _file.filename + _file.filetype), ""); //dodanie pliku do archiwum
-                                }
-                                _zip.Save(path); //zapis archiwum
-                                if (cbx_ArchivePanelSetToSend.IsChecked == true)
-                                {
-                                    FileToSendSet(path);                                   
-                                }
-                                tbl_ArchivePanelAllert.Text = "";
-                                tbl_ArchivePanelAllert.Visibility = Visibility.Collapsed;
-                                pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check;
-                            }
-                        }
-                        else
-                        {
-                            tbl_ArchivePanelAllert.Text = "UWAGA! Na liście brak zaznaczonych plików do skompresowania.";
-                            tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
-                            pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
-                        }
-                    }
-                    else
-                    {
-                        tbl_ArchivePanelAllert.Text = "UWAGA! Na liście brak plików do skompresowania.";
-                        tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
-                        pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
-                    }
+                    path = config.GetArchiveAddress();
                 }
                 else
                 {
-                    tbl_ArchivePanelAllert.Text = "UWAGA! Nie utworzono archiwum. Podaj nazwę archiwum, które chcesz utworzyć.";
+                    tbl_ArchivePanelAllert.Text = "UWAGA! Domyślne miejsce zapisu nieustawione. Załaduj plik konfiguracyjny lub ręcznie wybierz miejsce zapisu";
                     tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
                     pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
                 }
             }
-            catch (FileNotFoundException)
-            {
-                tbl_ArchivePanelAllert.Text = "UWAGA! Błąd tworzenia. Przynajmniej jeden wybrany plik zmienił ścieżke dostępu.";
-                tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
-                pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
-            }
-            catch (ArgumentException)
-            {
-                tbl_ArchivePanelAllert.Text = "UWAGA! Błąd tworzenia. Nazwa archiwum zawiera niedozwolone znaki.";
-                tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
-                pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
-            }
-            catch (Exception)
-            {
 
-            }
-        }
+            result = ZipFileCreate.CreateZip(files_list, tbx_ArchivePanelFilename.Text, pbx_ArchivePanelPasswordBox.Password, path);
 
-        private void FileToSendSet(string path)
-        {
-            FileInfo _file_to_send = new FileInfo(path);
 
-            if (file_to_send != null)
+            if (result)
             {
-                file_to_send.filename = Path.GetFileNameWithoutExtension(_file_to_send.Name);
-                file_to_send.filepath = path;
-                file_to_send.filetype = _file_to_send.Extension;
-                file_to_send.filesize = _file_to_send.Length;
-                file_to_send.is_checked = true;
+                if (cbx_ArchivePanelSetToSend.IsChecked == true)
+                {
+                    file_to_send = FileToSend.FileToSendSet(ZipFileCreate.GetPath());
+                    
+                    tbl_ControlPanelFileName.Text = file_to_send.filename;
+                    tbl_ControlPanelFileLocation.Text = file_to_send.filepath;
+                    tbl_ControlPanelFileSize.Text = FileToSend.FormatSize(file_to_send.filesize);
+                }
+                tbl_ArchivePanelAllert.Text = "";
+                tbl_ArchivePanelAllert.Visibility = Visibility.Collapsed;
+                pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Check;
             }
             else
             {
-                file_to_send = new FileInformation()
-                {
-                    filename = Path.GetFileNameWithoutExtension(_file_to_send.Name),
-                    filepath = path,
-                    filetype = _file_to_send.Extension,
-                    filesize = _file_to_send.Length,
-                    is_checked = true
-                };
+                tbl_ArchivePanelAllert.Text = ZipFileCreate.GetError();
+                tbl_ArchivePanelAllert.Visibility = Visibility.Visible;
+                pic_ArchivePanelCreateZIP.Kind = MaterialDesignThemes.Wpf.PackIconKind.Close;
             }
-            tbl_ControlPanelFileName.Text = _file_to_send.Name;
-            tbl_ControlPanelFileLocation.Text = path;
-            tbl_ControlPanelFileSize.Text = FormatSize(_file_to_send.Length);
-        }
-
-        public static string FormatSize(Int64 bytes)
-        {
-            string[] suffixes = { "Bytes", "KB", "MB", "GB", "TB", "PB" };
-            int counter = 0;
-            decimal number = (decimal)bytes;
-            while (Math.Round(number / 1024) >= 1)
-            {
-                number = number / 1024;
-                counter++;
-            }
-            return string.Format("{0:n1}{1}", number, suffixes[counter]);
         }
 
         private void btn_ArchivePanelDataGridClear_Click(object sender, RoutedEventArgs e) //event do czyszczenia plikow
@@ -632,7 +478,11 @@ namespace Server
 
             if (ofd.ShowDialog() == true)
             {
-                FileToSendSet(ofd.FileName);
+                file_to_send = FileToSend.FileToSendSet(ofd.FileName);
+
+                tbl_ControlPanelFileName.Text = file_to_send.filename;
+                tbl_ControlPanelFileLocation.Text = file_to_send.filepath;
+                tbl_ControlPanelFileSize.Text = FileToSend.FormatSize(file_to_send.filesize);
             }
             else
             {
