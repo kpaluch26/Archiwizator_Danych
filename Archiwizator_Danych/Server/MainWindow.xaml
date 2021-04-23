@@ -163,112 +163,112 @@
                 </Grid>
             </StackPanel>
             <materialDesign:Flipper Margin="45,90,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                    <materialDesign:Flipper.FrontContent >
-                        <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="280" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
-                                <materialDesign:PackIcon Kind="FileUpload" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
-                            </materialDesign:ColorZone>
-                            <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button x:Name="btn_ConfigurationLoad" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Wczytaj konfigurację" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ConfigurationLoad_Click"/>
-                            </StackPanel>
-                        </Grid>
-                    </materialDesign:Flipper.FrontContent>
-                    <materialDesign:Flipper.BackContent>
-                        <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="280" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
-                                <materialDesign:PackIcon x:Name="pic_ConfigurationLoad" Kind="Check" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
-                            </materialDesign:ColorZone>
-                            <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Click="btn_ConfigurationReturn_Click" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
-                            </StackPanel>
-                        </Grid>
-                    </materialDesign:Flipper.BackContent>
-                </materialDesign:Flipper>
+                <materialDesign:Flipper.FrontContent >
+                    <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="280" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
+                            <materialDesign:PackIcon Kind="FileUpload" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
+                        </materialDesign:ColorZone>
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button x:Name="btn_ConfigurationLoad" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Wczytaj konfigurację" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ConfigurationLoad_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Flipper.FrontContent>
+                <materialDesign:Flipper.BackContent>
+                    <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="280" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
+                            <materialDesign:PackIcon x:Name="pic_ConfigurationLoad" Kind="Check" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
+                        </materialDesign:ColorZone>
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Click="btn_ConfigurationReturn_Click" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Flipper.BackContent>
+            </materialDesign:Flipper>
 
-                <materialDesign:Flipper x:Name="flp_ConfigurationSave" Margin="0,90,45,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Right" materialDesign:ShadowAssist.ShadowDepth="Depth3" IsEnabled="False">
-                    <materialDesign:Flipper.FrontContent >
-                        <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="280" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
-                                <materialDesign:PackIcon Kind="FileDownload" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
-                            </materialDesign:ColorZone>
-                            <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button x:Name="btn_ConfigurationSave" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Zapisz konfigurację" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ConfigurationSave_Click"/>
-                            </StackPanel>
-                        </Grid>
-                    </materialDesign:Flipper.FrontContent>
-                    <materialDesign:Flipper.BackContent>
-                        <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="280" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
-                                <materialDesign:PackIcon x:Name="pic_ConfigurationSave" Kind="Check" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
-                            </materialDesign:ColorZone>
-                            <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Click="btn_ConfigurationReturn_Click" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
-                            </StackPanel>
-                        </Grid>
-                    </materialDesign:Flipper.BackContent>
-                </materialDesign:Flipper>
+            <materialDesign:Flipper x:Name="flp_ConfigurationSave" Margin="0,90,45,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Right" materialDesign:ShadowAssist.ShadowDepth="Depth3" IsEnabled="False">
+                <materialDesign:Flipper.FrontContent >
+                    <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="280" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
+                            <materialDesign:PackIcon Kind="FileDownload" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
+                        </materialDesign:ColorZone>
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button x:Name="btn_ConfigurationSave" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Zapisz konfigurację" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ConfigurationSave_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Flipper.FrontContent>
+                <materialDesign:Flipper.BackContent>
+                    <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="280" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
+                            <materialDesign:PackIcon x:Name="pic_ConfigurationSave" Kind="Check" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
+                        </materialDesign:ColorZone>
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Powrót" Click="btn_ConfigurationReturn_Click" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Flipper.BackContent>
+            </materialDesign:Flipper>
 
-                <materialDesign:Flipper x:Name="flp_ConfigurationCreate" Margin="370,90,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                    <materialDesign:Flipper.FrontContent >
-                        <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="280" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
-                                <materialDesign:PackIcon Kind="FilePlus" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
-                            </materialDesign:ColorZone>
-                            <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button x:Name="btn_ConfigurationCreate" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Stwórz konfigurację" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
-                            </StackPanel>
-                        </Grid>
-                    </materialDesign:Flipper.FrontContent>
-                    <materialDesign:Flipper.BackContent>
-                        <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="280" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
-                                <Grid>
-                                    <TextBox x:Name="txt_ConfigurationPort" materialDesign:HintAssist.Hint="Port komunikacji" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="20" SelectionBrush="#FF3D5AFE" Margin="0,60,0,0" CaretBrush="#FF3D5AFE" Cursor="IBeam" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE" SelectionTextBrush="#FF3D5AFE"/>
-                                    <ComboBox x:Name="cmb_ConfigurationBuffer" materialDesign:HintAssist.Hint="Rozmiar buffora" Style="{DynamicResource MaterialDesignOutlinedComboBox}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,140,0,0" FontSize="20" Foreground="White" Background="#FF1A237E" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE" materialDesign:HintAssist.Background="#FF1A237E" IsReadOnly="True" >
-                                        <ComboBox.ItemContainerStyle>
-                                            <Style TargetType="{x:Type ComboBoxItem}">
-                                                <!--<Setter Property="Background" Value="#FF1A237E"/>
+            <materialDesign:Flipper x:Name="flp_ConfigurationCreate" Margin="370,90,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                <materialDesign:Flipper.FrontContent >
+                    <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="280" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
+                            <materialDesign:PackIcon Kind="FilePlus" Height="280" Width="280" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF3D5AFE"/>
+                        </materialDesign:ColorZone>
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button x:Name="btn_ConfigurationCreate" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Stwórz konfigurację" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True"/>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Flipper.FrontContent>
+                <materialDesign:Flipper.BackContent>
+                    <Grid Background="#FF3D5AFE" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="280" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#FF1A237E">
+                            <Grid>
+                                <TextBox x:Name="txt_ConfigurationPort" materialDesign:HintAssist.Hint="Port komunikacji" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="20" SelectionBrush="#FF3D5AFE" Margin="0,60,0,0" CaretBrush="#FF3D5AFE" Cursor="IBeam" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE" SelectionTextBrush="#FF3D5AFE"/>
+                                <ComboBox x:Name="cmb_ConfigurationBuffer" materialDesign:HintAssist.Hint="Rozmiar buffora" Style="{DynamicResource MaterialDesignOutlinedComboBox}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,140,0,0" FontSize="20" Foreground="White" Background="#FF1A237E" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" materialDesign:HintAssist.Foreground="#FF3D5AFE" materialDesign:HintAssist.Background="#FF1A237E" IsReadOnly="True" >
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ComboBoxItem}">
+                                            <!--<Setter Property="Background" Value="#FF1A237E"/>
                                                 <Setter Property="BorderBrush" Value="#FF1A237E"/>-->
-                                                <Setter Property="Foreground" Value="Black"/>
-                                            </Style>
-                                        </ComboBox.ItemContainerStyle>
-                                        <ComboBoxItem Content="512" />
-                                        <ComboBoxItem Content="1024" />
-                                        <ComboBoxItem Content="2048" />
-                                        <ComboBoxItem Content="4096" />
-                                    </ComboBox>
-                                </Grid>
-                            </materialDesign:ColorZone>
-                            <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Button x:Name="btn_ConfigurationCreateSave" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Zapisz" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ConfigurationCreateSave_Click"/>
-                            </StackPanel>
-                        </Grid>
-                    </materialDesign:Flipper.BackContent>
-                </materialDesign:Flipper>
+                                            <Setter Property="Foreground" Value="Black"/>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                    <ComboBoxItem Content="512" />
+                                    <ComboBoxItem Content="1024" />
+                                    <ComboBoxItem Content="2048" />
+                                    <ComboBoxItem Content="4096" />
+                                </ComboBox>
+                            </Grid>
+                        </materialDesign:ColorZone>
+                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button x:Name="btn_ConfigurationCreateSave" Background="{x:Null}" BorderBrush="{x:Null}" Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Zapisz" Foreground="White" Cursor="Hand" FontSize="20" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ConfigurationCreateSave_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Flipper.BackContent>
+            </materialDesign:Flipper>
         </Grid>
 
         <Grid x:Name="grd_ArchivePanel" Visibility="Collapsed" Margin="60,60,0,0">
@@ -434,7 +434,8 @@
                 </Grid>
             </StackPanel>
 
-            <DataGrid Margin="10,90,0,10" x:Name="dgr_UsersPanelHistory" AllowDrop="False" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="440" Width="580" VerticalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" ClipboardCopyMode="None" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFF0EAEA" RowDetailsVisibilityMode="Collapsed" Background="LightGray" BorderBrush="#FFF0EAEA" BorderThickness="1" CanUserResizeColumns="True">
+            <Button x:Name="btn_UserPanelHistoryExport" Margin="350,490,430,10" Content="Zapisz historię do pliku" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="40" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_UserPanelHistoryExport_Click"/>
+            <DataGrid Margin="10,90,0,10" x:Name="dgr_UsersPanelHistory" AllowDrop="False" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="390" Width="580" VerticalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" ClipboardCopyMode="None" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFF0EAEA" RowDetailsVisibilityMode="Collapsed" Background="LightGray" BorderBrush="#FFF0EAEA" BorderThickness="1" CanUserResizeColumns="True">
                 <DataGrid.DataContext>
                     <local:WorkHistory/>
                 </DataGrid.DataContext>
@@ -485,13 +486,13 @@
                             <DataTemplate>
                                 <Button x:Name="btn_UsersPanelDeleteUser" Content="Usuń" Command="{Binding Path=DisconnectClient}" Background="#FF3D5AFE" Foreground="White" BorderBrush="{x:Null}"/>
                             </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>                        
+                        </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
 
-            <Grid x:Name="grd_ResourcesMonitor" Visibility="Collapsed" Margin="60,60,0,0">
+        <Grid x:Name="grd_ResourcesMonitor" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Monitor zasobów" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
@@ -540,6 +541,7 @@
                 </materialDesign:PopupBox>
             </StackPanel>
         </Grid>
+
         <Grid x:Name="grd_Menu" Width="60" HorizontalAlignment="Left" Background="#FF1A237E" Margin="0,60,0,0">
             <StackPanel>
                 <Grid Height="90" Background="White">

@@ -569,5 +569,30 @@ namespace Server
             tbl_ControlPanelServer.Text = "Oczekiwanie na przesłanie plików.";
         }
 
+        private void btn_UserPanelHistoryExport_Click(object sender, RoutedEventArgs e)
+        {
+            StreamWriter sw;
+            SaveFileDialog sfg = new SaveFileDialog(); //utworzenie okna do przeglądania plików
+            sfg.Filter = "txt files (*.txt)|*.txt"; //ustawienie filtrów okna na pliki txt i xml
+            sfg.FilterIndex = 1; //ustawienie domyślnego filtru na plik txt
+            sfg.RestoreDirectory = true; //przywracanie wcześniej zamkniętego katalogu
+            sfg.Title = "Wybierz lub utwórz plik do zapisu historii."; //nadanie nazwy okna
+
+            if (sfg.ShowDialog() == true)//wyświetlenie okna ze sprawdzeniem, czy plik został zapisany
+            {
+                sw = new StreamWriter(Path.Combine(sfg.FileName)); //utworzenie streama do zapisu danych
+                foreach (var x in dgr_UsersPanelHistory.Items)
+                {
+                    sw.WriteLine(x.ToString()); //zapis do pliku
+                }
+                sw.Close(); //zamknięcie streama
+            }
+            else
+            {
+                //Console.WriteLine("Nie wybrano pliku do zapisu, powrót do menu."); //komunikat
+                //Console.ReadKey(true); //potwierdzenie komunikatu
+            }
+        }
+
     }    
 }

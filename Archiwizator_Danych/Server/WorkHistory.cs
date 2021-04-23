@@ -72,5 +72,10 @@ namespace Server
             history_time = DateTime.Now.ToString();
             activity_name = "BŁĄD! Podczas transferus pliku: " + _file + " wystąpił błąd. Użytkownik " + _client + " nie otrzymał kompletu danych.";
         }
+
+        public override string ToString()
+        {
+            return $"{history_time} {activity_name}";
+        }
     }
 }

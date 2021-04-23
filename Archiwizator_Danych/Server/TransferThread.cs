@@ -106,7 +106,7 @@ namespace Server
                                     stream.Flush(); //zwolnienie strumienia
                                     data = new byte[buffer_size]; //ustawienie rozmiaru bufera
                                     receive_bytes = stream.Read(data, 0, data.Length);
-                                    client_filename = System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes);
+                                    client_filename = System.Text.Encoding.UTF8.GetString(data, 0, receive_bytes);
 
                                     if (client_filename != null && client_filename != "")
                                     {
@@ -174,7 +174,7 @@ namespace Server
                                     if ("confirmtask" == System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes))
                                     {
                                         data = new byte[buffer_size]; //ustawienie rozmiaru bufera
-                                        data = System.Text.Encoding.ASCII.GetBytes(file_to_send.GetFullFileName()); //zakodowanie nazwy pliku
+                                        data = System.Text.Encoding.UTF8.GetBytes(file_to_send.GetFullFileName()); //zakodowanie nazwy pliku
                                         stream.Write(data, 0, data.Length); //wysłanie nazwy pliku
                                         stream.Flush(); //zwolnienie strumienia
                                         data = new byte[buffer_size];
@@ -243,7 +243,7 @@ namespace Server
                         }
                         else if (canceltoken.IsCancellationRequested)
                         {
-                            client.Client.Disconnect(true); //rozłącz klienta
+                            client.Client.Disconnect(true); //rozłącz klienta                            
                             help = true;
                         }
                     }
