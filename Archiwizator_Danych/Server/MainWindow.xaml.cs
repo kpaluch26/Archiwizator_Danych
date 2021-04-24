@@ -487,7 +487,6 @@ namespace Server
                 tbl_ControlPanelAllert.Text = "UWAGA! Nie wybrano nowego archiwum. Powrót do poprzedniego pliku.";
                 tbl_ControlPanelAllert.Visibility = Visibility.Visible;
             }
-
         }
 
         private void btn_ControlPanelChangeConfigPath_Click(object sender, RoutedEventArgs e)
