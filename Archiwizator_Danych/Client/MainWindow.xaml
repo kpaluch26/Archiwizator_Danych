@@ -304,7 +304,105 @@
             </Grid>
         </Grid>
 
-        <Grid x:Name="grd_ResourcesMonitor" Visibility="Visible" Margin="60,60,0,0">
+        <Grid x:Name="grd_ArchivePanelRead" Visibility="Visible" Margin="60,60,0,0">
+            <StackPanel>
+                <Grid Height="60" Background="#FF1A237E">
+                    <TextBlock Text="Eksport Archiwum" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
+                </Grid>
+                <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ArchivePanelAllert}">
+                    <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ArchivePanelReadAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Visible" />
+                </Grid>
+            </StackPanel>
+            
+            <DataGrid Margin="10,95,10,0" x:Name="dgr_ArchivePanelReadFiles" AllowDrop="False" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Visible" Height="285" Width="710" VerticalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" ClipboardCopyMode="None" GridLinesVisibility="All" HorizontalGridLinesBrush="#FFF0EAEA" RowDetailsVisibilityMode="Collapsed" Background="LightGray" BorderBrush="#FFF0EAEA" BorderThickness="1">
+                <DataGrid.Resources>
+                    <local:FormatSizeConverter x:Key="FormatSizeConverter"/>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Nazwa pliku" Binding="{Binding filename}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}" MinWidth="100" Width="200">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Rozszerzenie" Binding="{Binding filetype}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}" MinWidth="100">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Rozmiar" Binding="{Binding filesize, Converter={StaticResource FormatSizeConverter}}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}" MinWidth="100">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Lokalizacja" Binding="{Binding filepath}" HeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" ElementStyle="{StaticResource MaterialDesignBody2TextBlock}" MinWidth="100" Width="317">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+                <DataGrid.DataContext>
+                    <local:FileInformation/>
+                </DataGrid.DataContext>
+            </DataGrid>
+
+            <materialDesign:Card Background="#FF1A237E" Width="280" Height="435" Margin="730,95,10,10" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
+                <Grid>
+                    <TextBlock Text="Wybrane Archiwum" FontSize="26" Margin="0,25" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                    
+                    <materialDesign:PackIcon Kind="FileEye" VerticalAlignment="Top" Margin="15,70,0,20" Height="30" Width="30"/>
+                    <TextBlock Text="Ilość plików:" FontSize="20" Margin="45,75,0,0" Height="30" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ArchivePanelReadQuantity" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="White" Width="80" FontSize="18" Margin="160,77,0,20" />
+
+                    <materialDesign:PackIcon Kind="FileCog" VerticalAlignment="Top" Margin="15,120,0,0" Height="30" Width="30"/>
+                    <TextBlock Text="Rozmiar plików:" FontSize="20" Margin="45,125,0,0" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ArchivePanelReadTotalSize" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="White" Width="80" FontSize="18" Margin="190,127,10,0" />
+
+                    <materialDesign:PackIcon Kind="Onepassword" VerticalAlignment="Top" Margin="15,170,0,0" Height="30" Width="30"/>
+                    <TextBlock Text="Ustawione hasło:" FontSize="20" Margin="45,175,0,0" Height="30" Width="160" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ArchivePanelReadPassword" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="White" Width="60" FontSize="18" Margin="200,177,10,0" />
+                    
+                    <Button Margin="20,365,20,20" x:Name="btn_ArchivePanelReadExportZip" Content="Wypakuj pliki z archiwum" Click="btn_ArchivePanelReadExportZip_Click" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="240" materialDesign:ButtonAssist.CornerRadius="10" Cursor="Hand"/>
+                </Grid>
+            </materialDesign:Card>
+
+            <materialDesign:Card Background="#FF1A237E" Width="710" Height="140" Margin="10,390,0,10" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
+                <Grid>
+                    <materialDesign:PackIcon Kind="FileEdit" Height="30" Width="30" VerticalAlignment="Top" Margin="5,10,0,0"/>
+                    <materialDesign:PackIcon Kind="FolderOpen" Height="30" Width="30" VerticalAlignment="Top" Margin="5,50,0,0"/>
+                    <materialDesign:PackIcon Kind="FileCode" Height="30" Width="30" VerticalAlignment="Top" Margin="5,90,0,0"/>
+                    <TextBlock Text="Nazwa pliku:" FontSize="26" Margin="35,10,0,0" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"  Margin="190,18,10,0" Height="39" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <TextBlock x:Name="tbl_ArchivePanelReadFileName" FontSize="18" Text=""/>
+                    </ScrollViewer>
+                    <TextBlock Text="Lokalizacja:" FontSize="26" Margin="35,50,0,0" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"  Margin="180,58,10,0" Height="39" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <TextBlock x:Name="tbl_ArchivePanelReadFileLocation" FontSize="18"/>
+                    </ScrollViewer>
+                    <TextBlock Text="Rozmiar pliku:" FontSize="26" Margin="35,90,0,0" Height="30" Width="170" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ArchivePanelReadFileSize" FontSize="18" Margin="210,98,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Button x:Name="btn_ArchivePanelReadSetZIP" Content="{materialDesign:PackIcon DotsHorizontal}" ToolTip="Icon" Margin="0,100,10,10" Height="30" Width="60" VerticalAlignment="Top" HorizontalAlignment="Right" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ArchivePanelReadSetZIP_Click" Cursor="Hand"/>
+                </Grid>
+            </materialDesign:Card>
+        </Grid>
+
+        <Grid x:Name="grd_ResourcesMonitor" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Monitor zasobów" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
@@ -384,10 +482,10 @@
                         </Button>
                     </ListViewItem>
                     <ListViewItem Height="60">
-                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_HistoryPanel" Cursor="Hand" materialDesign:RippleAssist.IsDisabled="True">
+                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ArchivePanelRead" Cursor="Hand" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ArchivePanelRead_Click">
                             <StackPanel Orientation="Horizontal" Margin="-16">
                                 <materialDesign:PackIcon Kind="Export" Width="25" Height="25" Margin="10"  VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
-                                <TextBlock Text="Otwieranie archiwa" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
+                                <TextBlock Text="Eksportowanie archiwa" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
                             </StackPanel>
                         </Button>
                     </ListViewItem>

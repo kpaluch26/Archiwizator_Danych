@@ -57,6 +57,7 @@ namespace Client
             grd_ArchivePanelCreate.Visibility = Visibility.Collapsed;
             grd_Configuration.Visibility = Visibility.Collapsed;
             grd_ResourcesMonitor.Visibility = Visibility.Collapsed;
+            grd_ArchivePanelRead.Visibility = Visibility.Collapsed;
 
             if (resources_thread != null && resources_thread.IsAlive && cts.Token.CanBeCanceled)
             {
@@ -493,6 +494,46 @@ namespace Client
             cts = new CancellationTokenSource();
             resources_thread = new Thread(() => ResourcesMonitor.ResourcesMonitorWork(cts.Token, total_ram, this));
             resources_thread.Start();
+        }
+
+        private void btn_ArchivePanelReadSetZIP_Click(object sender, RoutedEventArgs e)
+        {            
+            OpenFileDialog ofd = new OpenFileDialog(); //utworzenie okna do przeglądania plików
+            ofd.Filter = "zip file(*.zip)|*.zip"; //ustawienie filtrów okna na dowolne pliki
+            ofd.FilterIndex = 1; //ustawienie domyślnego filtru
+            ofd.RestoreDirectory = true; //przywracanie wcześniej zamkniętego katalogu
+            ofd.Multiselect = false; //ustawienie możliwości wyboru wielu plików z poziomu okna 
+
+            if (ofd.ShowDialog() == true)
+            {
+                FileInfo fn = new FileInfo(ofd.FileName);
+
+                tbl_ArchivePanelReadFileName.Text = ofd.SafeFileName;
+                tbl_ArchivePanelReadFileLocation.Text = ofd.FileName;
+                tbl_ArchivePanelReadFileSize.Text = FileToSend.FormatSize(fn.Length);
+
+                dgr_ArchivePanelReadFiles.ItemsSource = ZipFileRead.ReadFileFromZip(ofd.FileName);
+
+                tbl_ArchivePanelReadPassword.Text = ZipFileRead.GetZipPassword();
+                tbl_ArchivePanelReadQuantity.Text = ZipFileRead.GetCount();
+                tbl_ArchivePanelReadTotalSize.Text = ZipFileRead.GetSize();
+            }
+            else
+            {
+                tbl_ArchivePanelReadAllert.Text = "UWAGA! Nie wybrano nowego archiwum.";
+                tbl_ArchivePanelReadAllert.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void btn_ArchivePanelReadExportZip_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_ArchivePanelRead_Click(object sender, RoutedEventArgs e)
+        {
+            CleanClient();
+            grd_ArchivePanelRead.Visibility = Visibility.Visible;
         }
     }
 }
