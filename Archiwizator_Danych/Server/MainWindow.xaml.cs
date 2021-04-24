@@ -384,7 +384,8 @@ namespace Server
                 {
                     if (files_list[i].is_checked == true)
                     {
-                        files_list.Remove(files_list[i]);                        
+                        files_list.Remove(files_list[i]);
+                        i -= 1;
                     }
                 }              
             }
