@@ -40,3 +40,4 @@ D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Client\o
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Client\obj\Debug\netcoreapp3.1\Client.dll
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Client\obj\Debug\netcoreapp3.1\Client.pdb
 D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Client\obj\Debug\netcoreapp3.1\Client.genruntimeconfig.cache
+D:\PROJEKTY\Archiwizator_Danych\Archiwizator_Danych\Archiwizator_Danych\Client\obj\Debug\netcoreapp3.1\GeneratedInternalTypeHelper.g.cs
