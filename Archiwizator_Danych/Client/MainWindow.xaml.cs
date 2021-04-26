@@ -27,6 +27,7 @@ namespace Client
         private static Thread resources_thread;
         private CancellationTokenSource cts;
         private ObservableCollection<FileInformation> files_list = new ObservableCollection<FileInformation>();
+        private FileInformation file_to_send;
         private long total_ram;
         private static bool resources_thread_ending = false;
         //konstruktor
@@ -55,10 +56,11 @@ namespace Client
         
         private void CleanClient()
         {
-            grd_ArchivePanelCreate.Visibility = Visibility.Collapsed;
+            grd_ControlPanel.Visibility = Visibility.Collapsed;
             grd_Configuration.Visibility = Visibility.Collapsed;
-            grd_ResourcesMonitor.Visibility = Visibility.Collapsed;
+            grd_ArchivePanelCreate.Visibility = Visibility.Collapsed;
             grd_ArchivePanelRead.Visibility = Visibility.Collapsed;
+            grd_ResourcesMonitor.Visibility = Visibility.Collapsed;           
 
             if (resources_thread_ending)
             {
@@ -71,7 +73,7 @@ namespace Client
 
         private void grd_MenuToolbar_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.DragMove();
+            this.DragMove();            
         }
 
         private void btn_MinimizeWindow_Click(object sender, RoutedEventArgs e)
@@ -174,6 +176,9 @@ namespace Client
 
                 user_configuration.state = true;
                 tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
+
+                tbl_ControlPanelUserName.Text = user_configuration.ToString();
+                tbl_ControlPanelHostName.Text = Dns.GetHostName(); //odczyt hostname
             }
             catch
             {
@@ -197,6 +202,12 @@ namespace Client
 
                 btn_ConfigurationDisconnect.IsEnabled = true;
                 btn_ConfigurationDisconnect.Visibility = Visibility.Visible;
+
+                btn_ControlPanelClientStop.IsEnabled = true;
+                btn_ControlPanelClientSend.IsEnabled = true;
+
+                tbl_ControlPanelClient.Text = "Oczekiwanie na polecenie.";
+                tbl_ControlPanelConnectionStatus.Text = "Połączony.";
             }
             else
             {
@@ -214,6 +225,7 @@ namespace Client
             {
                 user_configuration.folderpath = fbd.SelectedPath;
                 tbl_ConfigurationSavePath.Text = fbd.SelectedPath;
+                tbl_ControlPanelSavePath.Text = fbd.SelectedPath;
                 tbl_ConfigurationAllert.Text = "";
                 tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
             }
@@ -234,6 +246,8 @@ namespace Client
         private void btn_ConfigurationDisconnect_Click(object sender, RoutedEventArgs e)
         {
             ConnectionEnd.TryDisconnect(this);
+            tbl_ControlPanelClient.Text = "Oczekiwanie na nawiązanie połączenia z serwerem.";
+            tbl_ControlPanelConnectionStatus.Text = "Niepołączony.";
         }
 
         private void btn_ArchivePanelCreateOptions_Click(object sender, RoutedEventArgs e)
@@ -278,13 +292,11 @@ namespace Client
             {
                 if (cbx_ArchivePanelSetToSend.IsChecked == true)
                 {
-                    //file_to_send = FileToSend.FileToSendSet(ZipFileCreate.GetPath());
+                    file_to_send = FileToSend.FileToSendSet(ZipFileCreate.GetPath());
 
-                    //TransferThread.SetUp(file_to_send);
-
-                    //tbl_ControlPanelFileName.Text = file_to_send.filename;
-                    //tbl_ControlPanelFileLocation.Text = file_to_send.filepath;
-                    //tbl_ControlPanelFileSize.Text = FileToSend.FormatSize(file_to_send.filesize);
+                    tbl_ControlPanelFileName.Text = file_to_send.filename;
+                    tbl_ControlPanelFileLocation.Text = file_to_send.filepath;
+                    tbl_ControlPanelFileSize.Text = FileToSend.FormatSize(file_to_send.filesize);
                 }
                 tbl_ArchivePanelAllert.Text = "";
                 tbl_ArchivePanelAllert.Visibility = Visibility.Collapsed;
@@ -593,6 +605,69 @@ namespace Client
             tbx_ArchivePanelReadPasswordUnmasked.Visibility = Visibility.Collapsed;
             pbx_ArchivePanelReadPasswordBox.Visibility = Visibility.Visible;
             tbx_ArchivePanelReadPasswordUnmasked.Text = "";
+        }
+
+        private void btn_ControlPanelClientSend_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void btn_ControlPanelChangeZIP_Click(object sender, RoutedEventArgs e)
+        {
+            rpb_ControlPanelProgressBar.Value = 0;
+            
+            OpenFileDialog ofd = new OpenFileDialog(); //utworzenie okna do przeglądania plików
+            ofd.Filter = "zip file(*.zip)|*.zip"; //ustawienie filtrów okna na dowolne pliki
+            ofd.FilterIndex = 1; //ustawienie domyślnego filtru
+            ofd.RestoreDirectory = true; //przywracanie wcześniej zamkniętego katalogu
+            ofd.Multiselect = false; //ustawienie możliwości wyboru wielu plików z poziomu okna 
+
+            if (ofd.ShowDialog() == true)
+            {
+                file_to_send = FileToSend.FileToSendSet(ofd.FileName);
+
+                tbl_ControlPanelFileName.Text = file_to_send.filename;
+                tbl_ControlPanelFileLocation.Text = file_to_send.filepath;
+                tbl_ControlPanelFileSize.Text = FileToSend.FormatSize(file_to_send.filesize);
+            }
+            else
+            {
+                tbl_ControlPanelAllert.Text = "UWAGA! Nie wybrano nowego archiwum. Powrót do poprzedniego pliku.";
+                tbl_ControlPanelAllert.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void btn_ControlPanelChangeFilePath_Click(object sender, RoutedEventArgs e)
+        {
+            Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog(); //utworzenie okna dialogowego do wybrania ścieżki zapisu otrzymanych plików
+            fbd.ShowNewFolderButton = true; //włączenie mozliwości tworzenia nowych folderów
+
+            if (fbd.ShowDialog() == true) //jeśli wybrano ścieżkę
+            {
+                user_configuration.folderpath = fbd.SelectedPath;
+                tbl_ConfigurationSavePath.Text = fbd.SelectedPath;
+                tbl_ControlPanelSavePath.Text = fbd.SelectedPath;
+                tbl_ControlPanelAllert.Text = "";
+                tbl_ControlPanelAllert.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                if (user_configuration.folderpath != null)
+                {
+                    tbl_ControlPanelAllert.Text = "UWAGA! Nie wybrano nowego miejsca zapisu. Powrót do poprzedniego zapisu.";
+                }
+                else
+                {
+                    tbl_ControlPanelAllert.Text = "UWAGA! Nie wybrano nowego miejsca zapisu.";
+                }
+                tbl_ControlPanelAllert.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void btn_ControlPanel_Click(object sender, RoutedEventArgs e)
+        {
+            CleanClient();
+            grd_ControlPanel.Visibility = Visibility.Visible;
         }
     }
 }

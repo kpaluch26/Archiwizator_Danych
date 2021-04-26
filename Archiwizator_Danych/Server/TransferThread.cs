@@ -206,7 +206,7 @@ namespace Server
                                                 }
 
                                                 stream.Flush(); //zwolnienie strumienia   
-                                                Thread.Sleep(250); //usypianie w celu oddzielenia następnej wiadomości
+                                                Thread.Sleep(500); //usypianie w celu oddzielenia następnej wiadomości
 
                                                 data = new byte[buffer_size]; //ustawienie rozmiaru bufera
                                                 data = System.Text.Encoding.ASCII.GetBytes("endsending"); //zakodowanie nazwy pliku

@@ -18,7 +18,7 @@ namespace Client
             int PORT_number = 0;
             int buffer_size = 0;
 
-            if (_user.state == true)
+            if (_user.state == true && _mw.tbl_ConfigurationSavePath.Text!="")
             {
                 IP_text = _mw.txt_ConfigurationIP.Text.Trim();
                 PORT_text = _mw.txt_ConfigurationPort.Text.Trim();
@@ -71,7 +71,7 @@ namespace Client
             }
             else
             {
-                _mw.tbl_ConfigurationAllert.Text = "UWAGA! Nie wprowadzono wszystkich danych użytkownika.";
+                _mw.tbl_ConfigurationAllert.Text = "UWAGA! Nie wprowadzono wszystkich danych użytkownika lub nie wybrano miejsca zapisu.";
                 return false;
             }
         }

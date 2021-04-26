@@ -61,7 +61,84 @@
     </Window.Triggers>
 
     <Grid Background="LightGray">
-        
+        <Grid x:Name="grd_ControlPanel" Visibility="Visible" Margin="60,60,0,0">
+            <Grid Height="60" Background="#FF1A237E" VerticalAlignment="Top">
+                <TextBlock Text="Panel sterowania" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
+            </Grid>
+            <Grid Height="30" Margin="0,60,0,0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ControlPanelAllert}" VerticalAlignment="Top">
+                <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
+                <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ControlPanelAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden"/>
+            </Grid>
+            <materialDesign:Card Background="#FF1A237E" Width="280" Height="280" Margin="10,100,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
+                <Grid>
+                    <xrpb:RadialProgressBar Value="100" VerticalAlignment="Top" HorizontalAlignment="Left" Width="280" Height="280" Foreground="#FFE1E5FF" BorderBrush="#FF1A237E"/>
+                    <xrpb:RadialProgressBar x:Name="rpb_ControlPanelProgressBar" Value="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="280" Height="280" Foreground="GreenYellow" BorderBrush="#FF1A237E"/>
+                    <TextBlock x:Name="tbl_ControlPanelProgressValue" TextAlignment="Center" Margin="20,100,20,120" Foreground="White" FontSize="60" Width="220"/>
+                    <TextBlock Text="Status transferu" FontSize="26" TextAlignment="Center" Margin="20,180,20,60" Width="220" Foreground="White"/>
+                </Grid>
+            </materialDesign:Card>
+
+            <materialDesign:Card Background="#FF1A237E" Width="710" Height="140" Margin="10,390,0,10" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
+                <Grid>
+                    <materialDesign:PackIcon Kind="FileEdit" Height="30" Width="30" VerticalAlignment="Top" Margin="5,10,0,0"/>
+                    <materialDesign:PackIcon Kind="FolderOpen" Height="30" Width="30" VerticalAlignment="Top" Margin="5,50,0,0"/>
+                    <materialDesign:PackIcon Kind="FileCode" Height="30" Width="30" VerticalAlignment="Top" Margin="5,90,0,0"/>
+                    <TextBlock Text="Nazwa pliku:" FontSize="26" Margin="35,10,0,0" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"  Margin="190,18,10,0" Height="39" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <TextBlock x:Name="tbl_ControlPanelFileName" FontSize="18" Text=""/>
+                    </ScrollViewer>
+                    <TextBlock Text="Lokalizacja:" FontSize="26" Margin="35,50,0,0" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"  Margin="180,58,10,0" Height="39" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <TextBlock x:Name="tbl_ControlPanelFileLocation" FontSize="18"/>
+                    </ScrollViewer>
+                    <TextBlock Text="Rozmiar pliku:" FontSize="26" Margin="35,90,0,0" Height="30" Width="170" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelFileSize" FontSize="18" Margin="210,98,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Button x:Name="btn_ControlPanelChangeZIP" Content="{materialDesign:PackIcon DotsHorizontal}" ToolTip="Icon" Margin="0,100,10,10" Height="30" Width="60" VerticalAlignment="Top" HorizontalAlignment="Right" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ControlPanelChangeZIP_Click" Cursor="Hand"/>
+                </Grid>
+            </materialDesign:Card>
+
+            <materialDesign:Card Background="#FF1A237E" Width="710" Height="280" Margin="300,100,10,160" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
+                <Grid>
+                    <TextBlock Text="Informacje o kliencie:" FontSize="36" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                    
+                    <materialDesign:PackIcon Kind="AccountBox" Height="30" Width="30" VerticalAlignment="Top" Margin="5,75,0,0"/>
+                    <TextBlock Text="Użytkownik:" FontSize="26" Margin="35,75,0,0" Height="30" Width="290" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelUserName" FontSize="18" Margin="180,83,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <materialDesign:PackIcon Kind="AccountSearch" Height="30" Width="30" VerticalAlignment="Top" Margin="5,115,0,0"/>
+                    <TextBlock Text="Hostname:" FontSize="26" Margin="35,115,0,0" Height="30" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelHostName" FontSize="18" Margin="170,123,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+                    <materialDesign:PackIcon Kind="FolderCog" Height="30" Width="30" VerticalAlignment="Top" Margin="5,155,0,0"/>
+                    <Button x:Name="btn_ControlPanelChangeFilePath" Click="btn_ControlPanelChangeFilePath_Click" Height="30" Width="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,155,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Cursor="Hand"/>
+                    <TextBlock Text="Miejsce zapisu:" FontSize="26" Margin="35,155,0,0" Height="30" Width="180" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"  Margin="220,163,10,0" Height="39" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <TextBlock x:Name="tbl_ControlPanelSavePath" FontSize="18"/>
+                    </ScrollViewer>
+
+                    <materialDesign:PackIcon Kind="Connection" Height="30" Width="30" VerticalAlignment="Top" Margin="5,195,0,0"/>
+                    <TextBlock Text="Status połączenia:" FontSize="26" Margin="35,195,0,0" Height="30" Width="220" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelConnectionStatus" FontSize="18" Margin="260,203,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Text="Niepołączony."/>
+                    
+                    <materialDesign:PackIcon Kind="PlusNetwork" Height="30" Width="30" VerticalAlignment="Top" Margin="5,235,0,0"/>
+                    <TextBlock Text="Aktywny tryb pracy:" FontSize="26" Margin="35,235,0,11" Height="30" Width="230" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbl_ControlPanelClient" FontSize="18" Margin="265,243,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Text="Oczekiwanie na nawiązanie połączenia z serwerem."/>
+                </Grid>
+            </materialDesign:Card>
+
+            <materialDesign:Card Background="#FF1A237E" Width="280" Height="140" Margin="730,390,10,10" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
+                <Grid>
+                    <materialDesign:Badged Badge="{materialDesign:PackIcon LanDisconnect}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="13,40,0,0" Background="{x:Null}" BorderBrush="#FF3D5AFE">
+                        <Button x:Name="btn_ControlPanelClientStop" Content="Rozłącz" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="60" Width="120" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ConfigurationDisconnect_Click" IsEnabled="False"/>
+                    </materialDesign:Badged>
+
+                    <materialDesign:Badged Badge="{materialDesign:PackIcon FileSendOutline}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="150,40,13,13" Background="{x:Null}" BorderBrush="#FF3D5AFE">
+                        <Button x:Name="btn_ControlPanelClientSend" Content="Wyślij plik" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="60" Width="120" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ControlPanelClientSend_Click" Cursor="Hand" IsEnabled="False"/>
+                    </materialDesign:Badged>
+                </Grid>
+            </materialDesign:Card>
+
+        </Grid>
+
         <Grid x:Name="grd_Configuration" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
@@ -451,7 +528,7 @@
                 </materialDesign:PopupBox>
             </StackPanel>
         </Grid>
-        
+
         <Grid x:Name="grd_Menu" Width="60" HorizontalAlignment="Left" Background="#FF1A237E" Margin="0,60,0,0">
             <StackPanel>
                 <Grid Height="90" Background="White">
@@ -464,7 +541,7 @@
                 </Grid>
                 <ListView ScrollViewer.HorizontalScrollBarVisibility="Disabled" Foreground="#FF3D5AFE">
                     <ListViewItem Height="60">
-                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ControlPanel" materialDesign:RippleAssist.IsDisabled="True" Cursor="Hand">
+                        <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ControlPanel" materialDesign:RippleAssist.IsDisabled="True" Cursor="Hand" Click="btn_ControlPanel_Click">
                             <StackPanel Orientation="Horizontal" Margin="-16" >
                                 <materialDesign:PackIcon Kind="ViewDashboard" Width="25" Height="25" Margin="10" VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
                                 <TextBlock Text="Panel sterowania" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>

@@ -66,7 +66,7 @@
     </Window.Triggers>
 
     <Grid Background="LightGray">
-        <Grid x:Name="grd_ControlPanel" Visibility="Collapsed" Margin="60,60,0,0">
+        <Grid x:Name="grd_ControlPanel" Visibility="Visible" Margin="60,60,0,0">
             <Grid Height="60" Background="#FF1A237E" VerticalAlignment="Top">
                 <TextBlock Text="Panel sterowania" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
             </Grid>
@@ -423,7 +423,7 @@
             </Grid>
         </Grid>
 
-        <Grid x:Name="grd_UsersPanel" Visibility="Visible" Margin="60,60,0,0">
+        <Grid x:Name="grd_UsersPanel" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Historia aktywności" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />

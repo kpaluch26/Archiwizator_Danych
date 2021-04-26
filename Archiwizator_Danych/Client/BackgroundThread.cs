@@ -53,8 +53,8 @@ namespace Client
                                 dec_data = ns.Read(data, 0, data.Length);
                                 string receive = System.Text.Encoding.ASCII.GetString(data, 0, dec_data);
                                 if (receive == "startsending")
-                                {
-                                    //this.Invoke(new MethodInvoker(delegate { ReceiveFileEnable(stream); }));
+                                {                                    
+                                    MW.Dispatcher.Invoke(delegate { ConnectionTransfer.ReceiveFile(MW, ns); });
                                 }
                             }
                             client.Client.ReceiveTimeout = 3000;
