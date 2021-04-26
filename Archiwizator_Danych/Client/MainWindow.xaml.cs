@@ -28,6 +28,7 @@ namespace Client
         private CancellationTokenSource cts;
         private ObservableCollection<FileInformation> files_list = new ObservableCollection<FileInformation>();
         private long total_ram;
+        private static bool resources_thread_ending = false;
         //konstruktor
         public MainWindow()
         {
@@ -59,8 +60,9 @@ namespace Client
             grd_ResourcesMonitor.Visibility = Visibility.Collapsed;
             grd_ArchivePanelRead.Visibility = Visibility.Collapsed;
 
-            if (resources_thread != null && resources_thread.IsAlive && cts.Token.CanBeCanceled)
+            if (resources_thread_ending)
             {
+                resources_thread_ending = false;
                 cts.Cancel();
                 cts.Token.WaitHandle.WaitOne();
                 cts.Dispose();
@@ -494,6 +496,7 @@ namespace Client
             cts = new CancellationTokenSource();
             resources_thread = new Thread(() => ResourcesMonitor.ResourcesMonitorWork(cts.Token, total_ram, this));
             resources_thread.Start();
+            resources_thread_ending = true;
         }
 
         private void btn_ArchivePanelReadSetZIP_Click(object sender, RoutedEventArgs e)
@@ -514,19 +517,52 @@ namespace Client
 
                 dgr_ArchivePanelReadFiles.ItemsSource = ZipFileRead.ReadFileFromZip(ofd.FileName);
 
-                tbl_ArchivePanelReadPassword.Text = ZipFileRead.GetZipPassword();
-                tbl_ArchivePanelReadQuantity.Text = ZipFileRead.GetCount();
-                tbl_ArchivePanelReadTotalSize.Text = ZipFileRead.GetSize();
+                if (!dgr_ArchivePanelReadFiles.Items.IsEmpty)
+                {
+                    tbl_ArchivePanelReadPassword.Text = ZipFileRead.GetZipPassword();
+                    tbl_ArchivePanelReadQuantity.Text = ZipFileRead.GetCount();
+                    tbl_ArchivePanelReadTotalSize.Text = ZipFileRead.GetSize();
+
+                    btn_ArchivePanelReadExportZip.IsEnabled = true;
+                }
+                else
+                {
+                    tbl_ArchivePanelReadPassword.Text = "";
+                    tbl_ArchivePanelReadQuantity.Text = "";
+                    tbl_ArchivePanelReadTotalSize.Text = "";
+
+                    btn_ArchivePanelReadExportZip.IsEnabled = false; ;
+
+                    tbl_ArchivePanelReadAllert.Text = ZipFileRead.GetError();
+                    tbl_ArchivePanelReadAllert.Visibility = Visibility.Visible;
+                }
             }
             else
             {
                 tbl_ArchivePanelReadAllert.Text = "UWAGA! Nie wybrano nowego archiwum.";
                 tbl_ArchivePanelReadAllert.Visibility = Visibility.Visible;
             }
+
+            pic_ArchivePanelReadExportZip.Visibility = Visibility.Hidden;
         }
 
         private void btn_ArchivePanelReadExportZip_Click(object sender, RoutedEventArgs e)
         {
+            bool result = false;
+
+            result = ZipFileRead.ExportZip(tbl_ArchivePanelReadFileLocation.Text, pbx_ArchivePanelReadPasswordBox.Password);
+
+            if (result)
+            {
+                pic_ArchivePanelReadExportZip.Visibility = Visibility.Visible;
+                tbl_ArchivePanelReadAllert.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                pic_ArchivePanelReadExportZip.Visibility = Visibility.Hidden;
+                tbl_ArchivePanelReadAllert.Text = ZipFileRead.GetError();
+                tbl_ArchivePanelReadAllert.Visibility = Visibility.Visible;
+            }
 
         }
 
@@ -534,6 +570,29 @@ namespace Client
         {
             CleanClient();
             grd_ArchivePanelRead.Visibility = Visibility.Visible;
+            tbl_ArchivePanelReadAllert.Visibility = Visibility.Hidden;
+            pic_ArchivePanelReadExportZip.Visibility = Visibility.Hidden;
+        }
+
+        private void pic_ArchivePanelReadPasswordBox_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            tbx_ArchivePanelReadPasswordUnmasked.Text = pbx_ArchivePanelReadPasswordBox.Password;
+            pbx_ArchivePanelReadPasswordBox.Visibility = Visibility.Collapsed;
+            tbx_ArchivePanelReadPasswordUnmasked.Visibility = Visibility.Visible;
+        }
+
+        private void pic_ArchivePanelReadPasswordBox_MouseLeave(object sender, MouseEventArgs e)
+        {
+            tbx_ArchivePanelReadPasswordUnmasked.Visibility = Visibility.Collapsed;
+            pbx_ArchivePanelReadPasswordBox.Visibility = Visibility.Visible;
+            tbx_ArchivePanelReadPasswordUnmasked.Text = "";
+        }
+
+        private void pic_ArchivePanelReadPasswordBox_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            tbx_ArchivePanelReadPasswordUnmasked.Visibility = Visibility.Collapsed;
+            pbx_ArchivePanelReadPasswordBox.Visibility = Visibility.Visible;
+            tbx_ArchivePanelReadPasswordUnmasked.Text = "";
         }
     }
 }

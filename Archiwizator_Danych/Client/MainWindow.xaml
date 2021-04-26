@@ -69,7 +69,7 @@
                 </Grid>
                 <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ConfigurationAllert}">
                     <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
-                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ConfigurationAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Collapsed"/>
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ConfigurationAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden"/>
                 </Grid>
             </StackPanel>
             <materialDesign:Card Background="#FF1A237E" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10"  Margin="10,120,0,10" Height="410" Width="480">
@@ -159,7 +159,7 @@
                 </Grid>
                 <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ArchivePanelAllert}">
                     <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
-                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ArchivePanelAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Visible" />
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ArchivePanelAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden" />
                 </Grid>
             </StackPanel>
 
@@ -304,14 +304,14 @@
             </Grid>
         </Grid>
 
-        <Grid x:Name="grd_ArchivePanelRead" Visibility="Visible" Margin="60,60,0,0">
+        <Grid x:Name="grd_ArchivePanelRead" Visibility="Collapsed" Margin="60,60,0,0">
             <StackPanel>
                 <Grid Height="60" Background="#FF1A237E">
                     <TextBlock Text="Eksport Archiwum" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </Grid>
-                <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ArchivePanelAllert}">
+                <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ArchivePanelReadAllert}">
                     <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
-                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ArchivePanelReadAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Visible" />
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ArchivePanelReadAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden" />
                 </Grid>
             </StackPanel>
             
@@ -377,8 +377,14 @@
                     <materialDesign:PackIcon Kind="Onepassword" VerticalAlignment="Top" Margin="15,170,0,0" Height="30" Width="30"/>
                     <TextBlock Text="Ustawione hasło:" FontSize="20" Margin="45,175,0,0" Height="30" Width="160" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                     <TextBlock x:Name="tbl_ArchivePanelReadPassword" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="White" Width="60" FontSize="18" Margin="200,177,10,0" />
-                    
-                    <Button Margin="20,365,20,20" x:Name="btn_ArchivePanelReadExportZip" Content="Wypakuj pliki z archiwum" Click="btn_ArchivePanelReadExportZip_Click" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="240" materialDesign:ButtonAssist.CornerRadius="10" Cursor="Hand"/>
+
+                    <PasswordBox x:Name="pbx_ArchivePanelReadPasswordBox" materialDesign:HintAssist.Hint="Hasło (opconalne)" Width="210" Margin="45,205,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="18" materialDesign:HintAssist.Foreground="#FF3D5AFE" SelectionTextBrush="#FF3D5AFE" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" SelectionBrush="#FF3D5AFE" CaretBrush="#FF3D5AFE" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" Cursor="IBeam" materialDesign:TextFieldAssist.HasClearButton="True" MaxLength="16"/>
+                    <TextBox x:Name="tbx_ArchivePanelReadPasswordUnmasked" materialDesign:HintAssist.Hint="Hasło (opconalne)" Visibility="Collapsed" Width="210" Margin="45,205,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="White" FontSize="18" SelectionTextBrush="#FF3D5AFE" materialDesign:TextFieldAssist.UnderlineBrush="#FF3D5AFE" SelectionBrush="#FF3D5AFE" CaretBrush="#FF3D5AFE" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Cursor="IBeam" materialDesign:TextFieldAssist.HasClearButton="True" IsReadOnly="True"/>
+                    <materialDesign:PackIcon x:Name="pic_ArchivePanelReadPasswordBox" Kind="Key" Margin="15,225,0,0" Width="30" Height="30" Foreground="White" MouseDown="pic_ArchivePanelReadPasswordBox_MouseDown" MouseUp="pic_ArchivePanelReadPasswordBox_MouseUp" MouseLeave="pic_ArchivePanelReadPasswordBox_MouseLeave"/>
+
+                    <materialDesign:PackIcon x:Name="pic_ArchivePanelReadExportZip" Kind="CheckboxMarkedCircleOutline" Height="125" Width="125" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="#FF3D5AFE" Margin="0,245,0,0" Visibility="Hidden"/>
+
+                    <Button Margin="20,365,20,20" x:Name="btn_ArchivePanelReadExportZip" Content="Wypakuj pliki z archiwum" Click="btn_ArchivePanelReadExportZip_Click" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="50" Width="240" materialDesign:ButtonAssist.CornerRadius="10" Cursor="Hand" IsEnabled="False"/>
                 </Grid>
             </materialDesign:Card>
 
@@ -485,7 +491,7 @@
                         <Button Background="{x:Null}" BorderBrush="{x:Null}" x:Name="btn_ArchivePanelRead" Cursor="Hand" materialDesign:RippleAssist.IsDisabled="True" Click="btn_ArchivePanelRead_Click">
                             <StackPanel Orientation="Horizontal" Margin="-16">
                                 <materialDesign:PackIcon Kind="Export" Width="25" Height="25" Margin="10"  VerticalAlignment="Center" Foreground="#FF3D5AFE"/>
-                                <TextBlock Text="Eksportowanie archiwa" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
+                                <TextBlock Text="Eksport archiwa" VerticalAlignment="Center" Margin="20 10" Foreground="#FF3D5AFE"/>
                             </StackPanel>
                         </Button>
                     </ListViewItem>
