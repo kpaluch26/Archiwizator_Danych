@@ -159,7 +159,7 @@
                 </Grid>
                 <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ConfigurationAllert}">
                     <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
-                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ConfigurationAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Collapsed"/>
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ConfigurationAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden"/>
                 </Grid>
             </StackPanel>
             <materialDesign:Flipper Margin="45,90,0,0" Width="280" Height="360" VerticalAlignment="Center" HorizontalAlignment="Left" materialDesign:ShadowAssist.ShadowDepth="Depth3">
@@ -278,7 +278,7 @@
                 </Grid>
                 <Grid Height="30" Margin="0" Background="Red" Visibility="{Binding Visibility, UpdateSourceTrigger=PropertyChanged}" DataContext="{x:Reference tbl_ArchivePanelAllert}">
                     <materialDesign:PackIcon Kind="AlertOutline" Height="25" Width="25" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Black" Margin="5,0,0,0"/>
-                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ArchivePanelAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Visible" />
+                    <TextBlock FontSize="18" Foreground="Black" VerticalAlignment="Center" TextAlignment="Center" x:Name="tbl_ArchivePanelAllert" HorizontalAlignment="Left" Margin="35,0" Visibility="Hidden" />
                 </Grid>
             </StackPanel>
 

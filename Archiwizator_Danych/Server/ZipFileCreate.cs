@@ -29,7 +29,6 @@ namespace Server
                 else
                 {
                     Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog(); //utworzenie okna dialogowego do wybrania ścieżki zapisu otrzymanych plików
-                    fbd.Description = "Wybierz ścieżkę dostępu."; //tytuł utworzonego okna
                     fbd.ShowNewFolderButton = true; //włączenie mozliwości tworzenia nowych folderów
 
                     if (fbd.ShowDialog() == true)

@@ -28,7 +28,8 @@ namespace Server
         private long total_ram;
         ObservableCollection<FileInformation> files_list = new ObservableCollection<FileInformation>();               
         CancellationTokenSource cts;
-        private FileInformation file_to_send;                                
+        private FileInformation file_to_send;
+        private static bool resources_thread_ending = false;
 
         //konstruktor 
         public MainWindow()
@@ -60,8 +61,9 @@ namespace Server
             grd_ControlPanel.Visibility = Visibility.Collapsed;
             grd_UsersPanel.Visibility = Visibility.Collapsed;
 
-            if (resources_thread != null && resources_thread.IsAlive && cts.Token.CanBeCanceled)
+            if (resources_thread_ending)
             {
+                resources_thread_ending = false;
                 cts.Cancel();
                 cts.Token.WaitHandle.WaitOne();
                 cts.Dispose();
@@ -142,6 +144,7 @@ namespace Server
             cts = new CancellationTokenSource();            
             resources_thread = new Thread(() => ResourcesMonitor.ResourcesMonitorWork(cts.Token, total_ram, this));
             resources_thread.Start();
+            resources_thread_ending = true;
         }
 
         private void btn_ConfigurationLoad_Click(object sender, RoutedEventArgs e) //funkcja do załadowania pliku konfiguracyjnego
