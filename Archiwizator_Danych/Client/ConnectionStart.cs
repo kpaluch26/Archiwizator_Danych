@@ -55,17 +55,23 @@ namespace Client
                     ns.Flush();
 
                     BackgroundThread.CreateBackgroundThread(_mw, client, ns, PORT_number, buffer_size);
+                    ConnectionTransfer.SetConnection(_mw, ns);
                     ConnectionEnd.SetClient(client);
 
                     return true;
                 }
                 catch (SocketException)
                 {
-                    _mw.tbl_ConfigurationAllert.Text = "UWAGA! Serwer odmawia nawiązania połączenia. Możliwe, że wprowadzono błędne dane serwera lub serwer pracuje w trybie uniemożliwiającym nawiązanie połączenia.";
+                    _mw.tbl_ConfigurationAllert.Text = "UWAGA! Serwer odmawia nawiązania połączenia. Wprowadzono błędne dane serwera lub serwer pracuje w trybie uniemożliwiającym nawiązanie połączenia.";
                     return false;
                 }
                 catch (FormatException)
+                {                    
+                    return false;
+                }
+                catch
                 {
+                    _mw.tbl_ConfigurationAllert.Text = "UWAGA! Przy próbie połączenia z serwerem wystąpił błąd.";
                     return false;
                 }
             }

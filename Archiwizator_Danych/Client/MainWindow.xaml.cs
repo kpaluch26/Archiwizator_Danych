@@ -52,9 +52,29 @@ namespace Client
 
             files_list.Clear();
             dgr_ArchivePanelFiles.ItemsSource = files_list;
+
+            SeTOnOffConfiguration(true);
         }   
         
-        private void CleanClient()
+        public void SeTOnOffConfiguration(bool _on)
+        {
+            if (_on)
+            {
+                grd_ConfigurationUserData.IsEnabled = true;
+                txt_ConfigurationIP.IsEnabled = true;
+                txt_ConfigurationPort.IsEnabled = true;
+                cmb_ConfigurationBuffer.IsEnabled = true;
+            }
+            else
+            {
+                grd_ConfigurationUserData.IsEnabled = false;
+                txt_ConfigurationIP.IsEnabled = false;
+                txt_ConfigurationPort.IsEnabled = false;
+                cmb_ConfigurationBuffer.IsEnabled = false;
+            }
+        }
+
+        public void CleanClient()
         {
             grd_ControlPanel.Visibility = Visibility.Collapsed;
             grd_Configuration.Visibility = Visibility.Collapsed;
@@ -203,11 +223,13 @@ namespace Client
                 btn_ConfigurationDisconnect.IsEnabled = true;
                 btn_ConfigurationDisconnect.Visibility = Visibility.Visible;
 
-                btn_ControlPanelClientStop.IsEnabled = true;
+                SeTOnOffConfiguration(false);
+               
                 btn_ControlPanelClientSend.IsEnabled = true;
+                btn_ControlPanelClientStop.IsEnabled = true;                
 
                 tbl_ControlPanelClient.Text = "Oczekiwanie na polecenie.";
-                tbl_ControlPanelConnectionStatus.Text = "Połączony.";
+                tbl_ControlPanelConnectionStatus.Text = "Połączony.";                
             }
             else
             {
@@ -245,9 +267,7 @@ namespace Client
 
         private void btn_ConfigurationDisconnect_Click(object sender, RoutedEventArgs e)
         {
-            ConnectionEnd.TryDisconnect(this);
-            tbl_ControlPanelClient.Text = "Oczekiwanie na nawiązanie połączenia z serwerem.";
-            tbl_ControlPanelConnectionStatus.Text = "Niepołączony.";
+            ConnectionEnd.TryDisconnect(this);            
         }
 
         private void btn_ArchivePanelCreateOptions_Click(object sender, RoutedEventArgs e)
@@ -609,7 +629,7 @@ namespace Client
 
         private void btn_ControlPanelClientSend_Click(object sender, RoutedEventArgs e)
         {
-            
+            ConnectionTransfer.SendFile(file_to_send);
         }
 
         private void btn_ControlPanelChangeZIP_Click(object sender, RoutedEventArgs e)
@@ -668,6 +688,15 @@ namespace Client
         {
             CleanClient();
             grd_ControlPanel.Visibility = Visibility.Visible;
+
+            tbl_ControlPanelProgressValue.Text = "";
+            tbl_ControlPanelOperation.Text = "Status transferu";
+            rpb_ControlPanelProgressBar.Value = 0;
+        }
+
+        private void btn_ControlPanelClientStop_Click(object sender, RoutedEventArgs e)
+        {
+            ConnectionEnd.TryDisconnect(this);
         }
     }
 }

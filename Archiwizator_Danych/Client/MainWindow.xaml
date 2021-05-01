@@ -74,7 +74,7 @@
                     <xrpb:RadialProgressBar Value="100" VerticalAlignment="Top" HorizontalAlignment="Left" Width="280" Height="280" Foreground="#FFE1E5FF" BorderBrush="#FF1A237E"/>
                     <xrpb:RadialProgressBar x:Name="rpb_ControlPanelProgressBar" Value="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="280" Height="280" Foreground="GreenYellow" BorderBrush="#FF1A237E"/>
                     <TextBlock x:Name="tbl_ControlPanelProgressValue" TextAlignment="Center" Margin="20,100,20,120" Foreground="White" FontSize="60" Width="220"/>
-                    <TextBlock Text="Status transferu" FontSize="26" TextAlignment="Center" Margin="20,180,20,60" Width="220" Foreground="White"/>
+                    <TextBlock x:Name="tbl_ControlPanelOperation" Text="Status transferu" FontSize="26" TextAlignment="Center" Margin="20,180,20,60" Width="220" Foreground="White"/>
                 </Grid>
             </materialDesign:Card>
 
@@ -128,7 +128,7 @@
             <materialDesign:Card Background="#FF1A237E" Width="280" Height="140" Margin="730,390,10,10" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10">
                 <Grid>
                     <materialDesign:Badged Badge="{materialDesign:PackIcon LanDisconnect}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="13,40,0,0" Background="{x:Null}" BorderBrush="#FF3D5AFE">
-                        <Button x:Name="btn_ControlPanelClientStop" Content="Rozłącz" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="60" Width="120" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ConfigurationDisconnect_Click" IsEnabled="False"/>
+                        <Button x:Name="btn_ControlPanelClientStop" Content="Rozłącz" Background="#FF3D5AFE" BorderBrush="#FF3D5AFE" FontSize="18" Height="60" Width="120" materialDesign:ButtonAssist.CornerRadius="10" Click="btn_ControlPanelClientStop_Click" IsEnabled="False"/>
                     </materialDesign:Badged>
 
                     <materialDesign:Badged Badge="{materialDesign:PackIcon FileSendOutline}" BadgeColorZoneMode="Custom" BadgeBackground="#FF3D5AFE" BadgeForeground="White" Margin="150,40,13,13" Background="{x:Null}" BorderBrush="#FF3D5AFE">
@@ -150,7 +150,7 @@
                 </Grid>
             </StackPanel>
             <materialDesign:Card Background="#FF1A237E" VerticalAlignment="Top" HorizontalAlignment="Left" UniformCornerRadius="10"  Margin="10,120,0,10" Height="410" Width="480">
-                <Grid>
+                <Grid x:Name="grd_ConfigurationUserData">
                     <TextBlock Text="Dane użytkownika" FontSize="36" Margin="0,25" VerticalAlignment="Top" HorizontalAlignment="Center"/>
                     
                     <materialDesign:PackIcon Kind="Account" VerticalAlignment="Top" Margin="15,85,0,0" Height="30" Width="30"/>

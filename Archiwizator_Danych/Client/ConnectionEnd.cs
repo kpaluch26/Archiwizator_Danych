@@ -21,6 +21,14 @@ namespace Client
 
             _mw.btn_ConfigurationConnect.Visibility = Visibility.Visible;
             _mw.btn_ConfigurationConnect.IsEnabled = true;
+
+            _mw.btn_ControlPanelClientStop.IsEnabled = false;
+            _mw.btn_ControlPanelClientSend.IsEnabled = false;
+
+            _mw.tbl_ControlPanelConnectionStatus.Text = "Niepołączony";
+            _mw.tbl_ControlPanelClient.Text = "Oczekiwanie na nawiązanie połączenia z serwerem.";
+            
+            _mw.SeTOnOffConfiguration(true);
         }
 
         public static void SetClient(TcpClient _client)

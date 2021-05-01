@@ -54,7 +54,7 @@ namespace Client
                                 string receive = System.Text.Encoding.ASCII.GetString(data, 0, dec_data);
                                 if (receive == "startsending")
                                 {                                    
-                                    MW.Dispatcher.Invoke(delegate { ConnectionTransfer.ReceiveFile(MW, ns); });
+                                    MW.Dispatcher.Invoke(delegate { ConnectionTransfer.ReceiveFile(); });
                                 }
                             }
                             client.Client.ReceiveTimeout = 3000;

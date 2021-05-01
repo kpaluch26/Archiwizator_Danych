@@ -35,8 +35,7 @@ namespace Server
         public MainWindow()
         {
             InitializeComponent();
-            SetUp();
-            TransferThread.SetLists(this);
+            SetUp();            
         }
 
         //funkcje
@@ -51,6 +50,13 @@ namespace Server
             files_list.Clear();
             dgr_ArchivePanelFiles.ItemsSource = files_list;
             tbl_ControlPanelUsercCounters.Text = "0 / 20";
+
+            btn_ControlPanelServerReceive.IsEnabled = false;
+            btn_ControlPanelServerSend.IsEnabled = false;
+            btn_ControlPanelServerStop.IsEnabled = false;
+            btn_ControlPanelServerListen.IsEnabled = false;
+
+            TransferThread.SetLists(this);
         }
 
         private void CleanServer() //funkcja do czyszczenia pozostałości po wcześniej otwartym oknie
@@ -158,6 +164,11 @@ namespace Server
                 btn_ConfigurationCreate.Content = "Edytuj konfigurację";
                 flp_ConfigurationSave.IsEnabled = true; //można eksportować do pliku
                 TransferThread.SetUp(config, this);
+
+                btn_ControlPanelServerReceive.IsEnabled = true;
+                btn_ControlPanelServerSend.IsEnabled = true;
+                btn_ControlPanelServerStop.IsEnabled = true;
+                btn_ControlPanelServerListen.IsEnabled = true;
             }
             else
             {
@@ -206,6 +217,11 @@ namespace Server
                 tbl_ConfigurationAllert.Visibility = Visibility.Hidden;
                 ServerConfigurationUpdate();
                 TransferThread.SetUp(config, this);
+
+                btn_ControlPanelServerReceive.IsEnabled = true;
+                btn_ControlPanelServerSend.IsEnabled = true;
+                btn_ControlPanelServerStop.IsEnabled = true;
+                btn_ControlPanelServerListen.IsEnabled = true;
             }
             else
             {
