@@ -125,43 +125,63 @@ namespace Server
 
                                         FileStream filestream = new FileStream(config.GetArchiveAddress() + @"\" + client_filename, FileMode.OpenOrCreate, FileAccess.Write); //utworzenie pliku do zapisu archiwum                              
                                         data = new byte[buffer_size]; //ustawienie rozmiaru bufera
+                                        stream.ReadTimeout=3000;
 
                                         while (!end_stream)
-                                        {
-                                            if (client.Client.Receive(buff, SocketFlags.Peek) == 0) //jeśli nagle przestał odpowiadać
+                                        {                                           
+                                            try
                                             {
-                                                WorkHistory worker1 = new WorkHistory();
-                                                worker1.ClientReceiveError(client_hostname, client_filename);
-                                                MW.Dispatcher.Invoke(delegate { history_list.Add(worker1); });
-                                                throw new SocketException();
-                                            }
+                                                receive_bytes = stream.Read(data, 0, data.Length);
+                                                string end_transfer = System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes);
 
-                                            receive_bytes = stream.Read(data, 0, data.Length);
-                                            string end_transfer = System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes);
-
-                                            if (end_transfer == "endsending")
-                                            {
-                                                end_stream = true;
+                                                if (end_transfer.Remove(0, (receive_bytes - 10)) == "endsending")
+                                                {
+                                                    if (end_transfer.Length <= 10)
+                                                    {
+                                                        end_stream = true;
+                                                    }
+                                                    else
+                                                    {
+                                                        filestream.Write(data, 0, (receive_bytes - 10)); //kopiowanie danych do pliku
+                                                        end_stream = true;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    filestream.Write(data, 0, receive_bytes); //kopiowanie danych do pliku
+                                                }
                                             }
-                                            else if (receive_bytes < buffer_size)
+                                            catch
                                             {
-                                                filestream.Write(data, 0, (receive_bytes - 10)); //kopiowanie danych do pliku
-                                                end_stream = true;
-                                            }
-                                            else
-                                            {
-                                                filestream.Write(data, 0, receive_bytes); //kopiowanie danych do pliku
+                                                if (client.Client.Receive(buff, SocketFlags.Peek) == 0) //jeśli nagle przestał odpowiadać
+                                                {
+                                                    WorkHistory worker1 = new WorkHistory();
+                                                    worker1.ClientReceiveError(client_hostname, client_filename);
+                                                    MW.Dispatcher.Invoke(delegate { history_list.Add(worker1); });
+                                                    throw new SocketException();
+                                                }
                                             }
                                         }
+                                        filestream.Close(); //zamknięcie strumienia pliku 
+                                        stream.ReadTimeout = Timeout.Infinite;
 
-                                        filestream.Close(); //zamknięcie strumienia pliku    
-
-                                        Monitor.Enter(client_list_locker);
-                                        WorkHistory worker2 = new WorkHistory();
-                                        worker2.ClientReceiveEnd(client_hostname, client_filename);
-                                        MW.Dispatcher.Invoke(delegate { history_list.Add(worker2); });
-                                        Monitor.Exit(client_list_locker);
-
+                                        if (end_stream)
+                                        {
+                                            Monitor.Enter(client_list_locker);
+                                            WorkHistory worker1 = new WorkHistory();
+                                            worker1.ClientReceiveEnd(client_hostname, client_filename);
+                                            MW.Dispatcher.Invoke(delegate { history_list.Add(worker1); });
+                                            Monitor.Exit(client_list_locker);
+                                        }
+                                        else
+                                        {
+                                            Monitor.Enter(client_list_locker);
+                                            WorkHistory worker1 = new WorkHistory();
+                                            worker1.ClientReceiveError(client_hostname, client_filename);
+                                            MW.Dispatcher.Invoke(delegate { history_list.Add(worker1); });
+                                            Monitor.Exit(client_list_locker);
+                                            throw new SocketException();
+                                        }
                                         client_filename = null; //wyczyszczenie nazwy pliku 
                                     }
                                 }

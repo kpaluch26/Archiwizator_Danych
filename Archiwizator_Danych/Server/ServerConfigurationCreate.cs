@@ -41,11 +41,11 @@ namespace Server
                 {
                     if (_iscreated)
                     {
-                        create_error = "UWAGA! Nie wprowadzono wszystkich danych niezbędnych do utworzenia konfiguracji lub wprowadzone dane są niepoprawne, powrót do istniejącej konfiguracji.";                        
+                        create_error = "UWAGA! Nie wprowadzono danych niezbędnych do utworzenia konfiguracji lub dane są niepoprawne, powrót do istniejącej konfiguracji.";                        
                     }
                     else
                     {
-                        create_error = "UWAGA! Nie wprowadzono wszystkich danych niezbędnych do utworzenia konfiguracji lub wprowadzone dane są niepoprawne.";
+                        create_error = "UWAGA! Nie wprowadzono danych niezbędnych do utworzenia konfiguracji lub dane są niepoprawne.";
                     }
                 }
             }

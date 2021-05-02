@@ -207,7 +207,7 @@ namespace Server
                 iscreated = true;
             }
 
-            new_config = ServerConfigurationCreate.CreateConfiguration(txt_ConfigurationPort.Text, tbl_ControlPanelBufferSize.Text, iscreated);
+            new_config = ServerConfigurationCreate.CreateConfiguration(txt_ConfigurationPort.Text, cmb_ConfigurationBuffer.Text, iscreated);
 
             if (new_config != null)
             {
@@ -228,7 +228,7 @@ namespace Server
                 if (iscreated)
                 {
                     tbl_ConfigurationAllert.Text = ServerConfigurationCreate.GetError();
-                    tbl_ConfigurationAllert.FontSize = 12;
+                    tbl_ConfigurationAllert.FontSize = 14;
                     tbl_ConfigurationAllert.Visibility = Visibility.Visible;
                     txt_ConfigurationPort.Text = config.GetPort().ToString();
                     cmb_ConfigurationBuffer.Text = config.GetBufferSize().ToString();

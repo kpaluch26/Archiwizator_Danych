@@ -62,7 +62,7 @@ namespace Client
                 }
                 catch (SocketException)
                 {
-                    _mw.tbl_ConfigurationAllert.Text = "UWAGA! Serwer odmawia nawiązania połączenia. Wprowadzono błędne dane serwera lub serwer pracuje w trybie uniemożliwiającym nawiązanie połączenia.";
+                    _mw.tbl_ConfigurationAllert.Text = "UWAGA! Wprowadzono błędne dane serwera lub serwer pracuje w trybie uniemożliwiającym nawiązanie połączenia.";
                     return false;
                 }
                 catch (FormatException)

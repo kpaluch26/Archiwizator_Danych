@@ -53,13 +53,24 @@ namespace Client
 
                     if (long.TryParse(file_size, out size))
                     {
-                        long steps = (size / buffer) + 2;
+                        long steps = (size / buffer) + 1;
                         double steps_counter = 1;
-                        double progress = 0;
+                        double step_to_percent = steps/100;
+                        int percent;
+                        int progress = 0;
+
+                        if (steps < 100) 
+                        {
+                            percent = 100 / (int)steps;
+                        }
+                        else
+                        {
+                            percent = 1;
+                        }
 
                         MW.CleanClient();
                         MW.grd_ControlPanel.Visibility = Visibility.Visible; 
-                        MW.rpb_ControlPanelProgressBar.Dispatcher.Invoke(() => MW.rpb_ControlPanelProgressBar.Value = 0, System.Windows.Threading.DispatcherPriority.Background);
+                        MW.rpb_ControlPanelProgressBar.Dispatcher.Invoke(() => MW.rpb_ControlPanelProgressBar.Value = 0, System.Windows.Threading.DispatcherPriority.Background);                        
                         MW.tbl_ControlPanelProgressValue.Text = "0 %";
                         MW.tbl_ControlPanelOperation.Text = "Pobieranie pliku";
 
@@ -69,33 +80,30 @@ namespace Client
                         NS.Flush();
 
                         FileStream filestream = new FileStream(MW.tbl_ConfigurationSavePath.Text + @"\" + filename, FileMode.OpenOrCreate, FileAccess.Write); //utworzenie pliku do zapisu archiwum
+                        data = new byte[buffer];
                         while (!end_stream)
-                        {
-                            data = new byte[buffer];
-                            receive_bytes = NS.Read(data, 0, buffer);
+                        {                            
+                            receive_bytes = NS.Read(data, 0, data.Length);
                             string end_transfer = System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes);
 
-                            if (end_transfer == "endsending")
+                            if (end_transfer.Remove(0, (receive_bytes - 10)) == "endsending")
                             {
+                                filestream.Write(data, 0, (receive_bytes - 10)); //kopiowanie danych do pliku
                                 end_stream = true;
                                 MW.rpb_ControlPanelProgressBar.Dispatcher.Invoke(() => MW.rpb_ControlPanelProgressBar.Value = 100, System.Windows.Threading.DispatcherPriority.Background);
                                 MW.tbl_ControlPanelProgressValue.Text = "100 %";
-                                MW.tbl_ControlPanelOperation.Text = "Pobrano plik";
-                            }
-                            else if (receive_bytes < buffer)
-                            {
-                                filestream.Write(data, 0, (receive_bytes-10)); //kopiowanie danych do pliku
-                                end_stream = true;
-                                MW.rpb_ControlPanelProgressBar.Dispatcher.Invoke(() => MW.rpb_ControlPanelProgressBar.Value = 100, System.Windows.Threading.DispatcherPriority.Background);
-                                MW.tbl_ControlPanelProgressValue.Text = "100 %";
-                                MW.tbl_ControlPanelOperation.Text = "Pobrano plik";
+                                MW.tbl_ControlPanelOperation.Text = "Otrzymano plik";
                             }
                             else
                             {
-                                filestream.Write(data, 0, receive_bytes); //kopiowanie danych do pliku
-                                progress = Math.Round((steps_counter / steps), 2) * 100;
-                                MW.rpb_ControlPanelProgressBar.Dispatcher.Invoke(() => MW.rpb_ControlPanelProgressBar.Value = progress, System.Windows.Threading.DispatcherPriority.Background);
-                                MW.tbl_ControlPanelProgressValue.Text = Math.Round(progress, 2).ToString() + " %";
+                                filestream.Write(data, 0, receive_bytes); //kopiowanie danych do pliku                                
+                                if (step_to_percent - steps_counter <= 0)
+                                {
+                                    progress += percent;
+                                    MW.rpb_ControlPanelProgressBar.Dispatcher.Invoke(() => MW.rpb_ControlPanelProgressBar.Value = progress, System.Windows.Threading.DispatcherPriority.Background);
+                                    //MW.tbl_ControlPanelProgressValue.Text = progress.ToString() + " %";
+                                    steps_counter -= step_to_percent;
+                                }
                                 steps_counter++;
                             }
                         }
@@ -118,7 +126,18 @@ namespace Client
             long size = _file.filesize;
             long steps = (size / buffer) + 1;
             double steps_counter = 1;
-            double progress = 0;
+            double step_to_percent = steps / 100;
+            int percent;
+            int progress = 0;
+
+            if (steps < 100)
+            {
+                percent = 100 / (int)steps;
+            }
+            else
+            {
+                percent = 1;
+            }
 
             NS.Flush();
             try
@@ -154,9 +173,13 @@ namespace Client
                             while ((actually_read = s.Read(data, 0, buffer)) > 0) //dopóki w pliku sa dane
                             {
                                 NS.Write(data, 0, actually_read); //wyslanie danych z pliku  
-                                progress = Math.Round((steps_counter / steps), 2) * 100;
-                                MW.rpb_ControlPanelProgressBar.Dispatcher.Invoke(() => MW.rpb_ControlPanelProgressBar.Value = progress, System.Windows.Threading.DispatcherPriority.Background);
-                                MW.tbl_ControlPanelProgressValue.Text = Math.Round(progress, 2).ToString() + " %";
+                                if (step_to_percent - steps_counter <= 0)
+                                {
+                                    progress += percent;
+                                    MW.rpb_ControlPanelProgressBar.Dispatcher.Invoke(() => MW.rpb_ControlPanelProgressBar.Value = progress, System.Windows.Threading.DispatcherPriority.Background);
+                                    //MW.tbl_ControlPanelProgressValue.Text = progress.ToString() + " %";
+                                    steps_counter -= step_to_percent;
+                                }
                                 steps_counter++;
                             }
                             NS.Flush(); //zwolnienie strumienia                         
