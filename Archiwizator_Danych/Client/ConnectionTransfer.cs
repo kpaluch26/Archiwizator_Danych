@@ -86,7 +86,7 @@ namespace Client
                             receive_bytes = NS.Read(data, 0, data.Length);
                             string end_transfer = System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes);
 
-                            if (end_transfer.Remove(0, (receive_bytes - 10)) == "endsending")
+                            if (receive_bytes>=10 && end_transfer.Remove(0, (receive_bytes - 10)) == "endsending")
                             {
                                 filestream.Write(data, 0, (receive_bytes - 10)); //kopiowanie danych do pliku
                                 end_stream = true;
@@ -96,12 +96,12 @@ namespace Client
                             }
                             else
                             {
-                                filestream.Write(data, 0, receive_bytes); //kopiowanie danych do pliku                                
+                                filestream.Write(data, 0, receive_bytes); //kopiowanie danych do pliku                                                 
                                 if (step_to_percent - steps_counter <= 0)
                                 {
                                     progress += percent;
                                     MW.rpb_ControlPanelProgressBar.Dispatcher.Invoke(() => MW.rpb_ControlPanelProgressBar.Value = progress, System.Windows.Threading.DispatcherPriority.Background);
-                                    //MW.tbl_ControlPanelProgressValue.Text = progress.ToString() + " %";
+                                    MW.tbl_ControlPanelProgressValue.Text = progress.ToString() + " %";
                                     steps_counter -= step_to_percent;
                                 }
                                 steps_counter++;
@@ -111,9 +111,10 @@ namespace Client
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception x)
             {                
                 MW.tbl_ControlPanelOperation.Text = "Błąd pobierania";
+                MW.Dispatcher.Invoke( delegate { MessageBox.Show(x.ToString()); });
             }            
         }
 
@@ -177,7 +178,7 @@ namespace Client
                                 {
                                     progress += percent;
                                     MW.rpb_ControlPanelProgressBar.Dispatcher.Invoke(() => MW.rpb_ControlPanelProgressBar.Value = progress, System.Windows.Threading.DispatcherPriority.Background);
-                                    //MW.tbl_ControlPanelProgressValue.Text = progress.ToString() + " %";
+                                    MW.tbl_ControlPanelProgressValue.Text = progress.ToString() + " %";
                                     steps_counter -= step_to_percent;
                                 }
                                 steps_counter++;

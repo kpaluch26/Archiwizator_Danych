@@ -20,7 +20,10 @@ namespace Server
             if (_config != null)
             {
                 config = _config;
-                m_oBackgroundWorker.RunWorkerAsync(config.GetPort()); //start wątka roboczego w tle
+                if (!m_oBackgroundWorker.IsBusy)
+                {
+                    m_oBackgroundWorker.RunWorkerAsync(config.GetPort()); //start wątka roboczego w tle
+                }
             }
         }
         private static void m_oBackgroundWorker_DoWork(object sender, DoWorkEventArgs e) //funkcja odpowiadająca za pracę wątka roboczego w tle

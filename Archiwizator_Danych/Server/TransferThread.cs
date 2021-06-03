@@ -134,7 +134,7 @@ namespace Server
                                                 receive_bytes = stream.Read(data, 0, data.Length);
                                                 string end_transfer = System.Text.Encoding.ASCII.GetString(data, 0, receive_bytes);
 
-                                                if (end_transfer.Remove(0, (receive_bytes - 10)) == "endsending")
+                                                if (receive_bytes >= 10 && end_transfer.Remove(0, (receive_bytes - 10)) == "endsending")
                                                 {
                                                     if (end_transfer.Length <= 10)
                                                     {
@@ -159,6 +159,7 @@ namespace Server
                                                     worker1.ClientReceiveError(client_hostname, client_filename);
                                                     MW.Dispatcher.Invoke(delegate { history_list.Add(worker1); });
                                                     throw new SocketException();
+                                                    end_stream = true;
                                                 }
                                             }
                                         }
