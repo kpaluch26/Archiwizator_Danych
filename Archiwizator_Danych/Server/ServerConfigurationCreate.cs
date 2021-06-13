@@ -18,24 +18,24 @@ namespace Server
             fbd.Description = "Wybierz ścieżkę dostępu."; //tytuł utworzonego okna
             fbd.ShowNewFolderButton = true; //włączenie mozliwości tworzenia nowych folderów
 
-            if (fbd.ShowDialog() == true) //jeśli wybrano ścieżkę
+            if (fbd.ShowDialog() == true) 
             {
                 int port, buffer;
                 string username, hostname, ip_address;
                 IPHostEntry ip_entry;
                 IPAddress[] all_address;
 
-                username = Environment.UserName; //odczyt nazwy konta użytkownika
-                hostname = Dns.GetHostName(); //odczyt hostname
+                username = Environment.UserName; 
+                hostname = Dns.GetHostName(); 
                 ip_entry = System.Net.Dns.GetHostEntry(hostname);
                 all_address = ip_entry.AddressList;
-                ip_address = all_address.Where(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().ToString();
-
+                ip_address = all_address.Where(x => 
+                                            x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).FirstOrDefault().ToString();
                 try
                 {
                     port = Convert.ToInt32(_port);
                     buffer = Convert.ToInt32(_buffer);
-                    config = new ServerConfiguration(username, hostname, ip_address, fbd.SelectedPath, port, buffer);//utworzenie configa                    
+                    config = new ServerConfiguration(username, hostname, ip_address, fbd.SelectedPath, port, buffer);                   
                 }
                 catch
                 {

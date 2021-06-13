@@ -40,33 +40,19 @@ namespace Client
                             int x = folderinfo.Length - 1;
 
                             fileinfo = folderinfo[x].Split('.');
-
                             fn.filename = fileinfo[0];
                             fn.filepath = _zippath;
                             fn.filesize = e.UncompressedSize;
 
-                            if (fileinfo.Length == 2)
-                            {
-                                fn.filetype = fileinfo[1];
-                            }
-                            else
-                            {
-                                fn.filetype = "Plik";
-                            }
+                            if (fileinfo.Length == 2){
+                                fn.filetype = fileinfo[1]; }
+                            else{ fn.filetype = "Plik"; }
+                            
                             fn.is_checked = true;
-
-                            if (check)
-                            {
-                                if (e.Encryption.ToString() != "None")
-                                {
-                                    password = "Tak";
-                                }
-                                else
-                                {
-                                    password = "Nie";
-                                }
-                                check = false;
-                            }
+                            if (check){
+                                if (e.Encryption.ToString() != "None"){ password = "Tak"; }
+                                else{ password = "Nie"; }
+                                check = false; }
 
                             size += e.UncompressedSize;
                             zip_files.Add(fn);

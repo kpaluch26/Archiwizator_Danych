@@ -57,17 +57,17 @@ namespace Server
 
                     if (selected_files.Count >= 1)
                     {
-                        using (ZipFile _zip = new ZipFile()) //utworzenie archiwum
+                        using (ZipFile _zip = new ZipFile()) 
                         {
                             foreach (var _file in selected_files)
                             {
                                 if (_password.Trim() != "")
                                 {
-                                    _zip.Password = _password; //dodanie hasła
+                                    _zip.Password = _password; 
                                 }
-                                _zip.AddFile((_file.filepath + "\\" + _file.filename + _file.filetype), ""); //dodanie pliku do archiwum
+                                _zip.AddFile((_file.filepath + "\\" + _file.filename + _file.filetype), ""); 
                             }
-                            _zip.Save(path); //zapis archiwum
+                            _zip.Save(path); 
                             return true;                            
                         }
                     }

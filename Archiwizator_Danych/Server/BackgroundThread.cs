@@ -26,28 +26,28 @@ namespace Server
                 }
             }
         }
-        private static void m_oBackgroundWorker_DoWork(object sender, DoWorkEventArgs e) //funkcja odpowiadająca za pracę wątka roboczego w tle
+        private static void m_oBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            TcpListener listener = new TcpListener(IPAddress.Any, config.GetPort()); //ustawienie nasłuchiwania na porcie z konfiguracji i dla dowolnego adresu IP
-            TcpClient client = null; //utworzenie pustego klienta
-            listener.Start(); //rozpoczęcie nasłuchiwania     
-            bool do_work = true; //zmienna określające prace wątka w tle
+            TcpListener listener = new TcpListener(IPAddress.Any, config.GetPort());  
+            TcpClient client = null; 
+            listener.Start();     
+            bool do_work = true; 
 
             while (do_work)
             {
-                if (ServerOptions.server_option == ServerOptions.Options.server_listen) //działa jesli tryb pracy serwera jest ustawiony na oczekiwanie
+                if (ServerOptions.server_option == ServerOptions.Options.server_listen) 
                 {
-                    if (listener.Pending()) //jeśli jakieś zapytanie przychodzi
+                    if (listener.Pending()) 
                     {
-                        client = listener.AcceptTcpClient(); //zaakceptowanie przychodzącego połączenia                           
-                        ThreadPool.QueueUserWorkItem(TransferThread.ConnectionManager,client); //Dodanie do kolejki klienta
+                        client = listener.AcceptTcpClient();                         
+                        ThreadPool.QueueUserWorkItem(TransferThread.ConnectionManager,client); 
                     }
                 }
-                if (m_oBackgroundWorker.CancellationPending) //jeśli przerwano prace wątka
+                if (m_oBackgroundWorker.CancellationPending) 
                 {
-                    listener.Stop(); //stop nasłuchiwania
-                    e.Cancel = true; //przerwanie obiektu
-                    do_work = false; //koniec pracy
+                    listener.Stop(); 
+                    e.Cancel = true; 
+                    do_work = false; 
                     return;
                 }
             }

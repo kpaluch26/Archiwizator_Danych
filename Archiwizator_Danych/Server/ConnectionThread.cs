@@ -33,16 +33,11 @@ namespace Server
             {
                if (_DisconnectClient == null)
                 {
-                    _DisconnectClient = new RelayCommand(
-                    param => this.Execute(),
-                    param => this.CanExecute()
-                );
+                    _DisconnectClient = new RelayCommand(param => this.Execute(),param => this.CanExecute());
                 }
-
                 return _DisconnectClient;
             }
         }
-
         private void Execute()
         {
             this.canceltoken.Cancel();
@@ -50,7 +45,6 @@ namespace Server
             this.canceltoken.Dispose();
             this.canceltoken = null;
         }
-
         private bool CanExecute()
         {
             if (canceltoken == null)
